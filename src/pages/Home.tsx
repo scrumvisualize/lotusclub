@@ -275,7 +275,7 @@ export default function Home() {
                     </div>
 
                     {/* Timeline */}
-                    <div className="mt-10">
+                    <div className="mt-12 md:mt-12 overflow-hidden">
                         <HostingTimeline />
                     </div>
 

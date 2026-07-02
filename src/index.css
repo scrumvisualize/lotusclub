@@ -10,3 +10,12 @@ body {
   margin: 0;
   font-family: Inter, Arial, sans-serif;
 }
+
+.timeline-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.timeline-scroll::-webkit-scrollbar {
+  display: none;
+}

@@ -62,30 +62,78 @@ export default function MondayTimeline() {
     return (
         <div style={{ fontFamily: 'Arial', padding: 20 }}>
             {/* BUTTONS */}
-            <div style={{ marginBottom: 20 }}>
+            <div style={{
+                marginBottom: 20,
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 12,
+                alignItems: 'center'
+            }}>
                 <button
                     onClick={() => {
                         setActiveIndex(0);
                         setPlaying(true);
                     }}
+                    style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: '50%',
+                        border: 'none',
+                        background: '#1e1f1e',
+                        color: 'white',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 20,
+                        boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+                        transition: 'transform 0.2s ease'
+                    }}
+                    title="Play Timeline"
                 >
-                    ▶ Play
+                    ▶
                 </button>
 
-                <button onClick={() => setPlaying(false)}>⏸ Pause</button>
+                <button
+                    onClick={() => setPlaying(false)}
+                    style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: '50%',
+                        border: 'none',
+                        background: '#1e1f1e',
+                        color: 'white',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 20,
+                        boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+                        transition: 'transform 0.2s ease'
+                    }}
+                >⏸ </button>
             </div>
 
             {/* =========================
 TIMELINE WRAPPER
 ========================= */}
-            <div style={{ position: 'relative', height: 140 }}>
+            <div className="timeline-scroll"
+                style={{
+                    position: 'relative',
+                    marginTop: 40,
+                    height: 220
+                    // overflowX: 'auto',
+                    // paddingBottom: 35
+                }}
+            >
+
                 {/* =========================
 CONNECTOR BACK LINE
 ========================= */}
                 <div
                     style={{
                         position: 'absolute',
-                        marginTop: 60,
+                        marginTop: 110,
                         top: 50,
                         left: 0,
                         right: 0,
@@ -102,7 +150,7 @@ CONNECTOR PROGRESS LINE
                 <div
                     style={{
                         position: 'absolute',
-                        marginTop: 60,
+                        marginTop: 110,
                         top: 50,
                         left: 0,
                         height: 40,
@@ -120,7 +168,7 @@ MILESTONES ROW
                 <div
                     style={{
                         position: 'relative',
-                        marginTop: 80
+                        marginTop: 50
                     }}
                 >
                     {/* =========================
@@ -128,111 +176,118 @@ DOT ROW (with labels + tooltip)
 ========================= */}
                     <div
                         style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            position: 'relative',
-                            zIndex: 2
+                            position: 'relative'
                         }}
                     >
-                        {allSchedule.map((item, index) => {
-                            const isPastOrPresent = new Date(item.date) <= today;
-                            const isCompleted = index <= safeActiveIndex;
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                position: 'relative',
+                                zIndex: 2,
+                                minWidth: 850
+                            }}
+                        >
+                            {allSchedule.map((item, index) => {
+                                const isPastOrPresent = new Date(item.date) <= today;
+                                const isCompleted = index <= safeActiveIndex;
 
-                            return (
-                                <div
-                                    key={item.date}
-                                    style={{
-                                        flex: 1,
-                                        textAlign: 'center',
-                                        position: 'relative'
-                                    }}
-                                >
-                                    {/* DOT */}
-
+                                return (
                                     <div
+                                        key={item.date}
                                         style={{
-                                            width: 30,
-                                            height: 30,
-                                            borderRadius: '50%',
-                                            margin: '0 auto',
-                                            background: isCompleted
-                                                ? '#2ecc71'
-                                                : isPastOrPresent
-                                                    ? '#90ee90'
-                                                    : '#ccc',
-                                            cursor: 'pointer',
-                                            position: 'relative',
-                                            zIndex: 3,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
+                                            flex: 1,
+                                            textAlign: 'center',
+                                            position: 'relative'
                                         }}
-                                        onMouseEnter={() => setActiveTooltipIndex(index)}
-                                        onMouseLeave={() => setActiveTooltipIndex(null)}
-                                        onClick={() =>
-                                            setActiveTooltipIndex((prev) =>
-                                                prev === index ? null : index
-                                            )
-                                        }
                                     >
-                                        <div
-                                            style={{
-                                                width: 10,
-                                                height: 10,
-                                                borderRadius: '50%',
-                                                background: '#fff'
-                                            }}
-                                        />
-                                    </div>
+                                        {/* DOT */}
 
-                                    {/* TOOLTIP */}
-                                    {activeTooltipIndex === index && (
                                         <div
                                             style={{
-                                                position: 'absolute',
-                                                top: -55,
-                                                left: '50%',
-                                                transform: 'translateX(-50%)',
-                                                // background: '#fff',
-                                                background: isDarkMode ? '#1f2937' : '#fff', // gray-800
-                                                color: isDarkMode ? '#fff' : '#111827',      // white / gray-900
-                                                padding: '6px 10px',
-                                                borderRadius: 8,
-                                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                                                fontSize: 11,
-                                                whiteSpace: 'nowrap',
-                                                zIndex: 10
+                                                width: 30,
+                                                height: 30,
+                                                borderRadius: '50%',
+                                                margin: '0 auto',
+                                                background: isCompleted
+                                                    ? '#2ecc71'
+                                                    : isPastOrPresent
+                                                        ? '#90ee90'
+                                                        : '#ccc',
+                                                cursor: 'pointer',
+                                                position: 'relative',
+                                                zIndex: 3,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                            onMouseEnter={() => setActiveTooltipIndex(index)}
+                                            onMouseLeave={() => setActiveTooltipIndex(null)}
+                                            onClick={() =>
+                                                setActiveTooltipIndex((prev) =>
+                                                    prev === index ? null : index
+                                                )
+                                            }
+                                        >
+                                            <div
+                                                style={{
+                                                    width: 10,
+                                                    height: 10,
+                                                    borderRadius: '50%',
+                                                    background: '#fff'
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* TOOLTIP */}
+                                        {activeTooltipIndex === index && (
+                                            <div
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: -55,
+                                                    left: '50%',
+                                                    transform: 'translateX(-50%)',
+                                                    // background: '#fff',
+                                                    background: isDarkMode ? '#1f2937' : '#fff', // gray-800
+                                                    color: isDarkMode ? '#fff' : '#111827',      // white / gray-900
+                                                    padding: '6px 10px',
+                                                    borderRadius: 8,
+                                                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                                                    fontSize: 11,
+                                                    whiteSpace: 'nowrap',
+                                                    zIndex: 10
+                                                }}
+                                            >
+                                                <div>👤 {item.hosts[0]}</div>
+                                                <div>👤 {item.hosts[1]}</div>
+                                            </div>
+                                        )}
+
+                                        {/* DATE LABEL */}
+                                        <div
+                                            style={{ fontSize: 12, marginTop: 12, marginBottom: 10 }}
+                                        >
+                                            {formatDisplayDate(item.date)}
+                                        </div>
+                                        <div
+                                            style={{
+                                                display: 'inline-block',
+                                                marginTop: 4,
+                                                padding: '3px 8px',
+                                                borderRadius: 9999,
+                                                fontSize: 10,
+                                                fontWeight: 600,
+                                                background: isCompleted ? '#dcfce7' : '#f3f4f6',
+                                                color: isCompleted ? '#15803d' : '#6b7280',
+                                                transition: 'all 0.3s ease'
                                             }}
                                         >
-                                            <div>👤 {item.hosts[0]}</div>
-                                            <div>👤 {item.hosts[1]}</div>
+                                            {isCompleted ? '✓ Completed' : 'Upcoming'}
                                         </div>
-                                    )}
-
-                                    {/* DATE LABEL */}
-                                    <div
-                                        style={{ fontSize: 12, marginTop: 12, marginBottom: 10 }}
-                                    >
-                                        {formatDisplayDate(item.date)}
                                     </div>
-                                    <div
-                                        style={{
-                                            display: 'inline-block',
-                                            marginTop: 6,
-                                            padding: '3px 8px',
-                                            borderRadius: 9999,
-                                            fontSize: 10,
-                                            fontWeight: 600,
-                                            background: isCompleted ? '#dcfce7' : '#f3f4f6',
-                                            color: isCompleted ? '#15803d' : '#6b7280',
-                                            transition: 'all 0.3s ease'
-                                        }}
-                                    >
-                                        {isCompleted ? '✓ Completed' : 'Upcoming'}
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
 
                     {/* =========================
