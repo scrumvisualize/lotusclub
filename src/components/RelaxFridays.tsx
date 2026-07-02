@@ -48,7 +48,7 @@ export default function RelaxFridays() {
                         dark:text-white
                         "
                     >
-                        Barbecue Fridays
+                        Barbecue Friday's
                     </h2>
 
                     <p

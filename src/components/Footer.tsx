@@ -22,11 +22,11 @@ export default function Footer() {
                         <a href="#hosting" className="hover:text-blue-600 transition">
                             Hosting
                         </a>
-                        <Link to="/members">
+                        <Link to="/members" className="hover:text-blue-600 transition-colors duration-200">
                             Members
                         </Link>
 
-                        <Link to="/contact">
+                        <Link to="/contact" className="hover:text-blue-600 transition-colors duration-200">
                             Contact
                         </Link>
                     </div>

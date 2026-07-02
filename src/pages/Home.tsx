@@ -268,14 +268,14 @@ export default function Home() {
                         </span>
 
                         <h2 className="mt-5 text-4xl md:text-5xl font-bold tracking-tight text-slate-800 dark:text-white">
-                            Hosting Every Week
+                            Weekly Hosting
                         </h2>
 
                         <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
                             Our Monday night hosting sessions are proudly supported by dedicated
                             volunteers who generously give their time each week.
                             <br></br>
-                            Click on the timeline green icon below to see who's hosting every Monday
+                            Hover or click on the timeline green icon below to see who's hosting every Monday
                             throughout the season.
                         </p>
 

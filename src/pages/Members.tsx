@@ -5,6 +5,7 @@ export default function Members() {
             id: 1,
             name: "Dan Thomas",
             membership: "Permanent",
+            suburb: "Forest Lake",
             status: "Active",
             joiningYear: "2020",
         },
@@ -12,6 +13,7 @@ export default function Members() {
             id: 2,
             name: "Vinod Mathew",
             membership: "Permanent",
+            suburb: "Manly",
             status: "Active",
             joiningYear: "2022",
         },
@@ -19,6 +21,7 @@ export default function Members() {
             id: 3,
             name: "Tran Don",
             membership: "Guest",
+            suburb: "Ripley",
             status: "Active",
             joiningYear: "2023",
         },
@@ -26,7 +29,16 @@ export default function Members() {
             id: 4,
             name: "Great Man",
             membership: "Guest",
+            suburb: "Holland Park",
             status: "Cancelled",
+            joiningYear: "2024",
+        },
+        {
+            id: 5,
+            name: "Sandy Hedge",
+            membership: "Permanent",
+            suburb: "Annerley",
+            status: "Active",
             joiningYear: "2024",
         },
     ];
@@ -105,7 +117,7 @@ export default function Members() {
                             >
 
                                 <th className="px-6 py-4 text-left">
-                                    Member No
+                                    Serial No
                                 </th>
 
                                 <th className="px-6 py-4 text-left">
@@ -114,6 +126,10 @@ export default function Members() {
 
                                 <th className="px-6 py-4 text-left">
                                     Membership Type
+                                </th>
+
+                                <th className="px-6 py-4 text-left">
+                                    Suburb
                                 </th>
 
                                 <th className="px-6 py-4 text-left">
@@ -155,6 +171,10 @@ export default function Members() {
 
                                     <td className="px-6 py-4">
                                         {member.membership}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        {member.suburb}
                                     </td>
 
                                     <td className="px-6 py-4">

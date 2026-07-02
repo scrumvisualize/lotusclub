@@ -121,28 +121,28 @@ export default function Navbar() {
                     "
                 >
 
-                    <Link to="/">
+                    <Link to="/" className="hover:text-blue-600 transition-colors duration-200">
                         Home
                     </Link>
 
 
-                    <a href="/#about">
+                    <a href="/#about" className="hover:text-blue-600 transition-colors duration-200">
                         About Us
                     </a>
 
-                    <a href="/#policies">
+                    <a href="/#policies" className="hover:text-blue-600 transition-colors duration-200">
                         Club Policies
                     </a>
 
-                    <a href="/#hosting">
+                    <a href="/#hosting" className="hover:text-blue-600 transition-colors duration-200">
                         Hosting
                     </a>
 
-                    <Link to="/members">
+                    <Link to="/members" className="hover:text-blue-600 transition-colors duration-200">
                         Members
                     </Link>
 
-                    <Link to="/contact">
+                    <Link to="/contact" className="hover:text-blue-600 transition-colors duration-200">
                         Contact
                     </Link>
 

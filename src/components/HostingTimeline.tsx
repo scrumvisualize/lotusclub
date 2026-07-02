@@ -23,14 +23,18 @@ export default function MondayTimeline() {
 
     const safeActiveIndex = Math.min(activeIndex, lastCompletedIndex);
 
-    const progress = maxIndex <= 0 ? 0 : (safeActiveIndex / maxIndex) * 100;
+    //const progress = maxIndex <= 0 ? 0 : (safeActiveIndex / maxIndex) * 100;
+    const progress =
+        maxIndex <= 0
+            ? 0
+            : (Math.max(0, safeActiveIndex) / maxIndex) * 100;
 
     // =========================
     // PLAY / PAUSE
     // =========================
 
     useEffect(() => {
-        setActiveIndex(0);
+        setActiveIndex(-1);
         setPlaying(true);
     }, []);
 
@@ -71,7 +75,7 @@ export default function MondayTimeline() {
             }}>
                 <button
                     onClick={() => {
-                        setActiveIndex(0);
+                        setActiveIndex(-1);
                         setPlaying(true);
                     }}
                     style={{
@@ -122,8 +126,6 @@ TIMELINE WRAPPER
                     position: 'relative',
                     marginTop: 40,
                     height: 220
-                    // overflowX: 'auto',
-                    // paddingBottom: 35
                 }}
             >
 
@@ -163,8 +165,8 @@ CONNECTOR PROGRESS LINE
                 />
 
                 {/* =========================
-MILESTONES ROW
-========================= */}
+                MILESTONES ROW
+                ========================= */}
                 <div
                     style={{
                         position: 'relative',
@@ -172,8 +174,8 @@ MILESTONES ROW
                     }}
                 >
                     {/* =========================
-DOT ROW (with labels + tooltip)
-========================= */}
+                    DOT ROW (with labels + tooltip)
+                    ========================= */}
                     <div
                         style={{
                             position: 'relative'

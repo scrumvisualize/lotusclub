@@ -67,7 +67,7 @@ export default function AboutSection() {
                         dark:text-gray-300
                         "
                     >
-                        Lotus Club is a place where friendship, fun and unforgettable memories come together. We believe that every gathering is an opportunity to strengthen relationships, share laughter and create meaningful experiences in a warm and welcoming environment.
+                        Lotus Club started in 2018, its a place where friendship, fun and unforgettable memories come together. We believe that every gathering is an opportunity to strengthen relationships, share laughter and create meaningful experiences in a warm and welcoming environment.
 
                         <br /><br />
 
