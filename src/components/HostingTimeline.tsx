@@ -168,7 +168,7 @@ MILESTONES ROW
                 <div
                     style={{
                         position: 'relative',
-                        marginTop: 50
+                        marginTop: 60
                     }}
                 >
                     {/* =========================
@@ -310,12 +310,15 @@ DOTTED CONNECTOR ROW
                                 style={{
                                     flex: 1,
                                     height: 2,
-                                    margin: '0 4px',
+                                    margin: '0 2px',
                                     backgroundImage:
                                         'repeating-linear-gradient(90deg, #aaa 0, #aaa 3px, transparent 3px, transparent 7px)'
                                 }}
                             />
+
                         ))}
+
+
                     </div>
                 </div>
             </div>

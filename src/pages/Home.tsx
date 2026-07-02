@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import coins from "../assets/coins.jpg";
 import fun1 from "../assets/fun1 copy.png";
 import fun3 from "../assets/fun3.png";
@@ -6,10 +6,29 @@ import AboutSection from "../components/AboutSection";
 import RelaxFridays from "../components/RelaxFridays";
 import ClubPolicies from "../components/ClubPolicies";
 import HostingTimeline from "../components/HostingTimeline";
+import Footer from "../components/Footer";
 
 export default function Home() {
 
     const [showJoinModal, setShowJoinModal] = useState(false);
+    const [showScrollTop, setShowScrollTop] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollTop(window.scrollY > 300);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
 
     return (
         <>
@@ -235,9 +254,6 @@ export default function Home() {
 
             {/* Hosting Timeline */}
 
-
-
-
             {/* =========================
                 ROW 1 - INTRODUCTION
                 ========================= */}
@@ -259,7 +275,7 @@ export default function Home() {
                             Our Monday night hosting sessions are proudly supported by dedicated
                             volunteers who generously give their time each week.
                             <br></br>
-                            Hover on the timeline green icon below to see who's hosting every Monday
+                            Click on the timeline green icon below to see who's hosting every Monday
                             throughout the season.
                         </p>
 
@@ -282,9 +298,9 @@ export default function Home() {
                 </div>
             </div>
 
+            {/* Footer section */}
 
-
-
+            <Footer />
 
             {
                 showJoinModal && (
@@ -439,6 +455,29 @@ export default function Home() {
 
                 )
             }
+            {showScrollTop && (
+                <button
+                    onClick={scrollToTop}
+                    title="Back to Top"
+                    style={{
+                        position: "fixed",
+                        bottom: 25,
+                        right: 25,
+                        width: 46,
+                        height: 46,
+                        borderRadius: "50%",
+                        border: "none",
+                        background: "#2563eb",
+                        color: "#fff",
+                        fontSize: 24,
+                        cursor: "pointer",
+                        boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
+                        zIndex: 9999
+                    }}
+                >
+                    ↑
+                </button>
+            )}
 
         </>
     );

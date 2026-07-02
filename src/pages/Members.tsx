@@ -105,7 +105,7 @@ export default function Members() {
                             >
 
                                 <th className="px-6 py-4 text-left">
-                                    Serial No
+                                    Member No
                                 </th>
 
                                 <th className="px-6 py-4 text-left">
