@@ -21,7 +21,6 @@ export interface Card {
     id: string;
     suit: Suit;
     value: CardValue;
-    color: "red" | "black";
     picked: boolean;
 }
 
