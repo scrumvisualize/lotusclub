@@ -288,6 +288,11 @@ export default function Navbar() {
                             Members
                         </Link>
 
+                        <Link to="/bookrummytable"
+                            onClick={() => setMenuOpen(false)}
+                        >
+                            Book Rummy Table
+                        </Link>
 
                         <Link
                             to="/contact"

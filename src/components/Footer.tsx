@@ -26,6 +26,10 @@ export default function Footer() {
                             Members
                         </Link>
 
+                        <Link to="/bookrummytable" className="hover:text-blue-600 transition-colors duration-200">
+                            Book Rummy Table
+                        </Link>
+
                         <Link to="/contact" className="hover:text-blue-600 transition-colors duration-200">
                             Contact
                         </Link>
