@@ -10,7 +10,6 @@ import { createDeck } from "../utils/deck";
 export default function BookRummyTable() {
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
     const [selectedColor, setSelectedColor] = useState<"red" | "black" | null>(null);
-    const [lockColor, setLockColor] = useState(false);
 
     const [results, setResults] = useState<PlayerCard[]>([]);
     const [started, setStarted] = useState(false);
@@ -66,7 +65,6 @@ export default function BookRummyTable() {
         setStarted(false);
         setActivePlayer(null);
         setSelectedColor(null);
-        setLockColor(false);
 
         localStorage.removeItem("rummy-results");
     };
