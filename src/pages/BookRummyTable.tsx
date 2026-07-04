@@ -69,6 +69,7 @@ export default function BookRummyTable() {
         localStorage.removeItem("rummy-results");
     };
 
+    // Book Rummy table functionality open on Monday and Friday from 6 pm to 9 pm
     const isBookingOpen = () => {
         const now = new Date();
 
@@ -78,10 +79,10 @@ export default function BookRummyTable() {
 
         const currentTimeInMinutes = hour * 60 + minute;
 
-        const start = 7 * 60;
-        const end = 11 * 60;
+        const start = 18 * 60;  // 6:00 PM
+        const end = 21 * 60;    // 9:00 PM
 
-        const isMondayOrFriday = day === 1 || day === 6;
+        const isMondayOrFriday = day === 1 || day === 5; // Open on Mondays and Fridays
 
         return isMondayOrFriday &&
             currentTimeInMinutes >= start &&
