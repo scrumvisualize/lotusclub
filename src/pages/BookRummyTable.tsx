@@ -147,7 +147,7 @@ export default function BookRummyTable() {
 
                     {showBookingMessage && !isBookingOpen() && (
                         <p className="mt-3 text-sm text-red-500 font-medium text-center">
-                            🚫 Booking opens only on Monday or Friday from 2:00 PM to 4:00 PM
+                            🚫 Booking opens only on Monday or Friday from 6:00 PM to 9:00 PM
                         </p>
                     )}
                 </>
