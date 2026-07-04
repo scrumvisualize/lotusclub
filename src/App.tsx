@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import Members from "./pages/Members"
+import BookRummyTable from "./pages/BookRummyTable"
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ duration-300
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/members" element={<Members />} />
+        <Route path="/bookrummytable" element={<BookRummyTable />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
     </div>
