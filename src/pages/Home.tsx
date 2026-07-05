@@ -276,16 +276,16 @@ export default function Home() {
                             volunteers who generously give their time each week.
                             <br></br>
                             Hover or click on the timeline green icon below to see who's hosting every Monday
-                            throughout the season.
+                            throughout the year. Slide towards right to see who is hosting for upcoming weeks.
                         </p>
 
                         <div className="mt-8 flex flex-wrap justify-center gap-4">
                             <div className="rounded-full bg-green-100 px-5 py-2 text-sm font-semibold text-green-700 dark:bg-green-900/30 dark:text-green-300">
-                                ✓ Completed Sessions
+                                ✓ Completed Hosting
                             </div>
 
                             <div className="rounded-full bg-purple-100 px-5 py-2 text-sm font-semibold text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
-                                📅 Season Schedule
+                                📅 Upcoming Hosting
                             </div>
                         </div>
                     </div>

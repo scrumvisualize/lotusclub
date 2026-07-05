@@ -1,6 +1,11 @@
+import { useState } from "react";
 import aboutImage from "../assets/hero.png";
 
 export default function AboutSection() {
+
+    // ✅ Controls Learn More expansion
+    const [showMore, setShowMore] = useState(false);
+
 
     return (
 
@@ -69,16 +74,38 @@ export default function AboutSection() {
                     >
                         Lotus Club started in 2018, its a place where friendship, fun and unforgettable memories come together. We believe that every gathering is an opportunity to strengthen relationships, share laughter and create meaningful experiences in a warm and welcoming environment.
 
-                        <br /><br />
+                        <span
+                            className="
+        mt-6
+        text-lg
+        leading-8
+        text-gray-600
+        dark:text-gray-300
+    "
+                        >   <br />
+                            <br />
+                            Our club brings people together through exciting activities, social
+                            events and shared interests that encourage connection and community
+                            spirit.
 
-                        Our club brings people together through exciting activities, social events and shared interests that encourage connection and community spirit. Whether you're joining us for a relaxing evening, a friendly card game, a special celebration or simply spending quality time with friends.
+                            {showMore && (
+                                <>
+                                    {" "}
 
-                        <br /><br />
-                        Our mission is to provide a safe, inclusive and enjoyable space where members can unwind, build lasting friendships and feel a true sense of belonging.
+                                    <br />
+                                    <br />
+                                    Our mission is to provide a safe, inclusive and enjoyable space
+                                    where members can unwind, build lasting friendships and feel a
+                                    true sense of belonging.
+                                </>
+                            )}
+                        </span>
+
                     </p>
 
 
                     <button
+                        onClick={() => setShowMore(!showMore)} // ✅ Toggle text
                         className="
                         mt-4
                         px-8
@@ -93,7 +120,7 @@ export default function AboutSection() {
                         hover:scale-105
                         "
                     >
-                        Learn More
+                        {showMore ? "Read Less" : "Read More"} &#8594;
                     </button>
 
 

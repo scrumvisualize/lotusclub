@@ -1,6 +1,9 @@
+import { useState } from "react";
 import relaxImage from "../assets/barbecue.png";
 
 export default function RelaxFridays() {
+
+    const [showMore, setShowMore] = useState(false);
 
     return (
 
@@ -71,19 +74,28 @@ export default function RelaxFridays() {
                         and create unforgettable memories in a
                         warm and welcoming atmosphere.
 
-                        <br /><br />
+                        {showMore && (
+                            <>
+                                {" "}
 
-                        Whether you're a long-time member or visiting for the first time, Relax Fridays offer the perfect opportunity to unwind after a busy week. Enjoy meaningful conversations, friendly competition, plenty of laughter and a welcoming community where everyone feels at home.
+                                <br />
+                                <br />
+                                Whether you're a long-time member or visiting for the first time, Relax Fridays offer the perfect opportunity to unwind after a busy week.
+                                Enjoy meaningful conversations, friendly competition, plenty of laughter and a welcoming community where everyone feels at home.
+                            </>
+                        )}
+
                     </p>
 
                     <button
+                        onClick={() => setShowMore(!showMore)} // ✅ Toggle text
                         className="
                         mt-4
                         px-8
                         py-3
                         rounded-full
-                        bg-purple-600
-                        hover:bg-purple-700
+                        bg-pink-600
+                        hover:bg-pink-700
                         text-white
                         font-semibold
                         shadow-lg
@@ -91,7 +103,7 @@ export default function RelaxFridays() {
                         hover:scale-105
                         "
                     >
-                        Join Relax Fridays
+                        {showMore ? "Read Less" : "Read More"} &#8594;
                     </button>
 
                 </div>
