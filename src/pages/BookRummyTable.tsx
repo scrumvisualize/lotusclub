@@ -29,6 +29,9 @@ export default function BookRummyTable() {
     const [activePlayer, setActivePlayer] = useState<string | null>(null);
     const [initialPlayerCount, setInitialPlayerCount] = useState(0);
 
+    const [successMessage, setSuccessMessage] = useState("");
+    const [clickedPlayer, setClickedPlayer] = useState<string | null>(null);
+
     // -----------------------------
     // MOCK USERS (only when FULL)
     // -----------------------------
@@ -84,11 +87,11 @@ export default function BookRummyTable() {
     // -----------------------------
     // ALLOW ME (mock join queue)
     // -----------------------------
-    const allowMe = (player: string) => {
-        setWaitingQueue(prev =>
-            prev.includes(player) ? prev : [...prev, player]
-        );
-    };
+    // const allowMe = (player: string) => {
+    //     setWaitingQueue(prev =>
+    //         prev.includes(player) ? prev : [...prev, player]
+    //     );
+    // };
 
     // -----------------------------
     // START GAME
@@ -147,6 +150,21 @@ export default function BookRummyTable() {
         setActivePlayer(null);
     };
 
+    const allowMe = (player: string) => {
+
+        if (waitingQueue.includes(player)) return;
+
+        setWaitingQueue(prev => [...prev, player]);
+
+        setClickedPlayer(player);
+        setSuccessMessage(`✅ ${player} joined the waiting queue.`);
+
+        setTimeout(() => {
+            setSuccessMessage("");
+            setClickedPlayer(null);
+        }, 2000);
+    };
+
     // -----------------------------
     // UI
     // -----------------------------
@@ -178,6 +196,12 @@ export default function BookRummyTable() {
                         Book Seat
                     </button>
 
+                    {successMessage && (
+                        <div className="mt-3 rounded-lg bg-green-100 border border-green-400 text-green-700 px-4 py-2 transition-all">
+                            {successMessage}
+                        </div>
+                    )}
+
                     {/* MOCK USERS */}
                     {selectedPlayers.length === MAX_PLAYERS && (
                         <div className="mt-6 p-4 border rounded-lg shadow-sm">
@@ -190,9 +214,14 @@ export default function BookRummyTable() {
                                     <span>{player}</span>
                                     <button
                                         onClick={() => allowMe(player)}
-                                        className="px-3 py-1 bg-blue-500 text-white rounded"
+                                        disabled={clickedPlayer === player}
+                                        className={`px-3 py-1 rounded text-white font-medium transition-all duration-300
+        ${clickedPlayer === player
+                                                ? "bg-green-600 scale-95 shadow-inner"
+                                                : "bg-blue-500 hover:bg-blue-600 hover:scale-105"
+                                            }`}
                                     >
-                                        Allow Me
+                                        {clickedPlayer === player ? "✓ Added" : "Allow Me"}
                                     </button>
                                 </div>
                             ))}
@@ -201,8 +230,8 @@ export default function BookRummyTable() {
 
                     {/* QUEUE */}
                     {waitingQueue.length > 0 && (
-                        <div className="mt-4 p-3 bg-yellow-100 rounded">
-                            <div className="flex justify-between mb-2">
+                        <div className="mt-4 p-3 dark:bg-slate-900 rounded">
+                            <div className="flex text-grey justify-between mb-2">
                                 <b>Waiting Queue</b>
                                 <span className="bg-yellow-300 px-2 rounded text-sm">
                                     {waitingQueue.length} waiting
@@ -210,7 +239,7 @@ export default function BookRummyTable() {
                             </div>
 
                             {waitingQueue.map((p, i) => (
-                                <div key={p}>
+                                <div key={p} className="text-grey">
                                     {i + 1}. {p}
                                 </div>
                             ))}
