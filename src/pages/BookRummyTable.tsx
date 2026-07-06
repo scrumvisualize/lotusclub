@@ -84,14 +84,6 @@ export default function BookRummyTable() {
         setWaitingQueue(queue);
     };
 
-    // -----------------------------
-    // ALLOW ME (mock join queue)
-    // -----------------------------
-    // const allowMe = (player: string) => {
-    //     setWaitingQueue(prev =>
-    //         prev.includes(player) ? prev : [...prev, player]
-    //     );
-    // };
 
     // -----------------------------
     // START GAME
@@ -108,7 +100,9 @@ export default function BookRummyTable() {
             queue: [...waitingQueue],
         });
 
-        setCards(createDeck());
+        //setCards(createDeck());
+        const shuffledDeck = [...createDeck()].sort(() => Math.random() - 0.5);
+        setCards(shuffledDeck);
         setStarted(true);
         setResults([]);
         setInitialPlayerCount(selectedPlayers.length);
@@ -131,18 +125,43 @@ export default function BookRummyTable() {
     // -----------------------------
     // CARD PICK
     // -----------------------------
+
     const handlePick = (card: Card) => {
+        //if (!activePlayer || card.picked) return;
         if (!activePlayer) return;
 
-        setResults(prev => [
-            ...prev,
-            {
-                player: activePlayer,
-                card,
-                order: prev.length + 1,
-            }
-        ]);
+        // Save result
 
+        setResults(prev => {
+            const alreadyExists = prev.some(
+                r => r.card.id === card.id
+            );
+
+            if (alreadyExists) return prev;
+
+            return [
+                ...prev,
+                {
+                    player: activePlayer,
+                    card,
+                    order: prev.length + 1,
+                }
+            ];
+        });
+
+        // Mark the card as picked
+
+        // prevent duplicate pick even in race conditions
+        setCards(prev => {
+            const exists = prev.find(c => c.id === card.id);
+            if (!exists || exists.picked) return prev;
+
+            return prev.map(c =>
+                c.id === card.id ? { ...c, picked: true } : c
+            );
+        });
+
+        // Remove player from remaining players
         setSelectedPlayers(prev =>
             prev.filter(p => p !== activePlayer)
         );
@@ -216,7 +235,7 @@ export default function BookRummyTable() {
                                         onClick={() => allowMe(player)}
                                         disabled={clickedPlayer === player}
                                         className={`px-3 py-1 rounded text-white font-medium transition-all duration-300
-        ${clickedPlayer === player
+                                        ${clickedPlayer === player
                                                 ? "bg-green-600 scale-95 shadow-inner"
                                                 : "bg-blue-500 hover:bg-blue-600 hover:scale-105"
                                             }`}

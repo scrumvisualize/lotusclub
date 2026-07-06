@@ -33,13 +33,13 @@ export default function ResultTable({ results, onReset }: Props) {
     };
 
     const sortedResults = [...results].sort((a, b) => {
-    const valueDiff =
-        valueRank[b.card.value] - valueRank[a.card.value];
+        const valueDiff =
+            valueRank[b.card.value] - valueRank[a.card.value];
 
-    if (valueDiff !== 0) return valueDiff;
+        if (valueDiff !== 0) return valueDiff;
 
-    return suitRank[b.card.suit] - suitRank[a.card.suit];
-});
+        return suitRank[b.card.suit] - suitRank[a.card.suit];
+    });
 
     return (
         <div className="p-4 mt-6">
