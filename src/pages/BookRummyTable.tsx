@@ -1,123 +1,160 @@
 import { useEffect, useState } from "react";
-
 import PlayerSelector from "../components/PlayerSelector";
 import CardGrid from "../components/CardGrid";
 import ResultTable from "../components/ResultTable";
 
 import { type Card, type PlayerCard } from "../types/card";
 import { createDeck } from "../utils/deck";
+import { players as allPlayers } from "../data/players";
 
 export default function BookRummyTable() {
+
+    const MIN_PLAYERS = 5;
+    const MAX_PLAYERS = 12;
+
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
+    const [waitingQueue, setWaitingQueue] = useState<string[]>([]);
+    const [mockRequests, setMockRequests] = useState<string[]>([]);
+
+    const [snapshot, setSnapshot] = useState<{
+        players: string[];
+        queue: string[];
+    } | null>(null);
+
+    const [started, setStarted] = useState(false);
     const [selectedColor, setSelectedColor] = useState<"red" | "black" | null>(null);
 
-    const [results, setResults] = useState<PlayerCard[]>([]);
-    const [started, setStarted] = useState(false);
-
     const [cards, setCards] = useState<Card[]>([]);
-
+    const [results, setResults] = useState<PlayerCard[]>([]);
     const [activePlayer, setActivePlayer] = useState<string | null>(null);
     const [initialPlayerCount, setInitialPlayerCount] = useState(0);
-    const [showBookingMessage, setShowBookingMessage] = useState(false);
 
-    // Load from localStorage
+    // -----------------------------
+    // MOCK USERS (only when FULL)
+    // -----------------------------
     useEffect(() => {
-        const saved = localStorage.getItem("rummy-results");
-        if (saved) {
-            setResults(JSON.parse(saved));
+        if (selectedPlayers.length === MAX_PLAYERS) {
+            const available = allPlayers.filter(p => !selectedPlayers.includes(p));
+            const shuffled = [...available].sort(() => 0.5 - Math.random());
+            setMockRequests(shuffled.slice(0, 5));
+        } else {
+            setMockRequests([]);
         }
-    }, []);
+    }, [selectedPlayers]);
 
-    // Save to localStorage
-    useEffect(() => {
-        if (results.length > 0) {
-            localStorage.setItem("rummy-results", JSON.stringify(results));
+    // -----------------------------
+    // HANDLE SELECT
+    // -----------------------------
+    const handlePlayerSelect = (player: string) => {
+
+        let selected = [...selectedPlayers];
+        let queue = [...waitingQueue];
+
+        const isSelected = selected.includes(player);
+
+        // REMOVE
+        if (isSelected) {
+            selected = selected.filter(p => p !== player);
+
+            // promote from queue
+            if (queue.length > 0) {
+                const next = queue.shift();
+                if (next && selected.length < MAX_PLAYERS) {
+                    selected.push(next);
+                }
+            }
         }
-    }, [results]);
+
+        // ADD
+        else {
+            if (selected.length < MAX_PLAYERS) {
+                selected.push(player);
+                queue = queue.filter(p => p !== player);
+            } else {
+                if (!queue.includes(player)) {
+                    queue.push(player);
+                }
+            }
+        }
+
+        setSelectedPlayers(selected);
+        setWaitingQueue(queue);
+    };
+
+    // -----------------------------
+    // ALLOW ME (mock join queue)
+    // -----------------------------
+    const allowMe = (player: string) => {
+        setWaitingQueue(prev =>
+            prev.includes(player) ? prev : [...prev, player]
+        );
+    };
+
+    // -----------------------------
+    // START GAME
+    // -----------------------------
+    const isValid =
+        selectedPlayers.length >= MIN_PLAYERS &&
+        selectedPlayers.length <= MAX_PLAYERS;
 
     const startGame = () => {
-        if (selectedPlayers.length !== 11) {
-            alert("Select 11 players first");
-            return;
+        if (!isValid) return;
+
+        setSnapshot({
+            players: [...selectedPlayers],
+            queue: [...waitingQueue],
+        });
+
+        setCards(createDeck());
+        setStarted(true);
+        setResults([]);
+        setInitialPlayerCount(selectedPlayers.length);
+    };
+
+    // -----------------------------
+    // BACK
+    // -----------------------------
+    const goBack = () => {
+        if (snapshot) {
+            setSelectedPlayers(snapshot.players);
+            setWaitingQueue(snapshot.queue);
         }
 
-        const fullDeck = createDeck();
-        console.log("DECK SIZE:", fullDeck.length); // MUST = 52
-        setCards(fullDeck);
-
-        setStarted(true);
-        setResults([]);
-        setActivePlayer(null);
-        setInitialPlayerCount(selectedPlayers.length);
-
-
-        setStarted(true);
-        setResults([]);
-        setActivePlayer(null);
-        setInitialPlayerCount(selectedPlayers.length);
-    };
-
-
-    const resetGame = () => {
-        setSelectedPlayers([]);
-        setCards([]);
-        setResults([]);
         setStarted(false);
-        setActivePlayer(null);
         setSelectedColor(null);
-
-        localStorage.removeItem("rummy-results");
+        setActivePlayer(null);
     };
 
-    // Book Rummy table functionality open on Monday and Friday from 6 pm to 9 pm
-    const isBookingOpen = () => {
-        const now = new Date();
-
-        const day = now.getDay();
-        const hour = now.getHours();
-        const minute = now.getMinutes();
-
-        const currentTimeInMinutes = hour * 60 + minute;
-
-        const start = 18 * 60;  // 6:00 PM
-        const end = 21 * 60;    // 9:00 PM
-
-        const isMondayOrFriday = day === 1 || day === 5; // Open on Mondays and Fridays
-
-        return isMondayOrFriday &&
-            currentTimeInMinutes >= start &&
-            currentTimeInMinutes < end;
-    };
-
-
+    // -----------------------------
+    // CARD PICK
+    // -----------------------------
     const handlePick = (card: Card) => {
         if (!activePlayer) return;
 
-        const newResult: PlayerCard = {
-            player: activePlayer,
-            card, // ✅ USE CLICKED CARD DIRECTLY
-            order: results.length + 1,
-        };
+        setResults(prev => [
+            ...prev,
+            {
+                player: activePlayer,
+                card,
+                order: prev.length + 1,
+            }
+        ]);
 
-        setResults((prev) => [...prev, newResult]);
-
-        setCards((prev) =>
-            prev.map((c) =>
-                c.id === card.id ? { ...c, picked: true } : c
-            )
-        );
-
-        setSelectedPlayers((prev) =>
-            prev.filter((p) => p !== activePlayer)
+        setSelectedPlayers(prev =>
+            prev.filter(p => p !== activePlayer)
         );
 
         setActivePlayer(null);
     };
 
+    // -----------------------------
+    // UI
+    // -----------------------------
     return (
         <div className="max-w-4xl mx-auto p-4">
+
             <h1 className="text-2xl font-bold mb-4">
-                🃏 Reserve Your Rummy Table
+                🃏 Book a Rummy Seat
             </h1>
 
             {/* STEP 1 */}
@@ -125,30 +162,59 @@ export default function BookRummyTable() {
                 <>
                     <PlayerSelector
                         selected={selectedPlayers}
-                        setSelected={setSelectedPlayers}
+                        onSelect={handlePlayerSelect}
                     />
 
                     <button
-                        disabled={selectedPlayers.length !== 11}
-                        onClick={() => {
-                            setShowBookingMessage(true);
-
-                            if (selectedPlayers.length === 11 && isBookingOpen()) {
-                                startGame();
+                        disabled={!isValid}
+                        onClick={startGame}
+                        className={`mt-4 px-4 py-2 rounded text-white transition
+                            ${isValid
+                                ? "bg-green-600 hover:bg-green-700 cursor-pointer"
+                                : "bg-gray-400 cursor-not-allowed opacity-60"
                             }
-                        }}
-                        className={`mt-4 px-4 py-2 rounded-lg text-white ${selectedPlayers.length === 11
-                            ? "bg-green-600 hover:bg-green-700"
-                            : "bg-gray-400 cursor-not-allowed"
-                            }`}
+                        `}
                     >
-                        Book Table
+                        Book Seat
                     </button>
 
-                    {showBookingMessage && !isBookingOpen() && (
-                        <p className="mt-3 text-sm text-red-500 font-medium text-center">
-                            🚫 Booking opens only on Monday or Friday from 6:00 PM to 9:00 PM
-                        </p>
+                    {/* MOCK USERS */}
+                    {selectedPlayers.length === MAX_PLAYERS && (
+                        <div className="mt-6 p-4 border rounded-lg shadow-sm">
+                            <h3 className="font-bold mb-3">
+                                Players waiting if someone drops out
+                            </h3>
+
+                            {mockRequests.map(player => (
+                                <div key={player} className="flex justify-between mb-2">
+                                    <span>{player}</span>
+                                    <button
+                                        onClick={() => allowMe(player)}
+                                        className="px-3 py-1 bg-blue-500 text-white rounded"
+                                    >
+                                        Allow Me
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* QUEUE */}
+                    {waitingQueue.length > 0 && (
+                        <div className="mt-4 p-3 bg-yellow-100 rounded">
+                            <div className="flex justify-between mb-2">
+                                <b>Waiting Queue</b>
+                                <span className="bg-yellow-300 px-2 rounded text-sm">
+                                    {waitingQueue.length} waiting
+                                </span>
+                            </div>
+
+                            {waitingQueue.map((p, i) => (
+                                <div key={p}>
+                                    {i + 1}. {p}
+                                </div>
+                            ))}
+                        </div>
                     )}
                 </>
             )}
@@ -156,24 +222,30 @@ export default function BookRummyTable() {
             {/* STEP 2 */}
             {started && (
                 <>
-                    {/* COLOR SELECTION */}
+                    <button
+                        onClick={goBack}
+                        className="mb-4 px-4 py-2 bg-gray-600 text-white rounded"
+                    >
+                        ← Back
+                    </button>
+
                     {!selectedColor && (
                         <div className="text-center mb-6">
-                            <h3 className="text-xl font-bold mb-2">
+                            <h3 className="text-xl font-bold mb-4">
                                 Choose Card Colour
                             </h3>
 
                             <div className="flex justify-center gap-5">
                                 <button
                                     onClick={() => setSelectedColor("red")}
-                                    className="px-6 py-3 rounded-xl bg-red-600 text-white"
+                                    className="px-6 py-3 bg-red-600 text-white rounded"
                                 >
                                     🔴 Red Cards
                                 </button>
 
                                 <button
                                     onClick={() => setSelectedColor("black")}
-                                    className="px-6 py-3 rounded-xl bg-black text-white"
+                                    className="px-6 py-3 bg-black text-white rounded"
                                 >
                                     ⚫ Black Cards
                                 </button>
@@ -181,56 +253,39 @@ export default function BookRummyTable() {
                         </div>
                     )}
 
-                    {/* PLAYER SELECTION */}
                     {selectedColor && (
                         <>
-                            <div className="mb-6">
-                                <h3 className="text-lg font-semibold mb-3">
-                                    Select Player to Pick a Card
-                                </h3>
-
-                                <div className="flex flex-wrap gap-3">
-                                    {selectedPlayers.map((player) => (
-                                        <button
-                                            key={player}
-                                            onClick={() => setActivePlayer(player)}
-                                            className={`px-4 py-2 rounded-full border ${activePlayer === player
-                                                ? "bg-blue-600 text-white"
-                                                : "bg-white dark:bg-slate-800"
-                                                }`}
-                                        >
-                                            {player}
-                                        </button>
-                                    ))}
-                                </div>
+                            <div className="mb-4">
+                                {selectedPlayers.map(p => (
+                                    <button
+                                        key={p}
+                                        onClick={() => setActivePlayer(p)}
+                                        className="m-1 px-3 py-1 border rounded"
+                                    >
+                                        {p}
+                                    </button>
+                                ))}
                             </div>
 
                             {activePlayer && (
-                                <div className="mb-4 text-center">
-                                    <p className="text-lg font-semibold text-blue-600 animate-pulse">
-                                        👉 {activePlayer}, click a card to pick
-                                    </p>
+                                <div className="mb-4 text-center text-blue-600 font-semibold animate-pulse">
+                                    👉 {activePlayer}, click a card to pick
                                 </div>
                             )}
 
-                            {/* CARD GRID */}
-                            <CardGrid
-                                cards={cards}
-                                onPick={handlePick}
-                            />
+                            <CardGrid cards={cards} onPick={handlePick} />
                         </>
                     )}
                 </>
             )}
 
             {/* RESULT */}
-            {results.length === initialPlayerCount &&
-                initialPlayerCount > 0 && (
-                    <ResultTable
-                        results={results}
-                        onReset={resetGame}
-                    />
-                )}
+            {started && results.length === initialPlayerCount && (
+                <ResultTable
+                    results={results}
+                    onReset={() => window.location.reload()}
+                />
+            )}
         </div>
     );
 }
