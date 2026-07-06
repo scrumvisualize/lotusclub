@@ -2,27 +2,18 @@ import { players } from "../data/players";
 
 type Props = {
     selected: string[];
-    setSelected: (players: string[]) => void;
     maxSelection?: number;
+    onSelect: (player: string) => void; // ✅ ADD THIS
 };
 
 export default function PlayerSelector({
     selected,
-    setSelected,
-    maxSelection = 11,
+    maxSelection = 12,
+    onSelect
 }: Props) {
+
     const togglePlayer = (name: string) => {
-        const isSelected = selected.includes(name);
-
-        if (isSelected) {
-            // remove player
-            setSelected(selected.filter((p) => p !== name));
-        } else {
-            // prevent selecting more than max
-            if (selected.length >= maxSelection) return;
-
-            setSelected([...selected, name]);
-        }
+        onSelect(name);
     };
 
     return (
@@ -47,9 +38,10 @@ export default function PlayerSelector({
                         >
                             <input
                                 type="checkbox"
-                                checked={isChecked}
+                                checked={selected.includes(name)}
                                 disabled={isDisabled}
                                 onChange={() => togglePlayer(name)}
+
                             />
 
                             <span className="text-sm">{name}</span>
