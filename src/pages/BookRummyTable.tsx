@@ -123,16 +123,6 @@ export default function BookRummyTable() {
 
 
 
-    const [usedCards, setUsedCards] =
-        useState<Card[]>([]);
-
-
-
-    const [loading, setLoading] =
-        useState(true);
-
-
-
     const [playerToRemove, setPlayerToRemove] =
         useState<BookingPlayer | null>(null);
 
@@ -360,7 +350,7 @@ export default function BookRummyTable() {
 
                     if (!snapshot.exists()) {
 
-                        setLoading(false);
+                        //setLoading(false);
 
                         return;
 
@@ -376,9 +366,6 @@ export default function BookRummyTable() {
 
                     if (data.usedCards) {
 
-                        setUsedCards(
-                            data.usedCards
-                        );
 
                     }
 
@@ -398,10 +385,6 @@ export default function BookRummyTable() {
 
                     }
 
-
-
-
-                    setLoading(false);
 
 
                 }
@@ -558,8 +541,6 @@ export default function BookRummyTable() {
 
 
 
-
-
                 await updateDoc(
                     bookingRef,
                     {
@@ -581,11 +562,6 @@ export default function BookRummyTable() {
                 return;
 
             }
-
-
-
-
-
 
 
 
@@ -644,14 +620,6 @@ export default function BookRummyTable() {
 
 
 
-
-
-
-
-
-
-
-
     /*
         CONFIRM PLAYER LEAVE
 
@@ -674,19 +642,12 @@ export default function BookRummyTable() {
 
 
 
-
-
-
             const bookingRef =
                 doc(
                     db,
                     "rummyBookings",
                     "currentBooking"
                 );
-
-
-
-
 
 
 
@@ -699,20 +660,11 @@ export default function BookRummyTable() {
 
 
 
-
-
-
-
-
             const updatedResults =
                 results.filter(
                     r =>
                         r.uid !== playerToRemove.uid
                 );
-
-
-
-
 
 
 
@@ -724,9 +676,6 @@ export default function BookRummyTable() {
                         playerToRemove
                     ]
                 );
-
-
-
 
 
 
@@ -756,8 +705,6 @@ export default function BookRummyTable() {
 
                 }
             );
-
-
 
 
 
@@ -802,12 +749,6 @@ export default function BookRummyTable() {
 
 
         };
-
-
-
-
-
-
 
 
 

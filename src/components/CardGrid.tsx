@@ -1,4 +1,4 @@
-import { type Card, type PlayerCard } from "../types/card";
+import { type Card } from "../types/card";
 
 type Props = {
     cards: Card[];

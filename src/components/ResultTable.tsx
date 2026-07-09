@@ -18,7 +18,6 @@ const isRedSuit = (suit: string) =>
 
 export default function ResultTable({
     results,
-    selectedPlayers,
     onReset,
     userRole
 }: Props) {
