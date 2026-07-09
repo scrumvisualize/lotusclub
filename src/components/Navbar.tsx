@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import lotuslogo from "../assets/lotuslogo.png"
+import UserProfileChip from "./UserProfile";
 
 
 export default function Navbar() {
@@ -14,6 +15,45 @@ export default function Navbar() {
 
 
     const [menuOpen, setMenuOpen] = useState(false);
+    //const user = localStorage.getItem("user");
+
+    const [user, setUser] = useState(
+        JSON.parse(localStorage.getItem("user") || "null")
+    );
+
+    useEffect(() => {
+
+        const updateUser = () => {
+            setUser(
+                JSON.parse(
+                    localStorage.getItem("user") || "null"
+                )
+            );
+        };
+
+        window.addEventListener(
+            "storage",
+            updateUser
+        );
+
+        return () => {
+            window.removeEventListener(
+                "storage",
+                updateUser
+            );
+        };
+
+    }, []);
+
+    const handleLogout = () => {
+
+        localStorage.removeItem("user");
+
+        setUser(null);
+
+        window.location.href = "/login";
+
+    };
 
 
     return (
@@ -142,14 +182,27 @@ export default function Navbar() {
                         Members
                     </Link>
 
-                    <Link to="/bookrummytable" className="hover:text-blue-600 transition-colors duration-200">
-                        Book a Seat
-                    </Link>
-
                     <Link to="/contact" className="hover:text-blue-600 transition-colors duration-200">
                         Contact
                     </Link>
 
+                    {user ? (
+                        <>
+                            <Link to="/bookrummytable" className="hover:text-blue-600 transition-colors duration-200">
+                                Book a Rummy Seat
+                            </Link>
+                            <UserProfileChip
+                                name={user.name}
+                                membershipNo={user.membershipNo}
+                                role={user.role}
+                                onLogout={handleLogout}
+                            />
+                        </>
+                    ) : (
+                        <Link to="/login" className="hover:text-blue-600 transition-colors duration-200">
+                            Login
+                        </Link>
+                    )}
 
                     <button
                         onClick={toggleTheme}
@@ -288,11 +341,6 @@ export default function Navbar() {
                             Members
                         </Link>
 
-                        <Link to="/bookrummytable"
-                            onClick={() => setMenuOpen(false)}
-                        >
-                            Book a Seat
-                        </Link>
 
                         <Link
                             to="/contact"
@@ -300,6 +348,24 @@ export default function Navbar() {
                         >
                             Contact
                         </Link>
+
+                        {user ? (
+                            <>
+                                <Link to="/bookrummytable" className="hover:text-blue-600 transition-colors duration-200">
+                                    Book a Rummy Seat
+                                </Link>
+                                <UserProfileChip
+                                    name={user.name}
+                                    membershipNo={user.membershipNo}
+                                    role={user.role}
+                                    onLogout={handleLogout}
+                                />
+                            </>
+                        ) : (
+                            <Link to="/login" className="hover:text-blue-600 transition-colors duration-200">
+                                Login
+                            </Link>
+                        )}
 
 
                     </div>

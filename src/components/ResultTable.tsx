@@ -1,13 +1,26 @@
 import { type PlayerCard } from "../types/card";
 
+
 type Props = {
     results: PlayerCard[];
+    selectedPlayers: {
+        uid: string;
+        name: string;
+    }[];
     onReset: () => void;
+    userRole: "admin" | "member";
 };
 
-const isRedSuit = (suit: string) => suit === "♥" || suit === "♦";
 
-export default function ResultTable({ results, onReset }: Props) {
+const isRedSuit = (suit: string) =>
+    suit === "♥" || suit === "♦";
+
+
+export default function ResultTable({
+    results,
+    onReset,
+    userRole
+}: Props) {
 
     const valueRank: Record<string, number> = {
         "A": 13,
@@ -32,56 +45,174 @@ export default function ResultTable({ results, onReset }: Props) {
         "♣": 1,
     };
 
+
     const sortedResults = [...results].sort((a, b) => {
+
+        // First compare card value
         const valueDiff =
-            valueRank[b.card.value] - valueRank[a.card.value];
+            valueRank[b.card.value] -
+            valueRank[a.card.value];
 
-        if (valueDiff !== 0) return valueDiff;
 
-        return suitRank[b.card.suit] - suitRank[a.card.suit];
+        if (valueDiff !== 0) {
+            return valueDiff;
+        }
+
+
+        // Same value, compare suit
+        return (
+            suitRank[b.card.suit] -
+            suitRank[a.card.suit]
+        );
+
     });
 
     return (
+
         <div className="p-4 mt-6">
-            <h2 className="text-xl font-bold mb-4">
-                🎴 Rummy Players Order Results
-            </h2>
+
+            <h3 className="text-lg font-bold mb-3">
+                🪑 Players Seating Order
+            </h3>
+
 
             <div className="space-y-2">
-                {sortedResults.map((item) => (
-                    <div
-                        key={item.order}
-                        className="flex justify-between items-center p-3 rounded-lg bg-slate-100 dark:bg-slate-800"
-                    >
-                        <div className="font-semibold">
-                            {item.order}. {item.player}
-                        </div>
 
-                        <div className="text-lg font-bold flex items-center gap-2">
-                            <span className="text-slate-600">
-                                {item.card.value}
-                            </span>
 
-                            <span
-                                className={
-                                    isRedSuit(item.card.suit)
-                                        ? "text-red-500 text-xl"
-                                        : "text-slate-600 text-xl"
-                                }
-                            >
-                                {item.card.suit}
-                            </span>
-                        </div>
-                    </div>
-                ))}
+                {
+                    sortedResults.map(
+                        (player, index) => {
+
+
+                            // Find card picked by this player
+
+                            const playerResult = player;
+
+
+                            return (
+
+                                <div
+                                    key={player.uid}
+                                    className="
+                                    flex
+                                    justify-between
+                                    items-center
+                                    p-3
+                                    rounded-lg
+                                    bg-slate-100
+                                    dark:bg-slate-800
+                                    "
+                                >
+
+
+                                    {/* Player order */}
+
+                                    <div className="font-semibold">
+                                        {index + 1}. {player.player}
+                                    </div>
+
+
+
+                                    {/* Card */}
+
+                                    {
+                                        playerResult ? (
+
+                                            <div
+                                                className="
+                                                text-xl
+                                                font-bold
+                                                flex
+                                                gap-2
+                                                "
+                                            >
+
+                                                <span>
+                                                    {
+                                                        playerResult.card.value
+                                                    }
+                                                </span>
+
+
+                                                <span
+                                                    className={
+                                                        isRedSuit(
+                                                            playerResult.card.suit
+                                                        )
+                                                            ?
+                                                            "text-red-500"
+                                                            :
+                                                            "text-slate-700"
+                                                    }
+                                                >
+
+                                                    {
+                                                        playerResult.card.suit
+                                                    }
+
+                                                </span>
+
+
+                                            </div>
+
+                                        )
+                                            :
+                                            (
+
+                                                <span
+                                                    className="
+                                                text-gray-400
+                                                text-sm
+                                                "
+                                                >
+                                                    Waiting...
+                                                </span>
+
+                                            )
+
+                                    }
+
+
+                                </div>
+
+                            );
+
+                        }
+
+                    )
+
+                }
+
+
             </div>
 
-            <button
-                onClick={onReset}
-                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-            >
-                🔄 New Game
-            </button>
+
+
+            {
+                userRole === "admin" && (
+
+                    <button
+                        onClick={onReset}
+                        className="
+                        mt-4
+                        bg-red-600
+                        hover:bg-red-700
+                        text-white
+                        px-4
+                        py-2
+                        rounded-lg
+                        "
+                    >
+                        New Game
+                    </button>
+
+                )
+            }
+
+
         </div>
+
     );
+
 }
+
