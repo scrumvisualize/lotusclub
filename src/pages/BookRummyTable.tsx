@@ -147,13 +147,6 @@ export default function BookRummyTable() {
         );
 
 
-
-
-
-
-
-
-
     /*
         LOAD MEMBERS
 
@@ -221,12 +214,6 @@ export default function BookRummyTable() {
 
 
     }, []);
-
-
-
-
-
-
 
 
 
@@ -310,11 +297,6 @@ export default function BookRummyTable() {
 
 
     }, []);
-
-
-
-
-
 
 
 
@@ -1446,15 +1428,11 @@ export default function BookRummyTable() {
 
         <div className="max-w-4xl mx-auto p-4">
 
-
             <h1 className="text-2xl font-bold mb-4 mx-2">
 
-                Book a Rummy Seat
+                Rummy Table Booking
 
             </h1>
-
-
-
 
 
             {!started && (
@@ -1488,8 +1466,6 @@ export default function BookRummyTable() {
                         }
 
                     />
-
-
 
                     <button
 
@@ -1531,14 +1507,6 @@ export default function BookRummyTable() {
 
                     </button>
 
-
-
-
-
-
-
-
-
                     {
                         successMessage &&
 
@@ -1557,7 +1525,6 @@ export default function BookRummyTable() {
                         </div>
 
                     }
-
 
 
                     {/*
@@ -1693,13 +1660,11 @@ export default function BookRummyTable() {
                     }
 
 
-
                     {/*
 
                         WAITING QUEUE
 
                     */}
-
 
 
                     {
@@ -1750,9 +1715,6 @@ export default function BookRummyTable() {
                             </div>
 
 
-
-
-
                             {
                                 waitingQueue.map(
                                     (player, index) => (
@@ -1789,12 +1751,9 @@ export default function BookRummyTable() {
                     }
 
 
-
                 </>
 
-
             )}
-
 
 
             {
@@ -1826,13 +1785,6 @@ export default function BookRummyTable() {
                     </button>
 
 
-
-
-
-
-
-
-
                     {
 
                         !selectedColor &&
@@ -1853,9 +1805,6 @@ export default function BookRummyTable() {
                                 Choose Card Colour
 
                             </h3>
-
-
-
 
 
                             <div className="
@@ -1884,11 +1833,6 @@ export default function BookRummyTable() {
                                     🔴 Red Cards
 
                                 </button>
-
-
-
-
-
 
 
                                 <button
@@ -1921,7 +1865,6 @@ export default function BookRummyTable() {
 
 
                     }
-
 
 
                     {
@@ -1978,13 +1921,6 @@ export default function BookRummyTable() {
                             </div>
 
 
-
-
-
-
-
-
-
                             {
                                 activePlayer &&
 
@@ -2003,14 +1939,6 @@ export default function BookRummyTable() {
 
 
                             }
-
-
-
-
-
-
-
-
 
                             <CardGrid
 
@@ -2048,13 +1976,6 @@ export default function BookRummyTable() {
             }
 
 
-
-
-
-
-
-
-
             {
                 started &&
                 results.length > 0 &&
@@ -2090,14 +2011,6 @@ export default function BookRummyTable() {
 
             }
 
-
-
-
-
-
-
-
-
             {
                 playerToRemove &&
 
@@ -2128,15 +2041,11 @@ export default function BookRummyTable() {
 
                         </div>
 
-
-
                         <h2 className="font-bold text-lg mb-3">
 
                             Leave Rummy Table?
 
                         </h2>
-
-
 
 
                         <p className="mb-5">
@@ -2152,9 +2061,6 @@ export default function BookRummyTable() {
                             from table?
 
                         </p>
-
-
-
 
 
                         <div className="
@@ -2179,16 +2085,9 @@ export default function BookRummyTable() {
                                 "
 
                             >
-
                                 Cancel
 
                             </button>
-
-
-
-
-
-
 
                             <button
 
@@ -2211,9 +2110,6 @@ export default function BookRummyTable() {
 
                             </button>
 
-
-
-
                         </div>
 
 
@@ -2221,7 +2117,6 @@ export default function BookRummyTable() {
 
 
                 </div>
-
 
             }
 
