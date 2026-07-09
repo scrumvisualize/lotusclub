@@ -6,11 +6,25 @@ type Props = {
 
 export default function ProtectedRoute({ children }: Props) {
 
-    const user = localStorage.getItem("user");
+    const user = JSON.parse(
+        localStorage.getItem("user") || "null"
+    );
+
 
     if (!user) {
         return <Navigate to="/login" replace />;
     }
+
+
+    if (user.mustChangePassword === true) {
+        return (
+            <Navigate
+                to="/change-password"
+                replace
+            />
+        );
+    }
+
 
     return children;
 }

@@ -1,10 +1,4 @@
-// import { useState } from "react";
-// import { signInWithEmailAndPassword } from "firebase/auth";
-// import { doc, getDoc } from "firebase/firestore";
-
-// import { auth, db } from "../firebase";
-
-
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import {
@@ -28,6 +22,7 @@ export default function Login() {
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
 
     const handleLogin = async () => {
@@ -44,9 +39,8 @@ export default function Login() {
 
             /*
               Find member using membership number
-
               Example:
-              LC0047
+              LC0029
             */
 
             const memberQuery = query(
@@ -79,19 +73,6 @@ export default function Login() {
             const memberData =
                 memberDoc.data();
 
-
-            /*
-              Example memberData:
-
-              {
-                membershipNo:"LC0047",
-                name:"Vinod",
-                email:"vinod@gmail.com",
-                role:"member",
-                active:true
-              }
-
-            */
 
 
             if (!memberData.active) {
@@ -126,7 +107,6 @@ export default function Login() {
 
             /*
               Store logged user details
-
               Later we will move this
               to AuthContext
             */
@@ -138,6 +118,15 @@ export default function Login() {
                     ...memberData
                 })
             );
+
+            // First login?
+            if (memberData.mustChangePassword === true) {
+
+                navigate("/change-password");
+
+                return;
+
+            }
 
 
             /*
@@ -192,7 +181,6 @@ export default function Login() {
                 }
             />
 
-
             <input
                 className="border p-2 w-full mb-3 rounded"
                 type="password"
@@ -205,7 +193,6 @@ export default function Login() {
                         )
                 }
             />
-
 
             {
                 error &&
@@ -233,7 +220,6 @@ export default function Login() {
                         : "Login"
                 }
             </button>
-
 
         </div>
 

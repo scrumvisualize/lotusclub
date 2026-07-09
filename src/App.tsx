@@ -6,6 +6,7 @@ import Members from "./pages/Members"
 import Login from "./pages/Login"
 import BookRummyTable from "./pages/BookRummyTable"
 import ProtectedRoute from "./components/protectedRoute";
+import ChangePassword from "./pages/ChangePassword";
 
 
 export default function App() {
@@ -13,14 +14,14 @@ export default function App() {
 
     <div
       className="
-min-h-screen
-bg-gray-50
-dark:bg-slate-950
-text-gray-900
-dark:text-white
-transition-colors
-duration-300
-"
+        min-h-screen
+        bg-gray-50
+        dark:bg-slate-950
+        text-gray-900
+        dark:text-white
+        transition-colors
+        duration-300
+        "
     >
       <Navbar />
 
@@ -39,6 +40,10 @@ duration-300
               <BookRummyTable />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/change-password"
+          element={<ChangePassword />}
         />
         <Route path="/contact" element={<Contact />} />
       </Routes>
