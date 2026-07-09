@@ -25,6 +25,7 @@ export interface Card {
 }
 
 export interface PlayerCard {
+    uid: string;
     player: string;
     card: Card;
     order: number;

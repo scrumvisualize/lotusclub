@@ -1,7 +1,7 @@
 // src/data/players.ts
 
 export const players: string[] = [
-    "Peter",
+    "Peter Sebastian",
     "Noby",
     "Jibi",
     "Anish",
@@ -9,7 +9,7 @@ export const players: string[] = [
     "Subeesh",
     "Haju",
     "Prasad",
-    "Vinod",
+    "Vinod Mathew",
     "James",
     "George",
     "Sijo",
