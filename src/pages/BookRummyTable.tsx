@@ -620,12 +620,6 @@ export default function BookRummyTable() {
             */
 
 
-            const alreadyQueue =
-                waitingQueue.some(
-                    p =>
-                        p.uid === player.uid
-                );
-
         };
 
 
