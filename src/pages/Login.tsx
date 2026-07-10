@@ -162,65 +162,151 @@ export default function Login() {
 
     return (
 
-        <div className="max-w-md mx-auto mt-20 p-6">
-
-            <h1 className="text-2xl font-bold mb-5">
-                Lotus Club Login
-            </h1>
-
-
-            <input
-                className="border p-2 w-full mb-3 rounded"
-                placeholder="Enter membership no (Ex: LC0029)"
-                value={membershipNo}
-                onChange={
-                    e =>
-                        setMembershipNo(
-                            e.target.value.toUpperCase()
-                        )
-                }
-            />
-
-            <input
-                className="border p-2 w-full mb-3 rounded"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={
-                    e =>
-                        setPassword(
-                            e.target.value
-                        )
-                }
-            />
-
-            {
-                error &&
-                <div className="text-red-600 mb-3">
-                    {error}
-                </div>
-            }
-
-
-            <button
-                onClick={handleLogin}
-                disabled={loading}
+        <div
+            className="
+        w-full
+        max-w-sm
+        sm:max-w-md
+        lg:max-w-lg
+        mx-auto
+        mt-10
+        sm:mt-16
+        px-4
+        sm:px-6
+        lg:px-8
+    "
+        >
+            <div
                 className="
-                    bg-blue-600 
-                    text-white 
-                    px-4 
-                    py-2 
-                    rounded
-                    disabled:bg-gray-400
-                "
+            bg-white
+            dark:bg-slate-800
+            shadow-md
+            rounded-lg
+            p-5
+            sm:p-6
+            lg:p-8
+        "
             >
-                {
-                    loading
-                        ? "Logging in..."
-                        : "Login"
-                }
-            </button>
 
+                <h1
+                    className="
+                text-xl
+                sm:text-2xl
+                lg:text-3xl
+                font-bold
+                mb-5
+                text-center
+            "
+                >
+                    Lotus Club Login
+                </h1>
+
+
+                <input
+                    className="
+                border
+                rounded
+                p-3
+                w-full
+                mb-4
+                text-sm
+                sm:text-base
+
+                bg-white
+                text-gray-900
+                placeholder-gray-500
+
+                dark:bg-slate-700
+                dark:text-white
+                dark:placeholder-gray-300
+
+                focus:outline-none
+                focus:ring-2
+                focus:ring-blue-500
+            "
+                    placeholder="Enter membership no (Ex: LC0029)"
+                    value={membershipNo}
+                    onChange={
+                        e =>
+                            setMembershipNo(
+                                e.target.value.toUpperCase()
+                            )
+                    }
+                />
+
+
+                <input
+                    className="
+                    border
+                    rounded
+                    p-3
+                    w-full
+                    mb-4
+                    text-sm
+                    sm:text-base
+
+                    bg-white
+                    text-gray-900
+                    placeholder-gray-500
+
+                    dark:bg-slate-700
+                    dark:text-white
+                    dark:placeholder-gray-300
+
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-blue-500
+            "
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={
+                        e =>
+                            setPassword(
+                                e.target.value
+                            )
+                    }
+                />
+
+
+                {
+                    error &&
+                    <div
+                        className="
+                    text-red-600
+                    text-sm
+                    mb-4
+                    text-center
+                "
+                    >
+                        {error}
+                    </div>
+                }
+
+
+                <button
+                    onClick={handleLogin}
+                    disabled={loading}
+                    className="
+                w-full
+                bg-blue-600
+                hover:bg-blue-700
+                text-white
+                font-medium
+                py-3
+                rounded
+                transition
+                disabled:bg-gray-400
+            "
+                >
+                    {
+                        loading
+                            ? "Logging in..."
+                            : "Login"
+                    }
+                </button>
+
+            </div>
         </div>
 
     );

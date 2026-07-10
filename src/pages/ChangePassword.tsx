@@ -132,84 +132,109 @@ export default function ChangePassword() {
 
     return (
 
-        <div className="max-w-md mx-auto mt-10">
-
-            <h2 className="text-2xl font-bold mb-5">
-
-                Change Password
-
-            </h2>
-
-            <input
-
-                type="password"
-
-                placeholder="New Password"
-
-                value={password}
-
-                onChange={(e) =>
-                    setPassword(e.target.value)
-                }
-
-                className="border p-2 w-full mb-3"
-
-            />
-
-            <input
-
-                type="password"
-
-                placeholder="Confirm Password"
-
-                value={confirm}
-
-                onChange={(e) =>
-                    setConfirm(e.target.value)
-                }
-
-                className="border p-2 w-full mb-4"
-
-            />
-
-            <button
-
-                onClick={savePassword}
-
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-
+        <div
+            className="
+        w-full
+        max-w-sm
+        sm:max-w-md
+        lg:max-w-lg
+        mx-auto
+        mt-6
+        sm:mt-10
+        px-4
+        sm:px-6
+        lg:px-8
+    "
+        >
+            <div
+                className="
+            bg-white
+            dark:bg-slate-800
+            shadow-md
+            rounded-lg
+            p-5
+            sm:p-6
+            lg:p-8
+        "
             >
+                <h2
+                    className="
+                text-xl
+                sm:text-2xl
+                lg:text-3xl
+                font-bold
+                mb-5
+                text-center
+            "
+                >
+                    Change Password
+                </h2>
 
-                Change Password
+                <input
+                    type="password"
+                    placeholder="New Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="
+                border
+                rounded
+                p-3
+                w-full
+                mb-4
+                text-sm
+                sm:text-base
+            "
+                />
 
-            </button>
+                <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    className="
+                border
+                rounded
+                p-3
+                w-full
+                mb-5
+                text-sm
+                sm:text-base
+            "
+                />
+
+                <button
+                    onClick={savePassword}
+                    className="
+                w-full
+                bg-blue-600
+                hover:bg-blue-700
+                text-white
+                font-medium
+                py-3
+                rounded
+                transition
+            "
+                >
+                    Change Password
+                </button>
+            </div>
 
             <CommonModal
-
                 open={modal.open}
-
                 title={modal.title}
-
                 message={modal.message}
-
                 type={modal.type}
-
                 onClose={() => {
-
                     setModal({
                         ...modal,
-                        open: false
+                        open: false,
                     });
-
 
                     if (redirectAfterModal) {
                         navigate("/bookrummytable");
                     }
-
                 }}
-
             />
-
         </div>
 
     );

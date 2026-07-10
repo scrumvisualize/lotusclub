@@ -142,7 +142,7 @@ export default function ResultTable({
                                                             ?
                                                             "text-red-500"
                                                             :
-                                                            "text-slate-700"
+                                                            "text-slate-700 dark:text-slate-300"
                                                     }
                                                 >
 

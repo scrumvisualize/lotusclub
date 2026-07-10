@@ -15,7 +15,6 @@ export default function Navbar() {
 
 
     const [menuOpen, setMenuOpen] = useState(false);
-    //const user = localStorage.getItem("user");
 
     const [user, setUser] = useState(
         JSON.parse(localStorage.getItem("user") || "null")
