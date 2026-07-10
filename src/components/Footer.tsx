@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 export default function Footer() {
+
     return (
         <footer className="mt-20 border-t border-gray-200 bg-white dark:border-gray-700 dark:bg-slate-900">
             <div className="mx-auto max-w-7xl px-6 py-8">
@@ -26,13 +27,14 @@ export default function Footer() {
                             Members
                         </Link>
 
-                        <Link to="/bookrummytable" className="hover:text-blue-600 transition-colors duration-200">
-                            Book a Seat
-                        </Link>
-
                         <Link to="/contact" className="hover:text-blue-600 transition-colors duration-200">
                             Contact
                         </Link>
+
+                        <Link to="/login" className="hover:text-blue-600 transition-colors duration-200">
+                            Login
+                        </Link>
+
                     </div>
 
                     {/* Social Icons */}
@@ -61,7 +63,7 @@ export default function Footer() {
 
                 {/* Bottom */}
                 <div className="mt-8 border-t border-gray-200 pt-5 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
-                    © {new Date().getFullYear()} Lotus Club, Brisbane • Designed with ❤️ by <span className="font-semibold">Vinod Mathew</span>
+                    © {new Date().getFullYear()} Lotus Club, Brisbane • Designed with ❤️ by <span className="font-semibold"><a href="https://www.instagram.com/k.vinodmathew/">Vinod Mathew</a></span>
                 </div>
 
             </div>

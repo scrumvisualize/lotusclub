@@ -272,6 +272,21 @@ export default function BookRummyTable() {
                             data.waitingQueue || []
                         );
 
+                        /*
+                            Check if seat available
+
+                            If yes:
+                            automatically promote
+                            first queue player
+
+                        */
+
+                        setTimeout(() => {
+
+                            promoteNextPlayer();
+
+                        }, 300);
+
 
                     }
                     else {
@@ -421,10 +436,6 @@ export default function BookRummyTable() {
 
 
 
-
-
-
-
     /*
         PLAYER SELECT
 
@@ -522,19 +533,72 @@ export default function BookRummyTable() {
                     );
 
 
+                /*
+                Add player to Joined list
+
+                Then calculate remaining
+                players for Waiting area
+
+                */
+
+
+                /*
+                Only create waiting area
+                when maximum players reached
+
+                Example:
+
+                MAX_PLAYERS = 2
+
+                Player 1 joins
+                -> no waiting list
+
+
+                Player 2 joins
+                -> create waiting list
+
+                */
+
+                let updatedWaitingPlayers: BookingPlayer[] = [];
+
+
+                if (updatedPlayers.length >= MAX_PLAYERS) {
+
+                    updatedWaitingPlayers =
+                        members.filter(
+                            member =>
+                                !updatedPlayers.some(
+                                    p =>
+                                        p.uid === member.uid
+                                )
+                        );
+
+                }
+
+
 
                 await updateDoc(
                     bookingRef,
                     {
 
-
                         selectedPlayers:
                             updatedPlayers,
 
 
+                        /*
+                            Players who are not playing
+                
+                            They see:
+                            Allow Me button
+                
+                        */
+
+                        playersWaiting:
+                            updatedWaitingPlayers,
+
+
                         updatedAt:
                             serverTimestamp()
-
 
                     }
                 );
@@ -561,40 +625,6 @@ export default function BookRummyTable() {
                     p =>
                         p.uid === player.uid
                 );
-
-
-
-            if (!alreadyQueue) {
-
-
-                const updatedQueue =
-                    uniquePlayers(
-                        [
-                            ...waitingQueue,
-                            player
-                        ]
-                    );
-
-
-
-                await updateDoc(
-                    bookingRef,
-                    {
-
-                        waitingQueue:
-                            updatedQueue,
-
-
-                        updatedAt:
-                            serverTimestamp()
-
-                    }
-                );
-
-
-            }
-
-
 
         };
 
@@ -659,27 +689,76 @@ export default function BookRummyTable() {
                     ]
                 );
 
+            /*
+            Check waiting queue immediately
+            after removing player
 
+            If slot available:
+            Promote first queue player
+
+            */
+
+            let finalPlayers = updatedPlayers;
+            let finalQueue = waitingQueue;
+            let finalWaiting = updatedWaiting;
+
+
+            if (
+                finalPlayers.length < MAX_PLAYERS &&
+                finalQueue.length > 0
+            ) {
+
+
+                const nextPlayer =
+                    finalQueue[0];
+
+
+                // Add first queue player
+
+                finalPlayers =
+                    uniquePlayers(
+                        [
+                            ...finalPlayers,
+                            nextPlayer
+                        ]
+                    );
+
+
+                // Remove from queue
+
+                finalQueue =
+                    finalQueue.slice(1);
+
+
+                // Remove from waiting area
+
+                finalWaiting =
+                    finalWaiting.filter(
+                        p =>
+                            p.uid !== nextPlayer.uid
+                    );
+
+            }
 
 
             await updateDoc(
                 bookingRef,
                 {
 
-
                     selectedPlayers:
-                        updatedPlayers,
-
+                        finalPlayers,
 
 
                     playersWaiting:
-                        updatedWaiting,
+                        finalWaiting,
 
+
+                    waitingQueue:
+                        finalQueue,
 
 
                     results:
                         updatedResults,
-
 
 
                     updatedAt:
@@ -689,15 +768,18 @@ export default function BookRummyTable() {
             );
 
 
-
             setSelectedPlayers(
-                updatedPlayers
+                finalPlayers
             );
 
 
-
             setPlayersWaiting(
-                updatedWaiting
+                finalWaiting
+            );
+
+
+            setWaitingQueue(
+                finalQueue
             );
 
 
@@ -709,25 +791,6 @@ export default function BookRummyTable() {
 
 
             setPlayerToRemove(null);
-
-
-
-
-
-
-            /*
-                Fill empty seat
-
-            */
-
-            setTimeout(
-                () => {
-
-                    promoteNextPlayer();
-
-                },
-                500
-            );
 
 
         };
@@ -752,10 +815,23 @@ export default function BookRummyTable() {
 
 
 
+    /*
+        ALLOW ME BUTTON
+
+        Player waiting area
+                |
+                |
+                v
+        FIFO Waiting Queue
+
+
+        Order of click decides position
+
+    */
+
+
     const handleAllowMe =
-        async (
-            player: BookingPlayer
-        ) => {
+        async (player: BookingPlayer) => {
 
 
             const bookingRef =
@@ -767,15 +843,57 @@ export default function BookRummyTable() {
 
 
 
-            const updatedQueue =
-                uniquePlayers(
-                    [
-                        ...waitingQueue,
-                        player
-                    ]
+            /*
+                Prevent duplicate queue entry
+        
+            */
+
+            const alreadyInQueue =
+                waitingQueue.some(
+                    p =>
+                        p.uid === player.uid
                 );
 
 
+            if (alreadyInQueue)
+                return;
+
+
+
+
+            /*
+                Add player to FIFO queue
+        
+                Example:
+        
+                Player 4 clicked first
+        
+                Queue:
+                Player 4
+        
+        
+                Player 3 clicked next
+        
+                Queue:
+                Player 4
+                Player 3
+        
+            */
+
+
+            const updatedQueue =
+                [
+                    ...waitingQueue,
+                    player
+                ];
+
+
+
+
+            /*
+                Remove from waiting area
+        
+            */
 
             const updatedPlayersWaiting =
                 playersWaiting.filter(
@@ -785,76 +903,7 @@ export default function BookRummyTable() {
 
 
 
-            // IMPORTANT:
-            // If seat available,
-            // move player directly
 
-            if (
-                selectedPlayers.length < MAX_PLAYERS
-            ) {
-
-
-                const updatedPlayers =
-                    uniquePlayers(
-                        [
-                            ...selectedPlayers,
-                            player
-                        ]
-                    );
-
-
-                await updateDoc(
-                    bookingRef,
-                    {
-
-                        selectedPlayers:
-                            updatedPlayers,
-
-
-                        playersWaiting:
-                            updatedPlayersWaiting,
-
-
-                        waitingQueue:
-                            updatedQueue.filter(
-                                p =>
-                                    p.uid !== player.uid
-                            ),
-
-
-                        updatedAt:
-                            serverTimestamp()
-
-                    }
-                );
-
-
-                setSelectedPlayers(
-                    updatedPlayers
-                );
-
-
-                setPlayersWaiting(
-                    updatedPlayersWaiting
-                );
-
-
-                setWaitingQueue(
-                    updatedQueue.filter(
-                        p =>
-                            p.uid !== player.uid
-                    )
-                );
-
-
-                return;
-
-            }
-
-
-
-
-            // Otherwise add to queue
 
             await updateDoc(
                 bookingRef,
@@ -875,6 +924,7 @@ export default function BookRummyTable() {
             );
 
 
+
             setWaitingQueue(
                 updatedQueue
             );
@@ -889,6 +939,7 @@ export default function BookRummyTable() {
             setClickedPlayer(
                 player.uid
             );
+
 
 
             setSuccessMessage(
@@ -910,10 +961,6 @@ export default function BookRummyTable() {
 
 
         };
-
-
-
-
 
 
 
@@ -962,13 +1009,29 @@ export default function BookRummyTable() {
                     ]
                 );
 
+            /*
+            Remove promoted player
+            from waiting area also
 
+            */
 
-            const updatedQueue =
-                waitingQueue.filter(
+            const updatedPlayersWaiting =
+                playersWaiting.filter(
                     p =>
                         p.uid !== nextPlayer.uid
                 );
+
+
+
+
+            /*
+                Remove first player only
+                FIFO behaviour
+
+            */
+
+            const updatedQueue =
+                waitingQueue.slice(1);
 
 
 
@@ -991,6 +1054,10 @@ export default function BookRummyTable() {
 
                     waitingQueue:
                         updatedQueue,
+
+
+                    playersWaiting:
+                        updatedPlayersWaiting,
 
 
                     updatedAt:
@@ -1546,6 +1613,9 @@ export default function BookRummyTable() {
                             mx-4
                             p-4
                             border
+                            dark:bg-slate-700
+                            dark:text-white
+                            dark:placeholder-gray-300
                             rounded-lg
                         ">
 
@@ -1677,6 +1747,9 @@ export default function BookRummyTable() {
                             p-4
                             bg-yellow-50
                             rounded-lg
+                            dark:bg-slate-700
+                            dark:text-white
+                            dark:placeholder-gray-300
                         ">
 
 
@@ -1700,6 +1773,8 @@ export default function BookRummyTable() {
                                     bg-yellow-300
                                     px-2
                                     rounded
+                                    dark:text-black
+                                    dark:placeholder-gray-300
                                 ">
 
                                     {
