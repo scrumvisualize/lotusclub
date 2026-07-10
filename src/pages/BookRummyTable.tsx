@@ -19,6 +19,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../firebase";
+import InformationSlider from "../components/InformationSlider";
 
 
 export default function BookRummyTable() {
@@ -1489,12 +1490,13 @@ export default function BookRummyTable() {
 
         <div className="max-w-4xl mx-auto p-4">
 
-            <h1 className="text-2xl font-bold mb-4 mx-2">
+            <h1 className="text-2xl font-bold mb-4 mx-4">
 
                 Rummy Table Booking
 
             </h1>
 
+            <InformationSlider />
 
             {!started && (
 
@@ -1839,6 +1841,7 @@ export default function BookRummyTable() {
 
 
                         className="
+                            mx-4
                             mb-4
                             px-4
                             py-2

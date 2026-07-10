@@ -29,7 +29,7 @@ export default function PlayerSelector({
     return (
         <div className="p-4">
 
-            <h2 className="text-xl font-bold mb-2">
+            <h2 className="text-xl font-bold mb-6">
                 Player's Joined ({selectedPlayers.length}/{maxSelection})
             </h2>
 
