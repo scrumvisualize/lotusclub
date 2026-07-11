@@ -329,6 +329,7 @@ export default function Home() {
                 p-8
                 "
                         >
+                            <p className="text-center font-style: italic">Hold on please ! Work In Progress </p>
 
                             <h2
                                 className="
