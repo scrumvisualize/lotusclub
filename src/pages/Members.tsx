@@ -82,7 +82,7 @@ export default function Members() {
                         dark:text-gray-300
                         "
                     >
-                        Membership List for the Year 2026 / 2027
+                        Members List for the Year 2026 / 2027
                     </p>
 
                 </div>

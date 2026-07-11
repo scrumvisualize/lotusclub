@@ -1,12 +1,23 @@
 import { useEffect, useState } from "react";
+
 import PlayerSelector from "../components/PlayerSelector";
 import CardGrid from "../components/CardGrid";
 import ResultTable from "../components/ResultTable";
 
-import { type Card, type PlayerCard } from "../types/card";
-import { type BookingPlayer } from "../types/member";
+import {
+    type Card,
+    type PlayerCard
+} from "../types/card";
 
-import { createDeck } from "../utils/deck";
+import {
+    type BookingPlayer
+} from "../types/member";
+
+
+import {
+    createDeck
+} from "../utils/deck";
+
 
 import {
     collection,
@@ -18,17 +29,22 @@ import {
     serverTimestamp,
 } from "firebase/firestore";
 
+
 import { db } from "../firebase";
+
 import InformationSlider from "../components/InformationSlider";
 
 
+
 export default function BookRummyTable() {
+
 
 
     const loggedUser =
         JSON.parse(
             localStorage.getItem("user") || "null"
         );
+
 
 
     const isAdmin =
@@ -38,16 +54,19 @@ export default function BookRummyTable() {
 
     const MAX_PLAYERS = 12;
 
-    const tableId = "currentTable";
-
 
 
     /*
         MEMBERS
     */
 
-    const [members, setMembers] =
+
+    const [
+        members,
+        setMembers
+    ] =
         useState<BookingPlayer[]>([]);
+
 
 
 
@@ -56,21 +75,31 @@ export default function BookRummyTable() {
         CURRENT PLAYERS
     */
 
-    const [selectedPlayers, setSelectedPlayers] =
+
+    const [
+        selectedPlayers,
+        setSelectedPlayers
+    ] =
         useState<BookingPlayer[]>([]);
+
 
 
 
 
     /*
-        PLAYERS WHO LEFT
+        PLAYERS WAITING AREA
 
-        Waiting for vacancy
+        Players who are not currently playing
 
     */
 
-    const [playersWaiting, setPlayersWaiting] =
+
+    const [
+        playersWaiting,
+        setPlayersWaiting
+    ] =
         useState<BookingPlayer[]>([]);
+
 
 
 
@@ -78,11 +107,15 @@ export default function BookRummyTable() {
     /*
         FIFO QUEUE
 
-        Players clicked Allow Me
+        Allow Me clicked order
 
     */
 
-    const [waitingQueue, setWaitingQueue] =
+
+    const [
+        waitingQueue,
+        setWaitingQueue
+    ] =
         useState<BookingPlayer[]>([]);
 
 
@@ -94,49 +127,96 @@ export default function BookRummyTable() {
     */
 
 
-    const [started, setStarted] =
+    const [
+        started,
+        setStarted
+    ] =
         useState(false);
 
 
 
-    const [selectedColor, setSelectedColor] =
-        useState<"red" | "black" | null>(null);
+    const [
+        selectedColor,
+        setSelectedColor
+    ] =
+        useState<
+            "red" |
+            "black" |
+            null
+        >(null);
 
 
 
-    const [cards, setCards] =
+    const [
+        cards,
+        setCards
+    ] =
         useState<Card[]>([]);
 
 
 
-    const [results, setResults] =
+    const [
+        results,
+        setResults
+    ] =
         useState<PlayerCard[]>([]);
 
 
 
-    const [activePlayer, setActivePlayer] =
+    const [
+        activePlayer,
+        setActivePlayer
+    ] =
         useState<string | null>(null);
 
 
 
-    const [pickedCards, setPickedCards] =
+    const [
+        pickedCards,
+        setPickedCards
+    ] =
         useState<string[]>([]);
 
 
 
-    const [playerToRemove, setPlayerToRemove] =
+    const [
+        playerToRemove,
+        setPlayerToRemove
+    ] =
         useState<BookingPlayer | null>(null);
 
 
 
-    const [clickedPlayer, setClickedPlayer] =
+    const [
+        clickedPlayer,
+        setClickedPlayer
+    ] =
         useState<string | null>(null);
 
 
 
-    const [successMessage, setSuccessMessage] =
+    const [
+        successMessage,
+        setSuccessMessage
+    ] =
         useState("");
 
+
+
+    /*
+        PREVENT DOUBLE PROMOTION
+
+        Important because Firebase listener
+        can fire multiple times
+
+    */
+
+
+    const [
+        promotionRunning,
+        setPromotionRunning
+    ] =
+        useState(false);
 
 
 
@@ -148,6 +228,9 @@ export default function BookRummyTable() {
         );
 
 
+
+
+
     /*
         LOAD MEMBERS
 
@@ -157,56 +240,57 @@ export default function BookRummyTable() {
     useEffect(() => {
 
 
-        const loadMembers = async () => {
+        const loadMembers =
+            async () => {
 
 
-            const snapshot =
-                await getDocs(
-                    collection(
-                        db,
-                        "members"
-                    )
-                );
-
-
-
-            const list =
-                snapshot.docs
-                    .filter(
-                        doc =>
-                            doc.data().active === true
-                    )
-                    .map(doc => {
-
-
-                        const data =
-                            doc.data();
-
-
-                        return {
-
-                            uid:
-                                doc.id,
-
-
-                            membershipNo:
-                                data.membershipNo,
-
-
-                            name:
-                                data.name
-
-                        };
-
-
-                    });
+                const snapshot =
+                    await getDocs(
+                        collection(
+                            db,
+                            "members"
+                        )
+                    );
 
 
 
-            setMembers(list);
+                const list =
+                    snapshot.docs
+                        .filter(
+                            doc =>
+                                doc.data().active === true
+                        )
+                        .map(doc => {
 
 
-        };
+                            const data =
+                                doc.data();
+
+
+                            return {
+
+                                uid:
+                                    doc.id,
+
+
+                                membershipNo:
+                                    data.membershipNo,
+
+
+                                name:
+                                    data.name
+
+                            };
+
+
+                        });
+
+
+
+                setMembers(list);
+
+
+            };
 
 
 
@@ -218,15 +302,21 @@ export default function BookRummyTable() {
 
 
 
-    /*
-        BOOKING LISTENER
 
+
+
+    /*
+        SINGLE BOOKING LISTENER
+
+        Handles:
 
         selectedPlayers
-
         playersWaiting
-
         waitingQueue
+        results
+
+        ONLY PLACE WHERE PROMOTION
+        IS TRIGGERED
 
     */
 
@@ -249,48 +339,7 @@ export default function BookRummyTable() {
                 snapshot => {
 
 
-                    if (snapshot.exists()) {
-
-
-                        const data =
-                            snapshot.data();
-
-
-
-                        setSelectedPlayers(
-                            data.selectedPlayers || []
-                        );
-
-
-
-                        setPlayersWaiting(
-                            data.playersWaiting || []
-                        );
-
-
-
-                        setWaitingQueue(
-                            data.waitingQueue || []
-                        );
-
-                        /*
-                            Check if seat available
-
-                            If yes:
-                            automatically promote
-                            first queue player
-
-                        */
-
-                        setTimeout(() => {
-
-                            promoteNextPlayer();
-
-                        }, 300);
-
-
-                    }
-                    else {
+                    if (!snapshot.exists()) {
 
 
                         setSelectedPlayers([]);
@@ -299,60 +348,13 @@ export default function BookRummyTable() {
 
                         setWaitingQueue([]);
 
+                        setResults([]);
 
-                    }
-
-
-                }
-            );
-
-
-
-        return () => unsubscribe();
-
-
-
-    }, []);
-
-
-
-
-    /*
-        TABLE LISTENER
-
-
-        Results
-
-        Cards
-
-    */
-
-
-    useEffect(() => {
-
-
-        const tableRef =
-            doc(
-                db,
-                "rummyTables",
-                tableId
-            );
-
-
-
-        const unsubscribe =
-            onSnapshot(
-                tableRef,
-                snapshot => {
-
-
-                    if (!snapshot.exists()) {
-
-                        //setLoading(false);
 
                         return;
 
                     }
+
 
 
 
@@ -362,27 +364,76 @@ export default function BookRummyTable() {
 
 
 
-                    if (data.usedCards) {
-
-
-                    }
-
+                    const currentSelectedPlayers =
+                        data.selectedPlayers || [];
 
 
 
-                    if (data.results) {
+                    const currentWaitingQueue =
+                        data.waitingQueue || [];
 
-                        setResults(
-                            data.results
-                        );
 
-                    }
-                    else {
 
-                        setResults([]);
+                    const currentPlayersWaiting =
+                        data.playersWaiting || [];
 
-                    }
 
+
+
+
+                    setSelectedPlayers(
+                        currentSelectedPlayers
+                    );
+
+
+
+                    setPlayersWaiting(
+                        currentPlayersWaiting
+                    );
+
+
+
+                    setWaitingQueue(
+                        currentWaitingQueue
+                    );
+
+
+
+                    /*
+                        Keep ResultTable working
+
+                    */
+
+
+                    setResults(
+                        data.results || []
+                    );
+
+
+
+
+                    /*
+                        AUTO PROMOTION
+
+                        Example:
+
+                        Player leaves
+
+                        11/12
+
+                        Queue:
+                        Jibi
+
+                        Jibi joins automatically
+
+                    */
+
+
+                    promoteNextPlayer(
+                        currentSelectedPlayers,
+                        currentWaitingQueue,
+                        currentPlayersWaiting
+                    );
 
 
                 }
@@ -390,27 +441,18 @@ export default function BookRummyTable() {
 
 
 
-        return () => unsubscribe();
+
+        return () =>
+            unsubscribe();
 
 
 
     }, []);
 
-
-
-
-
-
     /*
-        REMOVE DUPLICATES BY UID
+    REMOVE DUPLICATES BY UID
 
-        Prevents:
-
-        John
-        John
-        John
-
-    */
+*/
 
 
     const uniquePlayers =
@@ -437,15 +479,13 @@ export default function BookRummyTable() {
 
 
 
+
+
     /*
         PLAYER SELECT
 
-
-        Add player to table
-
-        or
-
-        remove request
+        Add player
+        or request leave
 
     */
 
@@ -461,9 +501,10 @@ export default function BookRummyTable() {
                 !isAdmin &&
                 player.uid !== loggedUser?.uid
             ) {
-                return;
-            }
 
+                return;
+
+            }
 
 
 
@@ -479,7 +520,6 @@ export default function BookRummyTable() {
 
 
 
-
             const alreadySelected =
                 selectedPlayers.some(
                     p =>
@@ -490,9 +530,8 @@ export default function BookRummyTable() {
 
 
 
-
             /*
-                User wants to leave
+                Leave request
 
             */
 
@@ -502,7 +541,9 @@ export default function BookRummyTable() {
 
                 setPlayerToRemove(player);
 
+
                 return;
+
 
             }
 
@@ -511,10 +552,8 @@ export default function BookRummyTable() {
 
 
 
-
-
             /*
-                Seat available
+                Available seat
 
             */
 
@@ -534,47 +573,60 @@ export default function BookRummyTable() {
                     );
 
 
-                /*
-                Add player to Joined list
 
-                Then calculate remaining
-                players for Waiting area
+
+
+                let updatedWaitingPlayers =
+                    [
+                        ...playersWaiting
+                    ];
+
+
+
+
+                /*
+                    When table becomes full,
+                    populate waiting area
 
                 */
 
 
-                /*
-                Only create waiting area
-                when maximum players reached
+                if (
+                    updatedPlayers.length >= MAX_PLAYERS
+                ) {
 
-                Example:
-
-                MAX_PLAYERS = 2
-
-                Player 1 joins
-                -> no waiting list
-
-
-                Player 2 joins
-                -> create waiting list
-
-                */
-
-                let updatedWaitingPlayers: BookingPlayer[] = [];
-
-
-                if (updatedPlayers.length >= MAX_PLAYERS) {
 
                     updatedWaitingPlayers =
-                        members.filter(
-                            member =>
-                                !updatedPlayers.some(
-                                    p =>
-                                        p.uid === member.uid
+                        uniquePlayers(
+                            [
+                                ...playersWaiting,
+
+
+                                ...members.filter(
+                                    member =>
+
+
+                                        !updatedPlayers.some(
+                                            p =>
+                                                p.uid === member.uid
+                                        )
+
+                                        &&
+
+
+                                        !waitingQueue.some(
+                                            q =>
+                                                q.uid === member.uid
+                                        )
+
                                 )
+
+                            ]
                         );
 
+
                 }
+
 
 
 
@@ -582,17 +634,10 @@ export default function BookRummyTable() {
                     bookingRef,
                     {
 
+
                         selectedPlayers:
                             updatedPlayers,
 
-
-                        /*
-                            Players who are not playing
-                
-                            They see:
-                            Allow Me button
-                
-                        */
 
                         playersWaiting:
                             updatedWaitingPlayers,
@@ -601,6 +646,7 @@ export default function BookRummyTable() {
                         updatedAt:
                             serverTimestamp()
 
+
                     }
                 );
 
@@ -608,15 +654,15 @@ export default function BookRummyTable() {
 
                 return;
 
-            }
 
+            }
 
 
 
             /*
                 Table full
 
-                Add to queue
+                User must use Allow Me
 
             */
 
@@ -625,17 +671,12 @@ export default function BookRummyTable() {
 
 
 
-
-
     /*
         CONFIRM PLAYER LEAVE
 
+        Remove player
 
-        Selected Players
-
-                ↓
-
-        Players Waiting
+        Promote queue automatically
 
     */
 
@@ -644,8 +685,10 @@ export default function BookRummyTable() {
         async () => {
 
 
+
             if (!playerToRemove)
                 return;
+
 
 
 
@@ -657,14 +700,11 @@ export default function BookRummyTable() {
                 );
 
 
-
-
-            const updatedPlayers =
+            let updatedPlayers =
                 selectedPlayers.filter(
                     p =>
                         p.uid !== playerToRemove.uid
                 );
-
 
 
             const updatedResults =
@@ -675,8 +715,7 @@ export default function BookRummyTable() {
 
 
 
-
-            const updatedWaiting =
+            let updatedWaiting =
                 uniquePlayers(
                     [
                         ...playersWaiting,
@@ -684,72 +723,82 @@ export default function BookRummyTable() {
                     ]
                 );
 
-            /*
-            Check waiting queue immediately
-            after removing player
 
-            If slot available:
-            Promote first queue player
+
+            let updatedQueue =
+                [
+                    ...waitingQueue
+                ];
+
+
+
+
+            /*
+                If queue exists,
+                immediately fill empty seat
 
             */
 
-            let finalPlayers = updatedPlayers;
-            let finalQueue = waitingQueue;
-            let finalWaiting = updatedWaiting;
-
 
             if (
-                finalPlayers.length < MAX_PLAYERS &&
-                finalQueue.length > 0
+                updatedPlayers.length < MAX_PLAYERS
+                &&
+                updatedQueue.length > 0
             ) {
 
 
+
                 const nextPlayer =
-                    finalQueue[0];
+                    updatedQueue[0];
 
 
-                // Add first queue player
 
-                finalPlayers =
+
+                updatedPlayers =
                     uniquePlayers(
                         [
-                            ...finalPlayers,
+                            ...updatedPlayers,
                             nextPlayer
                         ]
                     );
 
 
-                // Remove from queue
-
-                finalQueue =
-                    finalQueue.slice(1);
 
 
-                // Remove from waiting area
 
-                finalWaiting =
-                    finalWaiting.filter(
+                updatedQueue =
+                    updatedQueue.slice(1);
+
+
+
+
+
+                updatedWaiting =
+                    updatedWaiting.filter(
                         p =>
                             p.uid !== nextPlayer.uid
                     );
 
+
             }
+
 
 
             await updateDoc(
                 bookingRef,
                 {
 
+
                     selectedPlayers:
-                        finalPlayers,
+                        updatedPlayers,
 
 
                     playersWaiting:
-                        finalWaiting,
+                        updatedWaiting,
 
 
                     waitingQueue:
-                        finalQueue,
+                        updatedQueue,
 
 
                     results:
@@ -759,28 +808,8 @@ export default function BookRummyTable() {
                     updatedAt:
                         serverTimestamp()
 
+
                 }
-            );
-
-
-            setSelectedPlayers(
-                finalPlayers
-            );
-
-
-            setPlayersWaiting(
-                finalWaiting
-            );
-
-
-            setWaitingQueue(
-                finalQueue
-            );
-
-
-
-            setResults(
-                updatedResults
             );
 
 
@@ -788,45 +817,51 @@ export default function BookRummyTable() {
             setPlayerToRemove(null);
 
 
+
         };
 
 
-
-
-
-
-
     /*
-        ALLOW ME BUTTON
+        ALLOW ME
 
+        Waiting Area
 
-        Players Waiting
+        -> Queue
 
-                ↓
+        OR
 
-        Waiting Queue
-
-    */
-
-
-
-    /*
-        ALLOW ME BUTTON
-
-        Player waiting area
-                |
-                |
-                v
-        FIFO Waiting Queue
-
-
-        Order of click decides position
+        Direct Join if seat available
 
     */
 
 
     const handleAllowMe =
-        async (player: BookingPlayer) => {
+        async (
+            player: BookingPlayer
+        ) => {
+
+
+            /*
+                Security check
+    
+                Member:
+                Can only allow himself
+    
+                Admin:
+                Can allow anyone
+    
+            */
+
+            if (
+                !isAdmin &&
+                player.uid !== loggedUser?.uid
+            ) {
+
+                return;
+
+            }
+
+
 
 
             const bookingRef =
@@ -839,8 +874,8 @@ export default function BookRummyTable() {
 
 
             /*
-                Prevent duplicate queue entry
-        
+                Prevent duplicate entry
+    
             */
 
             const alreadyInQueue =
@@ -850,47 +885,41 @@ export default function BookRummyTable() {
                 );
 
 
-            if (alreadyInQueue)
+
+            const alreadyPlaying =
+                selectedPlayers.some(
+                    p =>
+                        p.uid === player.uid
+                );
+
+
+
+            if (
+                alreadyInQueue ||
+                alreadyPlaying
+            ) {
+
                 return;
 
+            }
 
 
 
-            /*
-                Add player to FIFO queue
-        
-                Example:
-        
-                Player 4 clicked first
-        
-                Queue:
-                Player 4
-        
-        
-                Player 3 clicked next
-        
-                Queue:
-                Player 4
-                Player 3
-        
-            */
-
-
-            const updatedQueue =
+            let updatedPlayers =
                 [
-                    ...waitingQueue,
-                    player
+                    ...selectedPlayers
                 ];
 
 
 
+            let updatedQueue =
+                [
+                    ...waitingQueue
+                ];
 
-            /*
-                Remove from waiting area
-        
-            */
 
-            const updatedPlayersWaiting =
+
+            let updatedWaiting =
                 playersWaiting.filter(
                     p =>
                         p.uid !== player.uid
@@ -898,37 +927,67 @@ export default function BookRummyTable() {
 
 
 
+            /*
+                Seat available
+    
+                Add directly to table
+    
+            */
 
 
-            await updateDoc(
-                bookingRef,
-                {
-
-                    waitingQueue:
-                        updatedQueue,
-
-
-                    playersWaiting:
-                        updatedPlayersWaiting,
-
-
-                    updatedAt:
-                        serverTimestamp()
-
-                }
-            );
+            if (
+                updatedPlayers.length < MAX_PLAYERS
+            ) {
 
 
 
-            setWaitingQueue(
-                updatedQueue
-            );
+                updatedPlayers =
+                    uniquePlayers(
+                        [
+                            ...updatedPlayers,
+                            player
+                        ]
+                    );
 
 
-            setPlayersWaiting(
-                updatedPlayersWaiting
-            );
 
+            }
+
+            else {
+
+
+                /*
+                    Table full
+    
+                    Add to FIFO queue
+    
+                */
+
+
+                updatedQueue =
+                    [
+                        ...updatedQueue,
+                        player
+                    ];
+
+
+            }
+
+
+            /*
+                FIX:
+    
+                Show confirmation first
+    
+                User sees:
+    
+                ✓ Added
+    
+    
+                Then after 500ms,
+                update Firebase
+    
+            */
 
 
             setClickedPlayer(
@@ -938,143 +997,202 @@ export default function BookRummyTable() {
 
 
             setSuccessMessage(
-                `✅ ${player.name} added to waiting queue`
+                updatedPlayers.some(
+                    p =>
+                        p.uid === player.uid
+                )
+
+                    ?
+
+                    `✅ ${player.name} added`
+
+                    :
+
+                    `✅ ${player.name} added to waiting queue`
+
             );
 
 
-
             setTimeout(
-                () => {
+                async () => {
+
+
+
+                    await updateDoc(
+                        bookingRef,
+                        {
+
+
+                            selectedPlayers:
+                                updatedPlayers,
+
+
+                            waitingQueue:
+                                updatedQueue,
+
+
+                            playersWaiting:
+                                updatedWaiting,
+
+
+                            updatedAt:
+                                serverTimestamp()
+
+
+                        }
+                    );
+
 
                     setClickedPlayer(null);
 
+
                     setSuccessMessage("");
 
+
+
                 },
-                2000
+
+                500
+
             );
 
 
         };
-
-
-
-
 
 
     /*
         PROMOTE FIRST QUEUE PLAYER
 
-
         FIFO
-
-        Queue[0]
 
     */
 
 
     const promoteNextPlayer =
-        async () => {
-
-
-            if (
-                waitingQueue.length === 0
-            )
-                return;
+        async (
+            currentSelectedPlayers: BookingPlayer[],
+            currentWaitingQueue: BookingPlayer[],
+            currentPlayersWaiting: BookingPlayer[]
+        ) => {
 
 
 
             if (
-                selectedPlayers.length >= MAX_PLAYERS
-            )
+                promotionRunning
+            ) {
+
                 return;
 
+            }
 
 
-            const nextPlayer =
-                waitingQueue[0];
+            if (
+                currentWaitingQueue.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                currentSelectedPlayers.length >= MAX_PLAYERS
+            ) {
+
+                return;
+
+            }
+
+
+            setPromotionRunning(true);
 
 
 
-            const updatedPlayers =
-                uniquePlayers(
-                    [
-                        ...selectedPlayers,
-                        nextPlayer
-                    ]
+
+            try {
+
+
+
+                const nextPlayer =
+                    currentWaitingQueue[0];
+
+
+
+                const updatedPlayers =
+                    uniquePlayers(
+                        [
+                            ...currentSelectedPlayers,
+                            nextPlayer
+                        ]
+                    );
+
+
+                const updatedQueue =
+                    currentWaitingQueue.slice(1);
+
+
+
+                const updatedWaiting =
+                    currentPlayersWaiting.filter(
+                        p =>
+                            p.uid !== nextPlayer.uid
+                    );
+
+
+
+                const bookingRef =
+                    doc(
+                        db,
+                        "rummyBookings",
+                        "currentBooking"
+                    );
+
+
+
+                await updateDoc(
+                    bookingRef,
+                    {
+
+
+                        selectedPlayers:
+                            updatedPlayers,
+
+
+                        waitingQueue:
+                            updatedQueue,
+
+
+                        playersWaiting:
+                            updatedWaiting,
+
+
+                        updatedAt:
+                            serverTimestamp()
+
+
+                    }
                 );
 
-            /*
-            Remove promoted player
-            from waiting area also
-
-            */
-
-            const updatedPlayersWaiting =
-                playersWaiting.filter(
-                    p =>
-                        p.uid !== nextPlayer.uid
-                );
 
 
+            }
 
 
-            /*
-                Remove first player only
-                FIFO behaviour
-
-            */
-
-            const updatedQueue =
-                waitingQueue.slice(1);
+            finally {
 
 
-
-            const bookingRef =
-                doc(
-                    db,
-                    "rummyBookings",
-                    "currentBooking"
-                );
+                setPromotionRunning(false);
 
 
-
-            await updateDoc(
-                bookingRef,
-                {
-
-                    selectedPlayers:
-                        updatedPlayers,
-
-
-                    waitingQueue:
-                        updatedQueue,
-
-
-                    playersWaiting:
-                        updatedPlayersWaiting,
-
-
-                    updatedAt:
-                        serverTimestamp()
-
-                }
-            );
-
+            }
 
 
         };
 
-
-
-
     /*
-        START GAME
+START GAME
 
-        Do NOT clear Firebase results here.
-        ResultTable depends on Firestore sync.
-
-    */
+*/
 
 
     const startGame =
@@ -1087,9 +1205,6 @@ export default function BookRummyTable() {
                 return;
 
 
-
-
-
             await updateDoc(
 
                 doc(
@@ -1100,21 +1215,17 @@ export default function BookRummyTable() {
 
                 {
 
-                    selectedPlayers:
-                        selectedPlayers,
+
+                    selectedPlayers,
 
 
                     updatedAt:
                         serverTimestamp()
 
+
                 }
 
             );
-
-
-
-
-
 
 
 
@@ -1128,24 +1239,15 @@ export default function BookRummyTable() {
                     );
 
 
-
-
-
-
-
-
             setCards(
                 shuffledDeck
             );
 
 
-
             setStarted(true);
 
 
-
             setSelectedColor(null);
-
 
 
             setActivePlayer(null);
@@ -1182,9 +1284,6 @@ export default function BookRummyTable() {
     /*
         PICK CARD
 
-
-        Save result to Firebase
-
     */
 
 
@@ -1199,6 +1298,8 @@ export default function BookRummyTable() {
 
 
 
+
+
             const player =
                 selectedPlayers.find(
                     p =>
@@ -1207,8 +1308,10 @@ export default function BookRummyTable() {
 
 
 
+
             if (!player)
                 return;
+
 
 
 
@@ -1235,8 +1338,8 @@ export default function BookRummyTable() {
 
                 return;
 
-            }
 
+            }
 
 
 
@@ -1271,11 +1374,10 @@ export default function BookRummyTable() {
 
 
 
-
-
                     results:
                         arrayUnion(
                             {
+
 
                                 uid:
                                     player.uid,
@@ -1292,122 +1394,31 @@ export default function BookRummyTable() {
                                 order:
                                     results.length + 1
 
+
+
                             }
                         ),
-
-
 
 
 
                     updatedAt:
                         serverTimestamp()
 
-                }
 
+                }
             );
+
+
 
 
             setActivePlayer(null);
 
+
         };
-
-
-
-
-    /*
-        SYNC CARD RESULTS
-
-
-        Keep this listener.
-
-        This is why ResultTable displays.
-
-    */
-
-
-    useEffect(() => {
-
-
-        const bookingRef =
-            doc(
-                db,
-                "rummyBookings",
-                "currentBooking"
-            );
-
-
-
-        const unsubscribe =
-            onSnapshot(
-                bookingRef,
-                snapshot => {
-
-
-                    if (
-                        snapshot.exists()
-                    ) {
-
-
-                        const data =
-                            snapshot.data();
-
-
-
-
-
-                        if (data.results) {
-
-
-                            setResults(
-                                data.results
-                            );
-
-
-                        }
-
-
-
-                        if (data.pickedCards) {
-
-
-                            setPickedCards(
-                                data.pickedCards
-                            );
-
-
-                        }
-
-
-                    }
-
-
-
-                }
-            );
-
-
-
-        return () => unsubscribe();
-
-
-
-    }, []);
-
 
 
     /*
         NEW GAME RESET
-
-
-        Clears:
-
-        Players
-
-        Queue
-
-        Results
-
-        Cards
 
     */
 
@@ -1425,6 +1436,7 @@ export default function BookRummyTable() {
                         "rummyBookings",
                         "currentBooking"
                     );
+
 
 
 
@@ -1455,6 +1467,7 @@ export default function BookRummyTable() {
                         updatedAt:
                             serverTimestamp()
 
+
                     }
                 );
 
@@ -1473,76 +1486,118 @@ export default function BookRummyTable() {
                 setPickedCards([]);
 
 
+
+
             }
+
+
             catch (error) {
+
 
                 console.error(
                     "Reset error",
                     error
                 );
 
+
             }
 
 
         };
 
+
     return (
 
-        <div className="max-w-4xl mx-auto p-4">
+        <div
+            className="
+        min-h-screen
+        bg-gray-100
+        dark:bg-slate-950
+        py-6
+        px-3
+        transition-colors
+    "
+        >
 
-            <h1 className="text-2xl font-bold mb-4 mx-4">
-
-                Rummy Table Booking
-
-            </h1>
-
-            <InformationSlider />
-
-            {!started && (
-
-                <>
-
-                    <PlayerSelector
-
-                        selectedPlayers={
-                            selectedPlayers
-                        }
-
-
-                        players={
-                            members
-                        }
-
-
-                        onSelect={
-                            handlePlayerSelect
-                        }
+            <div
+                className="
+            max-w-5xl
+            mx-auto
+            bg-white
+            dark:bg-slate-900
+            rounded-2xl
+            shadow-lg
+            border
+            border-gray-200
+            dark:border-slate-700
+            p-4
+            sm:p-6
+            transition-colors
+        "
+            >
 
 
-                        loggedUser={
-                            loggedUser
-                        }
+                <h1 className="text-2xl font-bold mb-4 mx-4">
+
+                    Rummy Table Booking
+
+                </h1>
 
 
-                        isAdmin={
-                            isAdmin
-                        }
+                <InformationSlider />
 
-                    />
+                {!started && (
 
-                    <button
-
-                        disabled={
-                            selectedPlayers.length === 0
-                        }
+                    <>
 
 
-                        onClick={
-                            startGame
-                        }
+                        <PlayerSelector
+
+                            selectedPlayers={
+                                selectedPlayers
+                            }
 
 
-                        className={`
+                            players={
+                                members
+                            }
+
+
+                            onSelect={
+                                handlePlayerSelect
+                            }
+
+
+                            loggedUser={
+                                loggedUser
+                            }
+
+
+                            isAdmin={
+                                isAdmin
+                            }
+
+
+                        />
+
+
+                        <button
+
+
+                            disabled={
+                                selectedPlayers.length === 0
+                            }
+
+
+
+                            onClick={
+                                startGame
+                            }
+
+
+
+                            className={`
+
                             mt-4
                             px-4
                             py-2
@@ -1550,31 +1605,37 @@ export default function BookRummyTable() {
                             rounded
                             text-white
 
+
                             ${selectedPlayers.length > 0
 
-                                ?
+                                    ?
 
-                                "bg-green-600 hover:bg-green-700"
+                                    "bg-green-600 hover:bg-green-700"
 
-                                :
+                                    :
 
-                                "bg-gray-400 cursor-not-allowed"
+                                    "bg-gray-400 cursor-not-allowed"
 
-                            }
+                                }
+
 
                         `}
 
-                    >
-
-                        Join Rummy Table
-
-                    </button>
-
-                    {
-                        successMessage &&
 
 
-                        <div className="
+                        >
+
+                            Join Rummy Table
+
+
+                        </button>
+
+
+                        {
+                            successMessage &&
+
+
+                            <div className="
                             mt-3
                             mx-4
                             bg-green-100
@@ -1583,178 +1644,165 @@ export default function BookRummyTable() {
                             rounded
                         ">
 
-                            {successMessage}
 
-                        </div>
-
-                    }
+                                {successMessage}
 
 
-                    {/*
+                            </div>
 
-                        PLAYERS WAITING
-
-                        Someone dropped out
-
-                    */}
+                        }
 
 
 
-                    {
-                        playersWaiting.length > 0 &&
+                        {
+                            playersWaiting.length > 0 &&
 
 
-                        <div className="
+                            <div className="
                             mt-5
                             mx-4
                             p-4
                             border
-                            dark:bg-slate-700
-                            dark:text-white
-                            dark:placeholder-gray-300
                             rounded-lg
                         ">
 
 
-                            <h3 className="font-bold mb-3">
 
-                                Players waiting if someone drops out
-
-                            </h3>
+                                <h3 className="font-bold mb-3">
 
 
-                            {
-                                playersWaiting.map(
-                                    (player, index) => (
+                                    Players waiting for a spot if someone leaves
 
 
-                                        <div
+                                </h3>
 
-                                            key={
-                                                player.uid
-                                            }
 
-                                            className="
+                                {
+                                    playersWaiting.map(
+                                        (player, index) => (
+
+
+                                            <div
+                                                key={
+                                                    player.uid
+                                                }
+
+                                                className="
                                         flex
                                         justify-between
                                         items-center
                                         mb-2
                                         "
-
-                                        >
-
-
-
-                                            <span>
-
-                                                {
-                                                    index + 1
-                                                }.
-                                                {" "}
-                                                {
-                                                    player.name
-                                                }
-
-                                            </span>
+                                            >
 
 
 
+                                                <span>
 
 
+                                                    {index + 1}.
+                                                    {" "}
+                                                    {player.name}
 
 
-                                            <button
-
-                                                onClick={() =>
-                                                    handleAllowMe(
-                                                        player
-                                                    )
-                                                }
+                                                </span>
 
 
-                                                className={`
-                                                px-3
-                                                py-1
-                                                rounded
-                                                text-white
+                                                <button
 
-                                                ${clickedPlayer === player.uid
+                                                    disabled={
+                                                        !isAdmin &&
+                                                        player.uid !== loggedUser?.uid
+                                                    }
 
-                                                        ?
+                                                    onClick={() =>
+                                                        handleAllowMe(player)
+                                                    }
 
-                                                        "bg-green-600"
 
-                                                        :
+                                                    className={`
 
-                                                        "bg-blue-600"
+                                                    px-3
+                                                    py-1
+                                                    rounded
+                                                    transition
+
+
+                                                    ${clickedPlayer === player.uid
+
+                                                            ?
+
+                                                            "bg-green-600 text-white"
+
+
+                                                            :
+
+                                                            (
+                                                                !isAdmin &&
+                                                                player.uid !== loggedUser?.uid
+                                                            )
+
+                                                                ?
+
+                                                                "bg-gray-300 text-gray-500 cursor-not-allowed"
+
+
+                                                                :
+
+                                                                "bg-blue-600 hover:bg-blue-700 text-white"
+
+                                                        }
+
+    `}
+
+                                                >
+
+
+                                                    {
+                                                        clickedPlayer === player.uid
+
+                                                            ?
+
+                                                            "✓ Added"
+
+                                                            :
+
+                                                            "Allow Me"
 
                                                     }
 
-                                            `}
 
-                                            >
-
-                                                {
-                                                    clickedPlayer === player.uid
-
-                                                        ?
-
-                                                        "✓ Added"
-
-                                                        :
-
-                                                        "Allow Me"
-
-                                                }
-
-
-                                            </button>
+                                                </button>
 
 
 
-                                        </div>
+                                            </div>
 
 
-                                    ))
+                                        )
+                                    )
 
-                            }
-
-
-
-                        </div>
-
-                    }
+                                }
 
 
-                    {/*
 
-                        WAITING QUEUE
-
-                    */}
+                            </div>
 
 
-                    {
-                        waitingQueue.length > 0 &&
+                        }
 
 
-                        <div className="
+                        {
+                            waitingQueue.length > 0 &&
+
+
+                            <div className="
                             mt-5
                             mx-4
                             p-4
                             bg-yellow-50
                             rounded-lg
-                            dark:bg-slate-700
-                            dark:text-white
-                            dark:placeholder-gray-300
                         ">
-
-
-
-                            <div className="
-                                flex
-                                justify-between
-                                mb-3
-                            ">
 
 
                                 <b>
@@ -1765,125 +1813,103 @@ export default function BookRummyTable() {
 
 
 
-                                <span className="
-                                    bg-yellow-300
-                                    px-2
-                                    rounded
-                                    dark:text-black
-                                    dark:placeholder-gray-300
-                                ">
 
-                                    {
-                                        waitingQueue.length
-                                    }
+                                {
+                                    waitingQueue.map(
+                                        (player, index) => (
 
-                                    {" "}waiting
 
-                                </span>
+                                            <div key={player.uid}>
+
+
+                                                {index + 1}.
+                                                {" "}
+                                                {player.name}
+
+
+                                            </div>
+
+
+                                        )
+
+                                    )
+
+                                }
 
 
 
                             </div>
 
-
-                            {
-                                waitingQueue.map(
-                                    (player, index) => (
-
-
-                                        <div
-
-                                            key={
-                                                player.uid
-                                            }
-
-                                        >
-
-                                            {
-                                                index + 1
-                                            }.
-                                            {" "}
-                                            {
-                                                player.name
-                                            }
-
-                                        </div>
-
-
-                                    ))
-
-                            }
-
-
-
-                        </div>
-
-
-                    }
-
-
-                </>
-
-            )}
-
-
-            {
-                started &&
-
-
-                <>
-
-                    <button
-
-                        onClick={
-                            goBack
                         }
 
 
-                        className="
-                            mx-4
-                            mb-4
-                            px-4
-                            py-2
-                            bg-gray-600
-                            text-white
-                            rounded
+
+
+                    </>
+
+
+                )}
+
+
+
+                {
+                    started &&
+
+                    <>
+
+
+                        <button
+
+                            onClick={
+                                goBack
+                            }
+
+
+                            className="
+                        mx-4
+                        mb-4
+                        px-4
+                        py-2
+                        bg-gray-600
+                        text-white
+                        rounded
                         "
 
-                    >
+                        >
 
-                        ← Back
-
-                    </button>
+                            ← Back
 
 
-                    {
-
-                        !selectedColor &&
+                        </button>
 
 
-                        <div className="
-                            text-center
-                            mb-6
-                        ">
 
 
-                            <h3 className="
-                                text-xl
-                                font-bold
-                                mb-4
-                            ">
 
-                                Choose Card Colour
-
-                            </h3>
+                        {
+                            !selectedColor &&
 
 
                             <div className="
-                                flex
-                                justify-center
-                                gap-5
+                        text-center
+                        mb-6
+                        ">
+
+
+                                <h3 className="
+                            text-xl
+                            font-bold
+                            mb-4
                             ">
+
+
+                                    Choose Card Colour
+
+
+                                </h3>
+
+
+
 
 
                                 <button
@@ -1893,18 +1919,22 @@ export default function BookRummyTable() {
                                     }
 
                                     className="
-                                    px-6
-                                    py-3
-                                    bg-red-600
-                                    text-white
-                                    rounded
-                                    "
+                                px-6
+                                py-3
+                                bg-red-600
+                                text-white
+                                rounded
+                                "
 
                                 >
 
                                     🔴 Red Cards
 
+
                                 </button>
+
+
+
 
 
                                 <button
@@ -1913,18 +1943,19 @@ export default function BookRummyTable() {
                                         setSelectedColor("black")
                                     }
 
-
                                     className="
-                                    px-6
-                                    py-3
-                                    bg-black
-                                    text-white
-                                    rounded
-                                    "
+                                ml-5
+                                px-6
+                                py-3
+                                bg-black
+                                text-white
+                                rounded
+                                "
 
                                 >
 
                                     ⚫ Black Cards
+
 
                                 </button>
 
@@ -1932,162 +1963,169 @@ export default function BookRummyTable() {
 
                             </div>
 
-
-                        </div>
-
-
-                    }
+                        }
 
 
-                    {
-                        selectedColor &&
+                        {
+                            selectedColor &&
 
 
-                        <>
+                            <>
 
 
-                            <div className="mb-4">
+                                <div>
 
 
-                                {
-                                    selectedPlayers.map(
-                                        player => (
+                                    {
+                                        selectedPlayers.map(
+                                            player => (
 
 
-                                            <button
+                                                <button
 
-                                                key={
-                                                    player.uid
-                                                }
-
-
-                                                onClick={() =>
-                                                    setActivePlayer(
-                                                        player.name
-                                                    )
-                                                }
+                                                    key={
+                                                        player.uid
+                                                    }
 
 
-                                                className="
-                                            m-1
-                                            px-3
-                                            py-1
-                                            border
-                                            rounded
-                                            "
-
-                                            >
-
-                                                {
-                                                    player.name
-                                                }
-
-                                            </button>
+                                                    onClick={() =>
+                                                        setActivePlayer(
+                                                            player.name
+                                                        )
+                                                    }
 
 
-                                        ))
+                                                    className="
+                                                m-1
+                                                px-3
+                                                py-1
+                                                border
+                                                rounded
+                                                "
 
-                                }
+                                                >
+
+                                                    {player.name}
 
 
-                            </div>
+                                                </button>
 
 
-                            {
-                                activePlayer &&
+                                            )
 
+                                        )
 
-                                <div className="
-                                    mb-4
-                                    text-center
-                                    text-blue-600
-                                    font-semibold
-                                ">
+                                    }
 
-                                    👉 {activePlayer},
-                                    click a card
 
                                 </div>
 
 
-                            }
 
-                            <CardGrid
 
-                                cards={
-                                    cards
+                                {
+                                    activePlayer &&
+
+
+                                    <div className="
+                                text-center
+                                text-blue-600
+                                font-semibold
+                                mb-4
+                                ">
+
+
+                                        👉 {activePlayer},
+                                        click a card
+
+
+                                    </div>
+
+
                                 }
 
 
-                                onPick={
-                                    handlePick
-                                }
+                                <CardGrid
+
+                                    cards={
+                                        cards
+                                    }
 
 
-                                pickedCards={
-                                    pickedCards
-                                }
+                                    onPick={
+                                        handlePick
+                                    }
 
 
-                                disabled={
-                                    hasAlreadyPicked
-                                }
-
-                            />
+                                    pickedCards={
+                                        pickedCards
+                                    }
 
 
-                        </>
+                                    disabled={
+                                        hasAlreadyPicked
+                                    }
+
+                                />
 
 
-                    }
 
 
-                </>
+                            </>
 
 
-            }
+                        }
 
 
-            {
-                started &&
-                results.length > 0 &&
+
+                    </>
 
 
-                <ResultTable
-
-                    results={
-                        results
-                    }
+                }
 
 
-                    selectedPlayers={
-                        selectedPlayers
-                    }
+                {
+                    started &&
+                    results.length > 0 &&
 
 
-                    onReset={
-                        handleNewGame
-                    }
+                    <ResultTable
+
+                        results={
+                            results
+                        }
 
 
-                    userRole={
-                        isAdmin
-                            ?
-                            "admin"
-                            :
-                            "member"
-                    }
+                        selectedPlayers={
+                            selectedPlayers
+                        }
 
 
-                />
-
-            }
-
-            {
-                playerToRemove &&
+                        onReset={
+                            handleNewGame
+                        }
 
 
-                <div className="
+                        userRole={
+                            isAdmin
+                                ?
+                                "admin"
+                                :
+                                "member"
+                        }
+
+
+                    />
+
+
+                }
+
+
+                {
+                    playerToRemove &&
+
+
+                    <div className="
                     fixed
                     inset-0
                     bg-black/40
@@ -2098,8 +2136,11 @@ export default function BookRummyTable() {
                 ">
 
 
-                    <div className="
+                        <div className="
                         bg-white
+                        dark:bg-slate-800
+                        text-gray-900
+                        dark:text-white
                         rounded-2xl
                         p-6
                         w-80
@@ -2107,92 +2148,124 @@ export default function BookRummyTable() {
                     ">
 
 
-                        <div className="text-4xl mb-3">
 
-                            ⚠️
+                            <div className="text-4xl mb-3">
 
-                        </div>
+                                ⚠️
 
-                        <h2 className="font-bold text-lg mb-3">
-
-                            Leave Rummy Table?
-
-                        </h2>
+                            </div>
 
 
-                        <p className="mb-5">
 
-                            Remove
+                            <h2 className="
+                            font-bold
+                            text-lg
+                            mb-3
+                            text-gray-900
+                            dark:text-white
+                            ">
 
-                            <b>
+                                Leave Rummy Table?
+
+                            </h2>
+
+
+
+
+                            <p className="mb-5 
+                            text-gray-700
+                            dark:text-gray-200">
+
+                                Remove
+
+                                <b className="
+                                text-gray-900
+                                dark:text-white
+                            ">
+                                    {" "}
+                                    {playerToRemove.name}
+                                </b>
+
                                 {" "}
-                                {playerToRemove.name}
-                            </b>
+                                from table?
 
-                            {" "}
-                            from table?
-
-                        </p>
+                            </p>
 
 
-                        <div className="
-                            flex
-                            justify-center
-                            gap-4
+
+
+                            <div className="
+                        flex
+                        justify-center
+                        gap-4
                         ">
 
 
+                                <button
 
-                            <button
+                                    onClick={() =>
+                                        setPlayerToRemove(null)
+                                    }
 
-                                onClick={() =>
-                                    setPlayerToRemove(null)
-                                }
-
-                                className="
+                                    className="
                                 px-4
                                 py-2
                                 rounded
                                 bg-gray-300
+                                dark:bg-slate-600
+                                dark:text-white
+                                hover:bg-gray-400
+                                dark:hover:bg-slate-500
                                 "
 
-                            >
-                                Cancel
+                                >
 
-                            </button>
-
-                            <button
-
-                                onClick={
-                                    confirmRemovePlayer
-                                }
+                                    Cancel
 
 
-                                className="
+                                </button>
+
+
+
+
+                                <button
+
+                                    onClick={
+                                        confirmRemovePlayer
+                                    }
+
+                                    className="
                                 px-4
                                 py-2
                                 rounded
                                 bg-red-600
                                 text-white
+                                hover:bg-red-700
                                 "
 
-                            >
+                                >
 
-                                Leave
+                                    Leave
 
-                            </button>
+
+                                </button>
+
+
+
+                            </div>
+
+
 
                         </div>
+
 
 
                     </div>
 
 
-                </div>
+                }
 
-            }
-
-
+            </div>
         </div>
 
     );

@@ -50,11 +50,11 @@ export default function CommonModal({
                 className="
                 bg-white
                 dark:bg-slate-800
+                text-gray-900
+                dark:text-white
                 rounded-2xl
-                shadow-xl
                 p-6
                 w-80
-                relative
                 text-center
                 "
             >
@@ -68,7 +68,7 @@ export default function CommonModal({
                     text-gray-500
                     "
                 >
-                    <X size={20}/>
+                    <X size={20} />
                 </button>
 
 
