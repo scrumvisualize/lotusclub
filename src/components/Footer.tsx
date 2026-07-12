@@ -1,6 +1,35 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
+
+    const [user, setUser] = useState(
+        JSON.parse(localStorage.getItem("user") || "null")
+    );
+
+    useEffect(() => {
+
+        const updateUser = () => {
+            setUser(
+                JSON.parse(
+                    localStorage.getItem("user") || "null"
+                )
+            );
+        };
+
+        window.addEventListener(
+            "storage",
+            updateUser
+        );
+
+        return () => {
+            window.removeEventListener(
+                "storage",
+                updateUser
+            );
+        };
+
+    }, []);
 
     return (
         <footer className="mt-20 border-t border-gray-200 bg-white dark:border-gray-700 dark:bg-slate-900">
@@ -31,9 +60,18 @@ export default function Footer() {
                             Contact
                         </Link>
 
-                        <Link to="/login" className="hover:text-blue-600 transition-colors duration-200">
-                            Login
-                        </Link>
+                        {user ? (
+                            <>
+                                <Link to="/bookrummytable" className="hover:text-blue-600 transition-colors duration-200">
+                                    Book a Rummy Seat
+                                </Link>
+
+                            </>
+                        ) : (
+                            <Link to="/login" className="hover:text-blue-600 transition-colors duration-200">
+                                Login
+                            </Link>
+                        )}
 
                     </div>
 

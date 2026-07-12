@@ -3,4 +3,5 @@ export type BookingPlayer = {
     membershipNo: string;
     name: string;
     rummyAmount?: number;
+    rummyPoolAmt?: number;
 };

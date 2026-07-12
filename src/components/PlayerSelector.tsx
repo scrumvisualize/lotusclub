@@ -13,7 +13,7 @@ type Props = {
 export default function PlayerSelector({
     selectedPlayers,
     players,
-    maxSelection = 12,
+    maxSelection = 11,
     onSelect,
     loggedUser,
     isAdmin,
@@ -24,9 +24,15 @@ export default function PlayerSelector({
         onSelect(player);
     };
 
-    const totalRummyPool = selectedPlayers.reduce(
+    const totalRummyAmount = selectedPlayers.reduce(
         (total, player) =>
             total + (Number(player.rummyAmount) || 0),
+        0
+    );
+
+    const totalRummyPoolAmt = selectedPlayers.reduce(
+        (total, player) =>
+            total + (Number(player.rummyPoolAmt) || 0),
         0
     );
 
@@ -37,10 +43,40 @@ export default function PlayerSelector({
                 Player's Joined ({selectedPlayers.length}/{maxSelection})
             </h2>
 
-            <div className="mt-4 mb-4 p-3 rounded-lg border bg-yellow-100 dark:bg-[#0ec9c9]">
-                <h3 className="font-semibold">
-                    Total Rummy Pool: ${totalRummyPool ?? 0}
-                </h3>
+            <div className="
+                mt-4
+                mb-4
+                grid
+                grid-cols-1
+                sm:grid-cols-2
+                gap-3
+                ">
+
+                <div className="
+                p-3
+                rounded-lg
+                border
+                bg-yellow-100
+                dark:bg-[#0ec9c9]
+                ">
+                    <h3 className="font-semibold">
+                        Total Rummy Amount: ${totalRummyAmount ?? 0}
+                    </h3>
+                </div>
+
+
+                <div className="
+                p-3
+                rounded-lg
+                border
+                bg-green-100
+                dark:bg-[#0ec9c9]
+                ">
+                    <h3 className="font-semibold">
+                        Total Rummy Pool Amount: ${totalRummyPoolAmt ?? 0}
+                    </h3>
+                </div>
+
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
