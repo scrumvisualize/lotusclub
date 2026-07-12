@@ -52,7 +52,7 @@ export default function BookRummyTable() {
 
 
 
-    const MAX_PLAYERS = 12;
+    const MAX_PLAYERS = 11;
 
 
 
@@ -117,8 +117,6 @@ export default function BookRummyTable() {
         setWaitingQueue
     ] =
         useState<BookingPlayer[]>([]);
-
-
 
 
 
@@ -264,6 +262,8 @@ export default function BookRummyTable() {
                             const data =
                                 doc.data();
 
+                            console.log("please show" + data.rummyPoolAmt);
+
                             return {
 
                                 uid:
@@ -278,7 +278,10 @@ export default function BookRummyTable() {
                                     data.name,
 
                                 rummyAmount:
-                                    data.rummyAmount || 0
+                                    data.rummyAmount || 0,
+
+                                rummyPoolAmt:
+                                    data.rummyPoolAmt || 0
 
                             };
 
@@ -363,24 +366,9 @@ export default function BookRummyTable() {
 
 
                     const currentSelectedPlayers =
-                        (data.selectedPlayers || []).map(
-                            (player: BookingPlayer) => {
+                        data.selectedPlayers || [];
 
-                                const member =
-                                    members.find(
-                                        m => m.membershipNo === player.membershipNo
-                                    );
-
-                                return {
-                                    ...player,
-                                    rummyAmount:
-                                        member?.rummyAmount ??
-                                        player.rummyAmount ??
-                                        0
-                                };
-                            }
-                        );
-
+                    setSelectedPlayers(currentSelectedPlayers);
 
 
                     const currentWaitingQueue =
@@ -580,7 +568,8 @@ export default function BookRummyTable() {
                             ...selectedPlayers,
                             {
                                 ...player,
-                                rummyAmount: Number(player.rummyAmount) || 0
+                                rummyAmount: Number(player.rummyAmount) || 0,
+                                rummyPoolAmt: Number(player.rummyPoolAmt) || 0
                             }
                         ]
                     );
@@ -611,33 +600,34 @@ export default function BookRummyTable() {
                             [
                                 ...playersWaiting,
 
-
                                 ...members.filter(
                                     member =>
-
-
                                         !updatedPlayers.some(
-                                            p =>
-                                                p.uid === member.uid
+                                            p => p.uid === member.uid
                                         )
-
                                         &&
-
-
                                         !waitingQueue.some(
-                                            q =>
-                                                q.uid === member.uid
+                                            q => q.uid === member.uid
                                         )
-
+                                        &&
+                                        member.uid !== loggedUser?.uid
                                 )
-
                             ]
                         );
 
 
                 }
 
+                // ADD THIS HERE
 
+                updatedWaitingPlayers =
+                    updatedWaitingPlayers.filter(
+                        waiting =>
+                            !updatedPlayers.some(
+                                selected =>
+                                    selected.uid === waiting.uid
+                            )
+                    );
 
 
                 await updateDoc(
@@ -957,7 +947,8 @@ export default function BookRummyTable() {
                             ...updatedPlayers,
                             {
                                 ...player,
-                                rummyAmount: Number(player.rummyAmount) || 0
+                                rummyAmount: Number(player.rummyAmount) || 0,
+                                rummyPoolAmt: Number(player.rummyPoolAmt) || 0
                             }
                         ]
                     );
@@ -1065,7 +1056,7 @@ export default function BookRummyTable() {
 
                 },
 
-                500
+                700
 
             );
 
