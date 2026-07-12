@@ -220,14 +220,11 @@ export default function BookRummyTable() {
 
 
 
-
     const hasAlreadyPicked =
         results.some(
             r =>
                 r.uid === loggedUser?.uid
         );
-
-
 
 
 
@@ -242,6 +239,7 @@ export default function BookRummyTable() {
 
         const loadMembers =
             async () => {
+
 
 
                 const snapshot =
@@ -266,7 +264,6 @@ export default function BookRummyTable() {
                             const data =
                                 doc.data();
 
-
                             return {
 
                                 uid:
@@ -278,7 +275,10 @@ export default function BookRummyTable() {
 
 
                                 name:
-                                    data.name
+                                    data.name,
+
+                                rummyAmount:
+                                    data.rummyAmount || 0
 
                             };
 
@@ -299,8 +299,6 @@ export default function BookRummyTable() {
 
 
     }, []);
-
-
 
 
 
@@ -365,7 +363,23 @@ export default function BookRummyTable() {
 
 
                     const currentSelectedPlayers =
-                        data.selectedPlayers || [];
+                        (data.selectedPlayers || []).map(
+                            (player: BookingPlayer) => {
+
+                                const member =
+                                    members.find(
+                                        m => m.membershipNo === player.membershipNo
+                                    );
+
+                                return {
+                                    ...player,
+                                    rummyAmount:
+                                        member?.rummyAmount ??
+                                        player.rummyAmount ??
+                                        0
+                                };
+                            }
+                        );
 
 
 
@@ -447,7 +461,7 @@ export default function BookRummyTable() {
 
 
 
-    }, []);
+    }, [members]);
 
     /*
     REMOVE DUPLICATES BY UID
@@ -477,12 +491,8 @@ export default function BookRummyTable() {
 
 
 
-
-
-
-
     /*
-        PLAYER SELECT
+        PLAYER SELECTloggedUser 
 
         Add player
         or request leave
@@ -568,12 +578,12 @@ export default function BookRummyTable() {
                     uniquePlayers(
                         [
                             ...selectedPlayers,
-                            player
+                            {
+                                ...player,
+                                rummyAmount: Number(player.rummyAmount) || 0
+                            }
                         ]
                     );
-
-
-
 
 
                 let updatedWaitingPlayers =
@@ -945,7 +955,10 @@ export default function BookRummyTable() {
                     uniquePlayers(
                         [
                             ...updatedPlayers,
-                            player
+                            {
+                                ...player,
+                                rummyAmount: Number(player.rummyAmount) || 0
+                            }
                         ]
                     );
 
@@ -1423,6 +1436,7 @@ START GAME
     */
 
 
+
     const handleNewGame =
         async () => {
 
@@ -1504,6 +1518,12 @@ START GAME
 
 
         };
+
+    const isUserJoined =
+        selectedPlayers.some(
+            player =>
+                player.uid === loggedUser?.uid
+        );
 
 
     return (
@@ -1625,7 +1645,11 @@ START GAME
 
                         >
 
-                            Join Rummy Table
+                            {
+                                isUserJoined
+                                    ? "View Rummy Order"
+                                    : "Join Rummy Table"
+                            }
 
 
                         </button>
@@ -1753,7 +1777,7 @@ START GAME
 
                                                         }
 
-    `}
+                                                    `}
 
                                                 >
 
@@ -2267,7 +2291,6 @@ START GAME
 
             </div>
         </div>
-
     );
 
 }

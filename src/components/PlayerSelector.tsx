@@ -16,8 +16,7 @@ export default function PlayerSelector({
     maxSelection = 12,
     onSelect,
     loggedUser,
-    isAdmin
-
+    isAdmin,
 }: Props) {
 
 
@@ -25,6 +24,11 @@ export default function PlayerSelector({
         onSelect(player);
     };
 
+    const totalRummyPool = selectedPlayers.reduce(
+        (total, player) =>
+            total + (Number(player.rummyAmount) || 0),
+        0
+    );
 
     return (
         <div className="p-4">
@@ -33,6 +37,11 @@ export default function PlayerSelector({
                 Player's Joined ({selectedPlayers.length}/{maxSelection})
             </h2>
 
+            <div className="mt-4 mb-4 p-3 rounded-lg border bg-yellow-100 dark:bg-[#0ec9c9]">
+                <h3 className="font-semibold">
+                    Total Rummy Pool: ${totalRummyPool ?? 0}
+                </h3>
+            </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
 
@@ -107,7 +116,6 @@ export default function PlayerSelector({
 
                     })
                 }
-
 
             </div>
 
