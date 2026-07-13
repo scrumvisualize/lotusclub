@@ -5,3 +5,10 @@ export type BookingPlayer = {
     rummyAmount?: number;
     rummyPoolAmt?: number;
 };
+
+export type BankerNote = {
+    id: string;
+    text: string;
+    createdBy: string;
+    createdAt: number;
+};

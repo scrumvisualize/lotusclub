@@ -10,7 +10,8 @@ import {
 } from "../types/card";
 
 import {
-    type BookingPlayer
+    type BookingPlayer,
+    type BankerNote
 } from "../types/member";
 
 
@@ -27,6 +28,7 @@ import {
     onSnapshot,
     arrayUnion,
     serverTimestamp,
+    arrayRemove
 } from "firebase/firestore";
 
 
@@ -117,6 +119,17 @@ export default function BookRummyTable() {
         setWaitingQueue
     ] =
         useState<BookingPlayer[]>([]);
+
+    const [
+        bankerNotes,
+        setBankerNotes
+    ] = useState<BankerNote[]>([]);
+
+
+    const [
+        newNote,
+        setNewNote
+    ] = useState("");
 
 
 
@@ -409,6 +422,10 @@ export default function BookRummyTable() {
 
                     setResults(
                         data.results || []
+                    );
+
+                    setBankerNotes(
+                        data.bankerNotes || []
                     );
 
 
@@ -1193,6 +1210,102 @@ export default function BookRummyTable() {
 
         };
 
+
+
+    const addBankerNote = async () => {
+
+
+        if (!newNote.trim())
+            return;
+
+
+        const bookingRef =
+            doc(
+                db,
+                "rummyBookings",
+                "currentBooking"
+            );
+
+
+        const note: BankerNote = {
+
+            id:
+                crypto.randomUUID(),
+
+            text:
+                newNote.trim(),
+
+            createdBy:
+                loggedUser?.name || "Unknown",
+
+            createdAt:
+                Date.now()
+
+        };
+
+
+        await updateDoc(
+            bookingRef,
+            {
+
+                bankerNotes:
+                    arrayUnion(note),
+
+
+                updatedAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        setNewNote("");
+
+    };
+
+
+    const removeBankerNote = async (
+        note: BankerNote
+    ) => {
+
+        const canRemove =
+            isAdmin ||
+            note.createdBy === loggedUser?.name;
+
+
+        if (!canRemove) {
+
+            return;
+
+        }
+
+
+        const bookingRef =
+            doc(
+                db,
+                "rummyBookings",
+                "currentBooking"
+            );
+
+
+        await updateDoc(
+            bookingRef,
+            {
+
+                bankerNotes:
+                    arrayRemove(note),
+
+                updatedAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+    };
+
+
+
     /*
 START GAME
 
@@ -1464,6 +1577,8 @@ START GAME
 
                         results: [],
 
+                        bankerNotes: [],
+
 
                         status:
                             "waiting",
@@ -1515,6 +1630,25 @@ START GAME
             player =>
                 player.uid === loggedUser?.uid
         );
+
+
+    const formatNoteTime = (timestamp: number) => {
+
+        return new Date(timestamp)
+            .toLocaleString(
+                "en-AU",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            );
+
+    };
+
+
 
 
     return (
@@ -1857,6 +1991,153 @@ START GAME
 
                         }
 
+                        <div
+                            className="
+                            mt-5
+                            mx-4
+                            p-4
+                            border
+                            rounded-lg
+                            bg-yellow-50
+                            dark:bg-yellow-900/20
+                            "
+                        >
+
+
+                            <h3 className="font-bold mb-3">
+                                💰 Banker Notes
+                            </h3>
+
+
+                            <div className="
+                            flex
+                            flex-col
+                            sm:flex-row
+                            gap-3
+                            mb-3
+                            ">
+
+                                <input
+
+                                    value={newNote}
+
+                                    onChange={(e) =>
+                                        setNewNote(e.target.value)
+                                    }
+
+                                    placeholder="Add note..."
+
+                                    className="
+                                    flex-1
+                                    border
+                                    rounded
+                                    px-3
+                                    py-2
+                                    dark:bg-slate-800
+                                    "
+
+                                />
+
+
+                                <button
+
+                                    onClick={addBankerNote}
+
+                                    className="
+                                    w-full
+                                    sm:w-auto
+                                    px-5
+                                    py-2
+                                    bg-blue-600
+                                    text-white
+                                    rounded-lg
+                                    "
+                                >
+                                    Add Note
+                                </button>
+
+
+                            </div>
+
+
+
+                            {
+                                bankerNotes.map(note => (
+
+
+                                    <div
+
+                                        key={note.id}
+
+                                        className="
+                                        flex
+                                        justify-between
+                                        items-center
+                                        bg-white
+                                        dark:bg-slate-800
+                                        rounded
+                                        p-3
+                                        mb-2
+                                        "
+                                    >
+
+                                        <div>
+
+                                            <div>
+                                                💵 {note.text}
+                                            </div>
+
+
+                                            <div className="
+                                            text-xs
+                                            text-gray-500
+                                            ">
+
+                                                Added by {note.createdBy}
+                                                {" • "}
+
+                                                {formatNoteTime(note.createdAt)}
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                        {
+                                            (
+                                                isAdmin ||
+                                                note.createdBy === loggedUser?.name
+                                            )
+                                            &&
+
+                                            <button
+
+                                                onClick={() =>
+                                                    removeBankerNote(note)
+                                                }
+
+                                                className="
+                                                text-red-600
+                                                "
+                                            >
+                                                ✕
+                                            </button>
+
+                                        }
+
+
+
+                                    </div>
+
+
+                                ))
+
+                            }
+
+
+                        </div>
+
 
 
 
@@ -1881,14 +2162,14 @@ START GAME
 
 
                             className="
-                        mx-4
-                        mb-4
-                        px-4
-                        py-2
-                        bg-gray-600
-                        text-white
-                        rounded
-                        "
+                            mx-4
+                            mb-4
+                            px-4
+                            py-2
+                            bg-gray-600
+                            text-white
+                            rounded
+                            "
 
                         >
 
@@ -2210,10 +2491,10 @@ START GAME
 
 
                             <div className="
-                        flex
-                        justify-center
-                        gap-4
-                        ">
+                            flex
+                            justify-center
+                            gap-4
+                            ">
 
 
                                 <button
@@ -2272,7 +2553,6 @@ START GAME
 
 
                         </div>
-
 
 
                     </div>
