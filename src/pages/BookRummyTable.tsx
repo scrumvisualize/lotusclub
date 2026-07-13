@@ -212,6 +212,28 @@ export default function BookRummyTable() {
     ] =
         useState("");
 
+    const [
+        globalMessage,
+        setGlobalMessage
+    ] = useState("");
+
+    const [
+        globalMessageTime,
+        setGlobalMessageTime
+    ] = useState<number | null>(null);
+
+    const [
+        showGlobalMessage,
+        setShowGlobalMessage
+    ] = useState(true);
+
+    const [
+        fadeGlobalMessage,
+        setFadeGlobalMessage
+    ] = useState(false);
+
+
+
 
 
     /*
@@ -250,7 +272,6 @@ export default function BookRummyTable() {
 
         const loadMembers =
             async () => {
-
 
 
                 const snapshot =
@@ -317,6 +338,41 @@ export default function BookRummyTable() {
     }, []);
 
 
+    useEffect(() => {
+
+        if (!globalMessage) {
+            return;
+        }
+
+
+        setShowGlobalMessage(true);
+        setFadeGlobalMessage(false);
+
+
+        const timer = setTimeout(() => {
+
+            setFadeGlobalMessage(true);
+
+
+            setTimeout(() => {
+
+                setShowGlobalMessage(false);
+
+            }, 1000);
+
+
+        }, 30000);
+
+
+
+        return () => {
+            clearTimeout(timer);
+        };
+
+
+    }, [globalMessage]);
+
+
 
 
     /*
@@ -364,6 +420,10 @@ export default function BookRummyTable() {
 
                         setResults([]);
 
+                        setGlobalMessage("");
+
+                        setGlobalMessageTime(null);
+
 
                         return;
 
@@ -376,6 +436,13 @@ export default function BookRummyTable() {
                         snapshot.data();
 
 
+                    setGlobalMessage(
+                        data.globalMessage || ""
+                    );
+
+                    setGlobalMessageTime(
+                        data.globalMessageTime || null
+                    );
 
 
                     const currentSelectedPlayers =
@@ -1414,9 +1481,6 @@ START GAME
                 return;
 
 
-
-
-
             const player =
                 selectedPlayers.find(
                     p =>
@@ -1526,8 +1590,6 @@ START GAME
             );
 
 
-
-
             setActivePlayer(null);
 
 
@@ -1579,6 +1641,11 @@ START GAME
 
                         bankerNotes: [],
 
+                        globalMessage:
+                            "🎉 New game started ! Book your rummy seat now and join the table.",
+
+                        globalMessageTime:
+                            Date.now(),
 
                         status:
                             "waiting",
@@ -1604,6 +1671,8 @@ START GAME
 
 
                 setPickedCards([]);
+
+                setShowGlobalMessage(true);
 
 
 
@@ -1655,13 +1724,13 @@ START GAME
 
         <div
             className="
-        min-h-screen
-        bg-gray-100
-        dark:bg-slate-950
-        py-6
-        px-3
-        transition-colors
-    "
+            min-h-screen
+            bg-gray-100
+            dark:bg-slate-950
+            py-6
+            px-3
+            transition-colors
+            "
         >
 
             <div
@@ -1690,6 +1759,84 @@ START GAME
 
 
                 <InformationSlider />
+
+                {
+                    globalMessage && showGlobalMessage && (
+
+                        <div
+                            className={`
+                                relative
+                                mx-4
+                                mt-4
+                                mb-4
+                                rounded-xl
+                                border
+                                border-orange-300
+                                bg-orange-50
+                                dark:border-orange-700
+                                dark:bg-orange-900
+                                p-4
+                                transition-opacity
+                                duration-1000
+                                ${fadeGlobalMessage
+                                    ? "opacity-0"
+                                    : "opacity-100"
+                                }
+                            `}
+                        >
+
+                            <button
+                                onClick={() =>
+                                    setShowGlobalMessage(false)
+                                }
+                                className="
+                                absolute
+                                top-2
+                                right-3
+                                text-xl
+                                font-bold
+                                text-gray-700
+                                hover:text-black
+                                z-10
+                                "
+                            >
+                                ×
+                            </button>
+
+                            <div className="font-semibold pr-8">
+
+                                {globalMessage}
+
+                            </div>
+
+                            {
+                                globalMessageTime && (
+
+                                    <div
+                                        className="
+                            text-xs
+                            text-gray-600
+                            mt-1
+                        "
+                                    >
+
+                                        {
+                                            new Date(
+                                                globalMessageTime
+                                            ).toLocaleString(
+                                                "en-AU"
+                                            )
+                                        }
+
+                                    </div>
+
+                                )
+                            }
+
+                        </div>
+
+                    )
+                }
 
                 {!started && (
 
@@ -2091,6 +2238,7 @@ START GAME
                                             <div className="
                                             text-xs
                                             text-gray-500
+                                            italic
                                             ">
 
                                                 Added by {note.createdBy}

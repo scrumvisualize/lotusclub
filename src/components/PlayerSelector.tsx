@@ -57,7 +57,7 @@ export default function PlayerSelector({
                 rounded-lg
                 border
                 bg-yellow-100
-                dark:bg-[#0ec9c9]
+                dark:bg-[#6ea9c4]
                 ">
                     <h3 className="font-semibold">
                         Total Rummy Amount: ${totalRummyAmount ?? 0}
@@ -70,7 +70,7 @@ export default function PlayerSelector({
                 rounded-lg
                 border
                 bg-green-100
-                dark:bg-[#0ec9c9]
+                dark:bg-[#6ea9c4]
                 ">
                     <h3 className="font-semibold">
                         Total Rummy Pool Amount: ${totalRummyPoolAmt ?? 0}
