@@ -13,7 +13,7 @@ export default function MondayTimeline() {
     const today = new Date();
 
     const allSchedule = schedule;
-    const isDarkMode = document.documentElement.classList.contains('dark');
+    //const isDarkMode = document.documentElement.classList.contains('dark');
 
     const lastCompletedIndex = allSchedule.reduce((acc, item, i) => {
         return new Date(item.date) <= today ? i : acc;
@@ -28,6 +28,8 @@ export default function MondayTimeline() {
         maxIndex <= 0
             ? 0
             : (Math.max(0, safeActiveIndex) / maxIndex) * 100;
+
+    const timelineRef = useRef<HTMLDivElement | null>(null);
 
     // =========================
     // PLAY / PAUSE
@@ -55,6 +57,41 @@ export default function MondayTimeline() {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
     }, [playing, lastCompletedIndex]);
+
+    useEffect(() => {
+
+        if (safeActiveIndex < 0) return;
+
+        const container = timelineRef.current;
+
+        if (!container) return;
+
+
+        const timelineWidth = 850;
+        const itemWidth = timelineWidth / allSchedule.length;
+
+
+        // Position of current green icon
+        const iconPosition =
+            safeActiveIndex * itemWidth + itemWidth / 2;
+
+
+        // Keep icon in center of mobile screen
+        const scrollPosition =
+            iconPosition - container.clientWidth / 2;
+
+
+        container.scrollTo({
+
+            left: Math.max(0, scrollPosition),
+
+            // Smooth browser animation
+            behavior: "smooth"
+
+        });
+
+
+    }, [safeActiveIndex]);
 
     const formatDisplayDate = (date: string) => {
         return new Date(date).toLocaleDateString("en-AU", {
@@ -119,80 +156,111 @@ export default function MondayTimeline() {
             </div>
 
             {/* =========================
-TIMELINE WRAPPER
-========================= */}
-            <div className="timeline-scroll"
+                TIMELINE WRAPPER
+                ========================= */}
+
+            <div
+                ref={timelineRef}   // ADD THIS
+                className="timeline-scroll"
                 style={{
                     position: 'relative',
                     marginTop: 40,
-                    height: 220
+                    height: 280,   // FIX: give tooltip space
+                    overflowX: 'auto',
+                    width: '100%',
+                    scrollBehavior: 'smooth'
+
                 }}
             >
 
-                {/* =========================
-CONNECTOR BACK LINE
-========================= */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        marginTop: 110,
-                        top: 50,
-                        left: 0,
-                        right: 0,
-                        height: 40,
-                        background: '#e0e0e0',
-                        borderRadius: 4,
-                        zIndex: 0
-                    }}
-                />
-
-                {/* =========================
-CONNECTOR PROGRESS LINE
-========================= */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        marginTop: 110,
-                        top: 50,
-                        left: 0,
-                        height: 40,
-                        width: `${progress}%`,
-                        background: 'linear-gradient(90deg, #a2d3ef, #1e63f8)',
-                        borderRadius: 4,
-                        zIndex: 1,
-                        transition: 'width 0.8s ease'
-                    }}
-                />
-
-                {/* =========================
-                MILESTONES ROW
-                ========================= */}
+                {/* FIX:
+                Same width as milestone row.
+                This keeps progress bar and green icons synced on mobile.
+                */}
                 <div
                     style={{
                         position: 'relative',
-                        marginTop: 60
+                        minWidth: 850,
+                        height: 220
                     }}
                 >
+
                     {/* =========================
-                    DOT ROW (with labels + tooltip)
+                    CONNECTOR BACK LINE
                     ========================= */}
                     <div
                         style={{
-                            position: 'relative'
+                            position: 'absolute',
+                            top: 110,
+                            left: 10,
+                            right: 15,
+                            height: 40,
+                            background: '#e0e0e0',
+                            borderRadius: 4,
+                            zIndex: 0
+                        }}
+                    />
+
+
+                    {/* =========================
+                    CONNECTOR PROGRESS LINE
+                    ========================= */}
+                    <div
+                        style={{
+                            position: 'absolute',
+
+                            // FIX:
+                            // Same coordinate system as milestone row
+                            top: 110,
+                            left: 10,
+
+                            height: 40,
+
+                            // FIX:
+                            // Calculate against complete timeline width
+                            width: `calc(${progress}% - 15px)`,
+
+                            background:
+                                'linear-gradient(90deg, #0f53e6, #799ef0)',
+
+                            borderRadius: 4,
+                            zIndex: 1,
+
+                            transition: 'width 0.8s ease'
+                        }}
+                    />
+
+
+                    {/* =========================
+                    MILESTONES ROW
+                    ========================= */}
+                    <div
+                        style={{
+                            position: 'relative',
+                            marginTop: 60
                         }}
                     >
+
                         <div
                             style={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 position: 'relative',
                                 zIndex: 2,
+
+                                // KEEP SAME WIDTH
                                 minWidth: 850
                             }}
                         >
+
                             {allSchedule.map((item, index) => {
-                                const isPastOrPresent = new Date(item.date) <= today;
-                                const isCompleted = index <= safeActiveIndex;
+
+                                const isPastOrPresent =
+                                    new Date(item.date) <= today;
+
+                                const isCompleted =
+                                    index <= safeActiveIndex;
+
 
                                 return (
                                     <div
@@ -203,6 +271,7 @@ CONNECTOR PROGRESS LINE
                                             position: 'relative'
                                         }}
                                     >
+
                                         {/* DOT */}
 
                                         <div
@@ -218,19 +287,36 @@ CONNECTOR PROGRESS LINE
                                                         : '#ccc',
                                                 cursor: 'pointer',
                                                 position: 'relative',
-                                                zIndex: 3,
+                                                zIndex: 999,
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center'
                                             }}
-                                            onMouseEnter={() => setActiveTooltipIndex(index)}
-                                            onMouseLeave={() => setActiveTooltipIndex(null)}
-                                            onClick={() =>
-                                                setActiveTooltipIndex((prev) =>
-                                                    prev === index ? null : index
-                                                )
-                                            }
+
+                                            // Desktop hover
+                                            onMouseEnter={() => {
+                                                setActiveTooltipIndex(index);
+                                            }}
+
+                                            onMouseLeave={() => {
+                                                setActiveTooltipIndex(null);
+                                            }}
+
+                                            // Mobile touch
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+
+                                                setActiveTooltipIndex(index);
+                                            }}
+
+
+                                            onTouchEnd={(e) => {
+                                                e.stopPropagation();
+
+                                                setActiveTooltipIndex(index);
+                                            }}
                                         >
+
                                             <div
                                                 style={{
                                                     width: 10,
@@ -239,6 +325,7 @@ CONNECTOR PROGRESS LINE
                                                     background: '#fff'
                                                 }}
                                             />
+
                                         </div>
 
                                         {/* TOOLTIP */}
@@ -246,18 +333,27 @@ CONNECTOR PROGRESS LINE
                                             <div
                                                 style={{
                                                     position: 'absolute',
-                                                    top: -55,
+
+                                                    // FIX: position above green icon
+                                                    top: -54,
+
                                                     left: '50%',
                                                     transform: 'translateX(-50%)',
-                                                    // background: '#fff',
-                                                    background: isDarkMode ? '#1f2937' : '#fff', // gray-800
-                                                    color: isDarkMode ? '#fff' : '#111827',      // white / gray-900
-                                                    padding: '6px 10px',
+
+                                                    background: '#1f2937',
+                                                    color: '#fff',
+
+                                                    padding: '8px 12px',
                                                     borderRadius: 8,
-                                                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                                                    fontSize: 11,
+
+                                                    fontSize: 12,
                                                     whiteSpace: 'nowrap',
-                                                    zIndex: 10
+
+                                                    zIndex: 9999,
+
+                                                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+
+                                                    pointerEvents: 'none'
                                                 }}
                                             >
                                                 <div>👤 {item.hosts[0]}</div>
@@ -265,12 +361,20 @@ CONNECTOR PROGRESS LINE
                                             </div>
                                         )}
 
-                                        {/* DATE LABEL */}
+
+                                        {/* DATE */}
                                         <div
-                                            style={{ fontSize: 12, marginTop: 12, marginBottom: 10 }}
+                                            style={{
+                                                fontSize: 12,
+                                                marginTop: 12,
+                                                marginBottom: 10
+                                            }}
                                         >
                                             {formatDisplayDate(item.date)}
                                         </div>
+
+
+                                        {/* STATUS */}
                                         <div
                                             style={{
                                                 display: 'inline-block',
@@ -279,51 +383,73 @@ CONNECTOR PROGRESS LINE
                                                 borderRadius: 9999,
                                                 fontSize: 10,
                                                 fontWeight: 600,
-                                                background: isCompleted ? '#dcfce7' : '#f3f4f6',
-                                                color: isCompleted ? '#15803d' : '#6b7280',
-                                                transition: 'all 0.3s ease'
+
+                                                background:
+                                                    isCompleted
+                                                        ? '#dcfce7'
+                                                        : '#f3f4f6',
+
+                                                color:
+                                                    isCompleted
+                                                        ? '#15803d'
+                                                        : '#6b7280'
                                             }}
                                         >
-                                            {isCompleted ? '✓ Completed' : 'Upcoming'}
+                                            {
+                                                isCompleted
+                                                    ? '✓ Completed'
+                                                    : 'Upcoming'
+                                            }
                                         </div>
+
+
                                     </div>
                                 );
                             })}
+
                         </div>
+
+
+                        {/* =========================
+                        DOTTED CONNECTOR
+                        ========================= */}
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: 15,
+                                left: 0,
+                                right: 0,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                zIndex: 1
+                            }}
+                        >
+
+                            {allSchedule
+                                .slice(0, -1)
+                                .map((_, i) => (
+                                    <div
+                                        key={i}
+                                        style={{
+                                            flex: 1,
+                                            height: 2,
+                                            margin: '0 2px',
+
+                                            backgroundImage:
+                                                'repeating-linear-gradient(90deg,#aaa 0,#aaa 3px,transparent 3px,transparent 7px)'
+                                        }}
+                                    />
+                                ))
+                            }
+
+                        </div>
+
                     </div>
 
-                    {/* =========================
-DOTTED CONNECTOR ROW
-========================= */}
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: 15, // aligns with center of dots
-                            left: 0,
-                            right: 0,
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            zIndex: 1
-                        }}
-                    >
-                        {allSchedule.slice(0, -1).map((_, i) => (
-                            <div
-                                key={i}
-                                style={{
-                                    flex: 1,
-                                    height: 2,
-                                    margin: '0 2px',
-                                    backgroundImage:
-                                        'repeating-linear-gradient(90deg, #aaa 0, #aaa 3px, transparent 3px, transparent 7px)'
-                                }}
-                            />
-
-                        ))}
-
-
-                    </div>
                 </div>
+
             </div>
+
         </div>
     );
 }
