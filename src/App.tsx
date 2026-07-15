@@ -7,9 +7,13 @@ import Login from "./pages/Login"
 import BookRummyTable from "./pages/BookRummyTable"
 import ProtectedRoute from "./components/protectedRoute";
 import ChangePassword from "./pages/ChangePassword";
+import GlobalLoader from "./components/GlobalLoader";
+import { useState } from "react";
 
 
 export default function App() {
+
+  const [isLoading, setIsLoading] = useState(false);
   return (
 
     <div
@@ -23,6 +27,8 @@ export default function App() {
         duration-300
         "
     >
+
+      {isLoading && <GlobalLoader />}
       <Navbar />
 
       <Routes>
@@ -30,7 +36,7 @@ export default function App() {
         <Route path="/members" element={<Members />} />
         <Route
           path="/login"
-          element={<Login />}
+          element={<Login setIsLoading={setIsLoading} />}
         />
 
         <Route

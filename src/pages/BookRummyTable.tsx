@@ -56,6 +56,9 @@ export default function BookRummyTable() {
 
     const MAX_PLAYERS = 11;
 
+    // Fixed pool amount per player
+    const RUMMY_POOL_AMOUNT = 10;
+
 
 
     /*
@@ -225,7 +228,12 @@ export default function BookRummyTable() {
     const [
         showGlobalMessage,
         setShowGlobalMessage
-    ] = useState(true);
+    ] = useState(false);
+
+    const [
+        globalMessageId,
+        setGlobalMessageId
+    ] = useState("");
 
     const [
         fadeGlobalMessage,
@@ -250,6 +258,16 @@ export default function BookRummyTable() {
         setPromotionRunning
     ] =
         useState(false);
+
+    const [
+        rummyAmountPerPlayer,
+        setRummyAmountPerPlayer
+    ] = useState<number>(60);
+
+    const [
+        rummyAmountSavedMessage,
+        setRummyAmountSavedMessage
+    ] = useState("");
 
 
 
@@ -296,7 +314,7 @@ export default function BookRummyTable() {
                             const data =
                                 doc.data();
 
-                            console.log("please show" + data.rummyPoolAmt);
+                            console.log("Load memebers" + JSON.stringify(data));
 
                             return {
 
@@ -315,7 +333,7 @@ export default function BookRummyTable() {
                                     data.rummyAmount || 0,
 
                                 rummyPoolAmt:
-                                    data.rummyPoolAmt || 0
+                                    RUMMY_POOL_AMOUNT
 
                             };
 
@@ -340,37 +358,55 @@ export default function BookRummyTable() {
 
     useEffect(() => {
 
-        if (!globalMessage) {
+        if (!globalMessage || !globalMessageId) {
             return;
         }
 
 
+        // SHOW MESSAGE FIRST
         setShowGlobalMessage(true);
+
         setFadeGlobalMessage(false);
+
 
 
         const timer = setTimeout(() => {
 
+
             setFadeGlobalMessage(true);
 
 
-            setTimeout(() => {
+
+            const hideTimer = setTimeout(() => {
+
 
                 setShowGlobalMessage(false);
+
+
+                // Mark as seen AFTER display finished
+                localStorage.setItem(
+                    "lastRummyMessageId",
+                    globalMessageId
+                );
+
 
             }, 1000);
 
 
-        }, 30000);
+
+            return () => clearTimeout(hideTimer);
 
 
 
-        return () => {
-            clearTimeout(timer);
-        };
+        }, 3000);
 
 
-    }, [globalMessage]);
+
+        return () => clearTimeout(timer);
+
+
+
+    }, [globalMessage, globalMessageId]);
 
 
 
@@ -435,14 +471,44 @@ export default function BookRummyTable() {
                     const data =
                         snapshot.data();
 
+                    console.log("Booking " + JSON.stringify(data));
 
-                    setGlobalMessage(
-                        data.globalMessage || ""
+                    // Load admin configured rummy amount
+                    setRummyAmountPerPlayer(
+                        data.rummyAmountPerPlayer || 60
                     );
 
-                    setGlobalMessageTime(
-                        data.globalMessageTime || null
-                    );
+                    const messageId =
+                        data.globalMessageId;
+
+
+                    if (
+                        data.globalMessage &&
+                        messageId &&
+                        shouldShowGlobalMessage(messageId)
+                    ) {
+
+                        setGlobalMessage(
+                            data.globalMessage
+                        );
+
+                        setGlobalMessageId(
+                            messageId
+                        );
+
+                        setGlobalMessageTime(
+                            data.globalMessageTime
+                        );
+
+
+                    }
+                    else {
+
+                        setGlobalMessage("");
+
+                        setShowGlobalMessage(false);
+
+                    }
 
 
                     const currentSelectedPlayers =
@@ -652,8 +718,12 @@ export default function BookRummyTable() {
                             ...selectedPlayers,
                             {
                                 ...player,
-                                rummyAmount: Number(player.rummyAmount) || 0,
-                                rummyPoolAmt: Number(player.rummyPoolAmt) || 0
+                                // Use admin configured amount
+                                rummyAmount:
+                                    rummyAmountPerPlayer || 60,
+
+                                rummyPoolAmt:
+                                    RUMMY_POOL_AMOUNT
                             }
                         ]
                     );
@@ -1031,8 +1101,11 @@ export default function BookRummyTable() {
                             ...updatedPlayers,
                             {
                                 ...player,
-                                rummyAmount: Number(player.rummyAmount) || 0,
-                                rummyPoolAmt: Number(player.rummyPoolAmt) || 0
+                                rummyAmount:
+                                    rummyAmountPerPlayer || 60,
+
+                                rummyPoolAmt:
+                                    RUMMY_POOL_AMOUNT
                             }
                         ]
                     );
@@ -1644,6 +1717,9 @@ START GAME
                         globalMessage:
                             "🎉 New game started ! Book your rummy seat now and join the table.",
 
+                        globalMessageId:
+                            crypto.randomUUID(),
+
                         globalMessageTime:
                             Date.now(),
 
@@ -1717,6 +1793,19 @@ START GAME
 
     };
 
+    const shouldShowGlobalMessage = (
+        messageId: string
+    ) => {
+
+        const lastSeen =
+            localStorage.getItem(
+                "lastRummyMessageId"
+            );
+
+
+        return lastSeen !== messageId;
+
+    };
 
 
 
@@ -1871,6 +1960,127 @@ START GAME
 
 
                         />
+
+                        {
+                            isAdmin &&
+
+                            <div
+                                className="
+                                mx-4
+                                mt-4
+                                p-4
+                                border
+                                rounded-lg
+                                bg-blue-50
+                                dark:bg-blue-900/20
+                                "
+                            >
+
+                                <h3 className="font-bold mb-3">
+                                    💰 Set Rummy Amount Per Player
+                                </h3>
+
+
+                                <div className="
+                                flex
+                                gap-3
+                                items-center
+                            ">
+
+                                    <input
+
+                                        type="number"
+
+                                        value={rummyAmountPerPlayer}
+
+                                        onChange={(e) =>
+                                            setRummyAmountPerPlayer(
+                                                Number(e.target.value)
+                                            )
+                                        }
+
+                                        className="
+                                        border
+                                        rounded
+                                        px-3
+                                        py-2
+                                        w-32
+                                        dark:bg-slate-800
+                                        "
+                                    />
+
+
+                                    <button
+
+                                        onClick={async () => {
+
+                                            await updateDoc(
+                                                doc(
+                                                    db,
+                                                    "rummyBookings",
+                                                    "currentBooking"
+                                                ),
+                                                {
+                                                    rummyAmountPerPlayer,
+                                                    updatedAt:
+                                                        serverTimestamp()
+                                                }
+                                            );
+
+                                            // Show confirmation message
+                                            setRummyAmountSavedMessage(
+                                                `✅ New amount set to $${rummyAmountPerPlayer} per player`
+                                            );
+
+
+                                            // Hide message after 3 seconds
+                                            setTimeout(() => {
+
+                                                setRummyAmountSavedMessage("");
+
+                                            }, 3000);
+
+                                        }}
+
+                                        className="
+                                        px-4
+                                        py-2
+                                        bg-green-600
+                                        text-white
+                                        rounded-lg
+                                        "
+                                    >
+                                        Save
+
+                                    </button>
+
+                                    {
+                                        rummyAmountSavedMessage &&
+
+                                        <div
+                                            className="
+                                        mt-3
+                                        text-green-700
+                                        bg-green-100
+                                        dark:bg-green-900/30
+                                        dark:text-green-300
+                                        px-3
+                                        py-2
+                                        rounded-lg
+                                        "
+                                        >
+
+                                            {rummyAmountSavedMessage}
+
+                                        </div>
+                                    }
+
+
+                                </div>
+
+
+                            </div>
+                        }
 
 
                         <button
@@ -2333,80 +2543,79 @@ START GAME
                         {
                             !selectedColor &&
 
-
                             <div className="
-                        text-center
-                        mb-6
-                        ">
-
+                                text-center
+                                mb-6
+                                ">
 
                                 <h3 className="
-                            text-xl
-                            font-bold
-                            mb-4
-                            ">
-
-
+                                text-xl
+                                font-bold
+                                mb-4
+                                ">
                                     Choose Card Colour
-
-
                                 </h3>
 
 
+                                <div className="
+                                flex
+                                justify-center
+                                gap-3
+                                px-2
+                                ">
+
+
+                                    <button
+
+                                        onClick={() =>
+                                            setSelectedColor("red")
+                                        }
+
+                                        className="
+                                        w-36
+                                        sm:w-auto
+                                        px-4
+                                        py-3
+                                        bg-red-600
+                                        text-white
+                                        rounded-lg
+                                        text-sm
+                                        sm:text-base
+                                        "
+
+                                    >
+                                        🔴 Red Cards
+
+                                    </button>
 
 
 
-                                <button
+                                    <button
 
-                                    onClick={() =>
-                                        setSelectedColor("red")
-                                    }
+                                        onClick={() =>
+                                            setSelectedColor("black")
+                                        }
 
-                                    className="
-                                px-6
-                                py-3
-                                bg-red-600
-                                text-white
-                                rounded
-                                "
+                                        className="
+                                        w-36
+                                        sm:w-auto
+                                        px-4
+                                        py-3
+                                        bg-black
+                                        text-white
+                                        rounded-lg
+                                        text-sm
+                                        sm:text-base
+                                        "
+                                    >
+                                        ⚫ Black Cards
 
-                                >
+                                    </button>
 
-                                    🔴 Red Cards
-
-
-                                </button>
-
-
-
-
-
-                                <button
-
-                                    onClick={() =>
-                                        setSelectedColor("black")
-                                    }
-
-                                    className="
-                                ml-5
-                                px-6
-                                py-3
-                                bg-black
-                                text-white
-                                rounded
-                                "
-
-                                >
-
-                                    ⚫ Black Cards
-
-
-                                </button>
-
+                                </div>
 
 
                             </div>
-
                         }
 
 
@@ -2512,9 +2721,6 @@ START GAME
 
                                 />
 
-
-
-
                             </>
 
 
@@ -2568,7 +2774,6 @@ START GAME
                 {
                     playerToRemove &&
 
-
                     <div className="
                     fixed
                     inset-0
@@ -2617,8 +2822,8 @@ START GAME
 
 
                             <p className="mb-5 
-                            text-gray-700
-                            dark:text-gray-200">
+                                text-gray-700
+                                dark:text-gray-200">
 
                                 Remove
 
@@ -2652,16 +2857,15 @@ START GAME
                                     }
 
                                     className="
-                                px-4
-                                py-2
-                                rounded
-                                bg-gray-300
-                                dark:bg-slate-600
-                                dark:text-white
-                                hover:bg-gray-400
-                                dark:hover:bg-slate-500
-                                "
-
+                                    px-4
+                                    py-2
+                                    rounded
+                                    bg-gray-300
+                                    dark:bg-slate-600
+                                    dark:text-white
+                                    hover:bg-gray-400
+                                    dark:hover:bg-slate-500
+                                    "
                                 >
 
                                     Cancel
@@ -2679,14 +2883,13 @@ START GAME
                                     }
 
                                     className="
-                                px-4
-                                py-2
-                                rounded
-                                bg-red-600
-                                text-white
-                                hover:bg-red-700
-                                "
-
+                                    px-4
+                                    py-2
+                                    rounded
+                                    bg-red-600
+                                    text-white
+                                    hover:bg-red-700
+                                    "
                                 >
 
                                     Leave
@@ -2694,10 +2897,7 @@ START GAME
 
                                 </button>
 
-
-
                             </div>
-
 
 
                         </div>
