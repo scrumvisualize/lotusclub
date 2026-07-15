@@ -35,8 +35,6 @@ import {
 import { db } from "../firebase";
 
 import InformationSlider from "../components/InformationSlider";
-import type { AnyOfSchema } from "firebase/ai";
-
 
 
 export default function BookRummyTable() {
