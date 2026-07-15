@@ -471,8 +471,6 @@ export default function BookRummyTable() {
                     }
 
 
-
-
                     const data =
                         snapshot.data();
 
@@ -2119,10 +2117,6 @@ START GAME
 
                         <button
 
-
-                            // disabled={
-                            //     selectedPlayers.length === 0
-                            // }
 
                             disabled={
                                 !showResultMode &&
