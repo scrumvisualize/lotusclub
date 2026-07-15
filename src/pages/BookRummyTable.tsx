@@ -35,6 +35,7 @@ import {
 import { db } from "../firebase";
 
 import InformationSlider from "../components/InformationSlider";
+import type { AnyOfSchema } from "firebase/ai";
 
 
 
@@ -269,6 +270,10 @@ export default function BookRummyTable() {
         setRummyAmountSavedMessage
     ] = useState("");
 
+    const [
+        showResultMode,
+        setShowResultMode
+    ] = useState(false);
 
 
     const hasAlreadyPicked =
@@ -556,6 +561,29 @@ export default function BookRummyTable() {
                     setResults(
                         data.results || []
                     );
+
+                    const currentResults =
+                        data.results || [];
+
+
+                    setResults(
+                        currentResults
+                    );
+
+
+                    // Restore View Rummy Order after page refresh
+                    if (loggedUser) {
+
+                        const userHasResult =
+                            currentResults.some(
+                                (item: any) =>
+                                    item.uid === loggedUser.uid
+                            );
+
+
+                        setShowResultMode(userHasResult);
+
+                    }
 
                     setBankerNotes(
                         data.bankerNotes || []
@@ -1533,6 +1561,10 @@ START GAME
 
             setActivePlayer(null);
 
+            if (isUserJoined) {
+                setShowResultMode(true);
+            }
+
 
         };
 
@@ -1749,6 +1781,8 @@ START GAME
                 setPickedCards([]);
 
                 setShowGlobalMessage(true);
+
+                setShowResultMode(false);
 
 
 
@@ -2086,15 +2120,27 @@ START GAME
                         <button
 
 
+                            // disabled={
+                            //     selectedPlayers.length === 0
+                            // }
+
                             disabled={
+                                !showResultMode &&
                                 selectedPlayers.length === 0
                             }
 
+                            onClick={() => {
 
+                                if (showResultMode) {
 
-                            onClick={
-                                startGame
-                            }
+                                    setStarted(true);
+
+                                    return;
+                                }
+
+                                startGame();
+
+                            }}
 
 
 
@@ -2128,7 +2174,7 @@ START GAME
                         >
 
                             {
-                                isUserJoined
+                                showResultMode
                                     ? "View Rummy Order"
                                     : "Join Rummy Table"
                             }
