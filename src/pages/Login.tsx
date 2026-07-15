@@ -14,14 +14,18 @@ import {
 
 import { auth, db } from "../firebase";
 
+type Props = {
+    setIsLoading: (value: boolean) => void;
+};
 
-export default function Login() {
+
+export default function Login({ setIsLoading }: Props) {
 
     const [membershipNo, setMembershipNo] = useState("");
     const [password, setPassword] = useState("");
 
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    //const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
 
@@ -29,8 +33,9 @@ export default function Login() {
 
         try {
 
+            setIsLoading(true);
             setError("");
-            setLoading(true);
+            //setLoading(true);
 
 
             const membership =
@@ -153,7 +158,7 @@ export default function Login() {
         }
         finally {
 
-            setLoading(false);
+            setIsLoading(false);
 
         }
 
@@ -286,7 +291,7 @@ export default function Login() {
 
                 <button
                     onClick={handleLogin}
-                    disabled={loading}
+                    //disabled={loading}
                     className="
                 w-full
                 bg-blue-600
@@ -299,11 +304,12 @@ export default function Login() {
                 disabled:bg-gray-400
             "
                 >
-                    {
+                    {/* {
                         loading
                             ? "Logging in..."
                             : "Login"
-                    }
+                    } */}
+                    Login
                 </button>
 
             </div>
