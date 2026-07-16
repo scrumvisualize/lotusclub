@@ -85,6 +85,10 @@ export default function Members() {
                         Members List for the Year 2026 / 2027
                     </p>
 
+                    <p className="mt-2 text-sm text-gray-600
+                        dark:text-gray-300 italic">(On mobile, please swipe left to see the full data.)
+                    </p>
+
                 </div>
 
 

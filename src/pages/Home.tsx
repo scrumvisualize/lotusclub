@@ -32,25 +32,25 @@ export default function Home() {
 
     return (
         <>
-            <section
+            {/* <section
                 className="
-            min-h-[calc(100vh-80px)]
-            flex
-            items-center
-            justify-center
-            px-6
-            pt-8
-            pb-8
-            sm:pt-10
-            lg:pt-10
-            bg-gradient-to-br
-            from-blue-50
-            via-white
-            to-purple-100
-            dark:from-slate-900
-            dark:via-slate-950
-            dark:to-slate-800
-            "
+                min-h-[calc(100vh-80px)]
+                flex
+                items-center
+                justify-center
+                px-6
+                pt-8
+                pb-8
+                sm:pt-10
+                lg:pt-10
+                bg-gradient-to-br
+                from-blue-50
+                via-white
+                to-purple-100
+                dark:from-slate-900
+                dark:via-slate-950
+                dark:to-slate-800
+                "
             >
 
                 <div
@@ -71,108 +71,106 @@ export default function Home() {
                 >
 
 
-                    {/* Heading */}
+                    
 
-                    <h1
-                        className="
+            <h1
+                className="
                     text-4xl
                     md:text-6xl
                     font-extrabold
                     text-blue-600
                     dark:text-blue-400
                     "
-                    >
-                        Welcome to Lotus Club
-                    </h1>
+            >
+                Welcome to Lotus Club
+            </h1>
 
 
 
-                    <p
-                        className="
+            <p
+                className="
                     mt-4
-                    text-xl
-                    md:text-lg
+                    text-sm
+                    md:text-sm
                     font-medium
                     text-gray-600
                     dark:text-gray-200
                     "
-                    >
-                        Connecting People • Creating Memories • Celebrating Together
-                    </p>
+            >
+                Connecting People • Creating Memories • Celebrating Together
+            </p>
 
-                    <div
-                        className="
-    mt-8
-    grid
-    grid-cols-1
-    sm:grid-cols-2
-    lg:grid-cols-3
-    gap-3
-    "
-                    >
+            <div
+                className="
+                        mt-8
+                        grid
+                        grid-cols-1
+                        sm:grid-cols-2
+                        lg:grid-cols-3
+                        gap-3
+                        "
+            >
 
-                        <img
-                            src={fun1}
-                            alt="Lotus Club Image 1"
-                            className="
-        w-full
-        h-[220px]
-        sm:h-[260px]
-        lg:h-[350px]
-        object-cover
-        rounded-3xl
-        shadow-xl
-        transition
-        hover:scale-105
-        duration-300
-        "
-                        />
-
-
-                        <img
-                            src={coins}
-                            alt="Lotus Club Image 2"
-                            className="
-        w-full
-        h-[220px]
-        sm:h-[260px]
-        lg:h-[350px]
-        object-cover
-        rounded-3xl
-        shadow-xl
-        transition
-        hover:scale-105
-        duration-300
-        "
-                        />
+                <img
+                    src={fun1}
+                    alt="Lotus Club Image 1"
+                    className="
+                            w-full
+                            h-[220px]
+                            sm:h-[260px]
+                            lg:h-[350px]
+                            object-cover
+                            rounded-3xl
+                            shadow-xl
+                            transition
+                            hover:scale-105
+                            duration-300
+                            "
+                />
 
 
-                        <img
-                            src={fun3}
-                            alt="Lotus Club Image 3"
-                            className="
-        w-full
-        h-[220px]
-        sm:h-[260px]
-        lg:h-[350px]
-        object-cover
-        rounded-3xl
-        shadow-xl
-        transition
-        hover:scale-105
-        duration-300
-        "
-                        />
+                <img
+                    src={coins}
+                    alt="Lotus Club Image 2"
+                    className="
+                            w-full
+                            h-[220px]
+                            sm:h-[260px]
+                            lg:h-[350px]
+                            object-cover
+                            rounded-3xl
+                            shadow-xl
+                            transition
+                            hover:scale-105
+                            duration-300
+                            "
+                />
 
 
-                    </div>
+                <img
+                    src={fun3}
+                    alt="Lotus Club Image 3"
+                    className="
+                            w-full
+                            h-[220px]
+                            sm:h-[260px]
+                            lg:h-[350px]
+                            object-cover
+                            rounded-3xl
+                            shadow-xl
+                            transition
+                            hover:scale-105
+                            duration-300
+                            "
+                />
+
+
+            </div>
 
 
 
-                    {/* Description */}
-
-                    <p
-                        className="
+            <p
+                className="
                     mt-8
                     text-gray-600
                     dark:text-gray-300
@@ -180,19 +178,15 @@ export default function Home() {
                     mx-auto
                     text-lg
                     "
-                    >
-                        A place where friends connect,
-                        enjoy playing cards and create
-                        wonderful memories together.
-                    </p>
+            >
+                A place where friends connect,
+                enjoy playing cards and create
+                wonderful memories together.
+            </p>
 
 
-
-
-                    {/* Buttons */}
-
-                    <div
-                        className="
+            <div
+                className="
                     mt-8
                     flex
                     flex-col
@@ -200,10 +194,10 @@ export default function Home() {
                     justify-center
                     gap-4
                     "
-                    >
-                        <button
-                            onClick={() => setShowJoinModal(true)}
-                            className="
+            >
+                <button
+                    onClick={() => setShowJoinModal(true)}
+                    className="
                         bg-blue-600
                         hover:bg-blue-700
                         text-white
@@ -215,12 +209,12 @@ export default function Home() {
                         transition
                         hover:scale-105
                         "
-                        >
-                            Join Our Club
-                        </button>
+                >
+                    Join Our Club
+                </button>
 
-                        <button
-                            className="
+                <button
+                    className="
                         border-2
                         border-blue-600
                         text-blue-600
@@ -233,11 +227,376 @@ export default function Home() {
                         dark:hover:bg-slate-800
                         transition
                         "
+                >
+                    Learn More
+                </button>
+            </div>
+        </div >
+            </section > */
+            }
+
+            <section
+                className="
+        relative
+        overflow-hidden
+        min-h-[calc(100vh-80px)]
+        flex
+        items-center
+        justify-center
+        px-6
+        pt-8
+        pb-8
+        sm:pt-10
+        lg:pt-10
+        bg-gradient-to-br
+        from-blue-50
+        via-white
+        to-purple-100
+        dark:from-slate-900
+        dark:via-slate-950
+        dark:to-slate-800
+    "
+            >
+
+                {/* Background effects */}
+
+                <div
+                    className="
+            absolute
+            top-0
+            left-0
+            w-72
+            h-72
+            bg-blue-300/20
+            rounded-full
+            blur-3xl
+            -translate-x-1/3
+            -translate-y-1/3
+            pointer-events-none
+        "
+                />
+
+                <div
+                    className="
+            absolute
+            bottom-0
+            right-0
+            w-96
+            h-96
+            bg-purple-300/20
+            rounded-full
+            blur-3xl
+            translate-x-1/4
+            translate-y-1/4
+            pointer-events-none
+        "
+                />
+
+                <div
+                    className="
+            relative
+            z-10
+            max-w-7xl
+            w-full
+            bg-white/80
+            dark:bg-slate-900/90
+            backdrop-blur-lg
+            border
+            border-white/30
+            dark:border-slate-700
+            rounded-3xl
+            shadow-2xl
+            p-8
+            md:p-16
+            lg:p-20
+            text-center
+            transition-all
+            duration-500
+        "
+                >
+
+                    {/* Badge */}
+
+                    <div
+                        className="
+                inline-flex
+                items-center
+                gap-2
+                px-5
+                py-2
+                rounded-full
+                bg-blue-100
+                dark:bg-slate-800
+                text-blue-700
+                dark:text-blue-300
+                font-medium
+                text-sm
+                shadow-md
+                mb-6
+            "
+                    >
+                        ✨ Welcome to Brisbane's Community Club
+                    </div>
+
+                    {/* Heading */}
+
+                    <h1
+                        className="
+                text-4xl
+                sm:text-5xl
+                md:text-6xl
+                lg:text-7xl
+                leading-tight
+                font-extrabold
+                text-blue-600
+                dark:text-blue-400
+            "
+                    >
+                        Welcome to Lotus Club
+                    </h1>
+
+                    <p
+                        className="
+                mt-4
+                text-sm
+                md:text-base
+                font-medium
+                text-gray-600
+                dark:text-gray-200
+                tracking-wide
+            "
+                    >
+                        Connecting People • Creating Memories • Celebrating Together
+                    </p>
+
+                    {/* Images */}
+
+                    <div
+                        className="
+                mt-10
+                grid
+                grid-cols-1
+                sm:grid-cols-2
+                lg:grid-cols-3
+                gap-5
+            "
+                    >
+
+                        <img
+                            src={fun1}
+                            alt="Lotus Club Image 1"
+                            className="
+                    w-full
+                    h-[220px]
+                    sm:h-[260px]
+                    lg:h-[350px]
+                    object-cover
+                    rounded-3xl
+                    shadow-xl
+                    transition-all
+                    duration-300
+                    hover:scale-105
+                    hover:-translate-y-2
+                "
+                        />
+
+                        <img
+                            src={coins}
+                            alt="Lotus Club Image 2"
+                            className="
+                    w-full
+                    h-[220px]
+                    sm:h-[260px]
+                    lg:h-[350px]
+                    object-cover
+                    rounded-3xl
+                    shadow-xl
+                    transition-all
+                    duration-300
+                    hover:scale-105
+                    hover:-translate-y-2
+                    lg:-translate-y-6
+                "
+                        />
+
+                        <img
+                            src={fun3}
+                            alt="Lotus Club Image 3"
+                            className="
+                    w-full
+                    h-[220px]
+                    sm:h-[260px]
+                    lg:h-[350px]
+                    object-cover
+                    rounded-3xl
+                    shadow-xl
+                    transition-all
+                    duration-300
+                    hover:scale-105
+                    hover:-translate-y-2
+                    lg:translate-y-4
+                "
+                        />
+
+                    </div>
+
+                    {/* Description */}
+
+                    <p
+                        className="
+                mt-10
+                text-gray-600
+                dark:text-gray-300
+                max-w-3xl
+                mx-auto
+                text-lg
+                leading-relaxed
+            "
+                    >
+                        A place where friends connect, enjoy playing cards,
+                        celebrate special moments and create wonderful memories
+                        together in a warm and welcoming community.
+                    </p>
+
+                    {/* Statistics */}
+
+                    <div
+                        className="
+                mt-10
+                grid
+                grid-cols-2
+                md:grid-cols-4
+                gap-6
+                max-w-4xl
+                mx-auto
+            "
+                    >
+
+                        <div
+                            className="
+                    p-5
+                    rounded-2xl
+                    bg-blue-50
+                    dark:bg-slate-800
+                "
+                        >
+                            <h3 className="text-3xl font-bold text-blue-600">
+                                50+
+                            </h3>
+
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Members
+                            </p>
+                        </div>
+
+                        <div
+                            className="
+                    p-5
+                    rounded-2xl
+                    bg-blue-50
+                    dark:bg-slate-800
+                "
+                        >
+                            <h3 className="text-3xl font-bold text-blue-600">
+                                5+
+                            </h3>
+
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Events
+                            </p>
+                        </div>
+
+                        <div
+                            className="
+                    p-5
+                    rounded-2xl
+                    bg-blue-50
+                    dark:bg-slate-800
+                "
+                        >
+                            <h3 className="text-3xl font-bold text-blue-600">
+                                5+
+                            </h3>
+
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Years
+                            </p>
+                        </div>
+
+                        <div
+                            className="
+                    p-5
+                    rounded-2xl
+                    bg-blue-50
+                    dark:bg-slate-800
+                "
+                        >
+                            <h3 className="text-3xl font-bold text-blue-600">
+                                ❤️
+                            </h3>
+
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Community
+                            </p>
+                        </div>
+
+                    </div>
+
+                    {/* Buttons */}
+
+                    <div
+                        className="
+                mt-10
+                flex
+                flex-col
+                sm:flex-row
+                justify-center
+                gap-4
+            "
+                    >
+
+                        <button
+                            onClick={() => setShowJoinModal(true)}
+                            className="
+                    bg-blue-600
+                    hover:bg-blue-700
+                    text-white
+                    px-8
+                    py-3
+                    rounded-full
+                    font-semibold
+                    shadow-lg
+                    transition-all
+                    duration-300
+                    hover:scale-105
+                "
+                        >
+                            Join Our Club
+                        </button>
+
+                        <button
+                            className="
+                    border-2
+                    border-blue-600
+                    text-blue-600
+                    dark:text-blue-400
+                    px-8
+                    py-3
+                    rounded-full
+                    font-semibold
+                    hover:bg-blue-50
+                    dark:hover:bg-slate-800
+                    transition-all
+                    duration-300
+                "
                         >
                             Learn More
                         </button>
+
                     </div>
+
                 </div>
+
             </section>
 
             {/* About Section */}
@@ -456,29 +815,31 @@ export default function Home() {
 
                 )
             }
-            {showScrollTop && (
-                <button
-                    onClick={scrollToTop}
-                    title="Back to Top"
-                    style={{
-                        position: "fixed",
-                        bottom: 25,
-                        right: 25,
-                        width: 46,
-                        height: 46,
-                        borderRadius: "50%",
-                        border: "none",
-                        background: "#2563eb",
-                        color: "#fff",
-                        fontSize: 24,
-                        cursor: "pointer",
-                        boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
-                        zIndex: 9999
-                    }}
-                >
-                    ↑
-                </button>
-            )}
+            {
+                showScrollTop && (
+                    <button
+                        onClick={scrollToTop}
+                        title="Back to Top"
+                        style={{
+                            position: "fixed",
+                            bottom: 25,
+                            right: 25,
+                            width: 46,
+                            height: 46,
+                            borderRadius: "50%",
+                            border: "none",
+                            background: "#2563eb",
+                            color: "#fff",
+                            fontSize: 24,
+                            cursor: "pointer",
+                            boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
+                            zIndex: 9999
+                        }}
+                    >
+                        ↑
+                    </button>
+                )
+            }
 
         </>
     );
