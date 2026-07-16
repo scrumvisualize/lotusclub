@@ -101,7 +101,7 @@ export default function Footer() {
 
                 {/* Bottom */}
                 <div className="mt-8 border-t border-gray-200 pt-5 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
-                    © {new Date().getFullYear()} Lotus Club, Brisbane • Designed with ❤️ by <span className="font-semibold"><a href="https://www.instagram.com/k.vinodmathew/">Vinod Mathew</a></span>
+                    © {new Date().getFullYear()} Lotus Club, Brisbane • Designed & developed with ❤️ by <span className="font-semibold"><a href="https://www.instagram.com/k.vinodmathew/">Vinod Mathew</a></span>
                 </div>
 
             </div>
