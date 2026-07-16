@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import { ThemeProvider } from "./context/ThemeContext";
+import "leaflet/dist/leaflet.css";
 
 
 ReactDOM.createRoot(
