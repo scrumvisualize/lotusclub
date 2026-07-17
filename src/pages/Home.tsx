@@ -7,11 +7,29 @@ import RelaxFridays from "../components/RelaxFridays";
 import ClubPolicies from "../components/ClubPolicies";
 import HostingTimeline from "../components/HostingTimeline";
 import Footer from "../components/Footer";
+import {
+    addDoc,
+    collection,
+    serverTimestamp
+} from "firebase/firestore";
+
+import { db } from "../firebase";
 
 export default function Home() {
 
     const [showJoinModal, setShowJoinModal] = useState(false);
     const [showScrollTop, setShowScrollTop] = useState(false);
+
+    const [requestName, setRequestName] = useState("");
+    const [requestMobile, setRequestMobile] = useState("");
+    const [requestMessage, setRequestMessage] = useState("");
+    const [showMessage, setShowMessage] = useState(false);
+    const [messageText, setMessageText] = useState("");
+    const [messageType, setMessageType] = useState<"success" | "error">("success");
+
+    const user = JSON.parse(
+        localStorage.getItem("user") || "null"
+    );
 
     useEffect(() => {
         const handleScroll = () => {
@@ -30,10 +48,87 @@ export default function Home() {
         });
     };
 
+    const submitRequest = async () => {
+
+        if (!requestName || !requestMobile || !requestMessage) {
+
+            showPopupMessage(
+                "Please fill all details",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if (requestMessage.length > 100) {
+
+            showPopupMessage(
+                "Message cannot exceed 100 characters",
+                "error"
+            );
+            return;
+        }
+
+
+        try {
+
+            await addDoc(
+                collection(db, "requests"),
+                {
+                    name: requestName,
+                    mobile: requestMobile,
+                    message: requestMessage,
+                    createdAt: serverTimestamp(),
+                    createdBy: user?.uid || ""
+                }
+            );
+
+            setRequestName("");
+            setRequestMobile("");
+            setRequestMessage("");
+
+            setShowJoinModal(false);
+
+
+        } catch (error) {
+
+            console.error(
+                "Request submit error:",
+                error
+            );
+
+            showPopupMessage(
+                "Unable to submit request",
+                "error"
+            );
+
+        }
+
+    };
+
+    const showPopupMessage = (
+        message: string,
+        type: "success" | "error" = "success"
+    ) => {
+
+        setMessageText(message);
+        setMessageType(type);
+        setShowMessage(true);
+
+
+        setTimeout(() => {
+            setShowMessage(false);
+        }, 3000);
+
+    };
+
     return (
         <>
-            {/* <section
+            <section
                 className="
+                relative
+                overflow-hidden
                 min-h-[calc(100vh-80px)]
                 flex
                 items-center
@@ -50,212 +145,7 @@ export default function Home() {
                 dark:from-slate-900
                 dark:via-slate-950
                 dark:to-slate-800
-                "
-            >
-
-                <div
-                    className="
-                max-w-7xl
-                w-full
-                bg-white
-                dark:bg-slate-900
-                rounded-3xl
-                shadow-2xl
-                p-10
-                md:p-16
-                lg:p-20
-                text-center
-                transition-all
-                duration-500
-                "
-                >
-
-
-                    
-
-            <h1
-                className="
-                    text-4xl
-                    md:text-6xl
-                    font-extrabold
-                    text-blue-600
-                    dark:text-blue-400
-                    "
-            >
-                Welcome to Lotus Club
-            </h1>
-
-
-
-            <p
-                className="
-                    mt-4
-                    text-sm
-                    md:text-sm
-                    font-medium
-                    text-gray-600
-                    dark:text-gray-200
-                    "
-            >
-                Connecting People • Creating Memories • Celebrating Together
-            </p>
-
-            <div
-                className="
-                        mt-8
-                        grid
-                        grid-cols-1
-                        sm:grid-cols-2
-                        lg:grid-cols-3
-                        gap-3
-                        "
-            >
-
-                <img
-                    src={fun1}
-                    alt="Lotus Club Image 1"
-                    className="
-                            w-full
-                            h-[220px]
-                            sm:h-[260px]
-                            lg:h-[350px]
-                            object-cover
-                            rounded-3xl
-                            shadow-xl
-                            transition
-                            hover:scale-105
-                            duration-300
-                            "
-                />
-
-
-                <img
-                    src={coins}
-                    alt="Lotus Club Image 2"
-                    className="
-                            w-full
-                            h-[220px]
-                            sm:h-[260px]
-                            lg:h-[350px]
-                            object-cover
-                            rounded-3xl
-                            shadow-xl
-                            transition
-                            hover:scale-105
-                            duration-300
-                            "
-                />
-
-
-                <img
-                    src={fun3}
-                    alt="Lotus Club Image 3"
-                    className="
-                            w-full
-                            h-[220px]
-                            sm:h-[260px]
-                            lg:h-[350px]
-                            object-cover
-                            rounded-3xl
-                            shadow-xl
-                            transition
-                            hover:scale-105
-                            duration-300
-                            "
-                />
-
-
-            </div>
-
-
-
-            <p
-                className="
-                    mt-8
-                    text-gray-600
-                    dark:text-gray-300
-                    max-w-2xl
-                    mx-auto
-                    text-lg
-                    "
-            >
-                A place where friends connect,
-                enjoy playing cards and create
-                wonderful memories together.
-            </p>
-
-
-            <div
-                className="
-                    mt-8
-                    flex
-                    flex-col
-                    sm:flex-row
-                    justify-center
-                    gap-4
-                    "
-            >
-                <button
-                    onClick={() => setShowJoinModal(true)}
-                    className="
-                        bg-blue-600
-                        hover:bg-blue-700
-                        text-white
-                        px-8
-                        py-3
-                        rounded-full
-                        font-semibold
-                        shadow-lg
-                        transition
-                        hover:scale-105
-                        "
-                >
-                    Join Our Club
-                </button>
-
-                <button
-                    className="
-                        border-2
-                        border-blue-600
-                        text-blue-600
-                        dark:text-blue-400
-                        px-8
-                        py-3
-                        rounded-full
-                        font-semibold
-                        hover:bg-blue-50
-                        dark:hover:bg-slate-800
-                        transition
-                        "
-                >
-                    Learn More
-                </button>
-            </div>
-        </div >
-            </section > */
-            }
-
-            <section
-                className="
-        relative
-        overflow-hidden
-        min-h-[calc(100vh-80px)]
-        flex
-        items-center
-        justify-center
-        px-6
-        pt-8
-        pb-8
-        sm:pt-10
-        lg:pt-10
-        bg-gradient-to-br
-        from-blue-50
-        via-white
-        to-purple-100
-        dark:from-slate-900
-        dark:via-slate-950
-        dark:to-slate-800
-    "
+               "
             >
 
                 {/* Background effects */}
@@ -666,50 +556,50 @@ export default function Home() {
 
                     <div
                         className="
-            fixed
-            inset-0
-            z-50
-            flex
-            items-center
-            justify-center
-            bg-black/50
-            px-6
-            "
+                        fixed
+                        inset-0
+                        z-50
+                        flex
+                        items-center
+                        justify-center
+                        bg-black/50
+                        px-6
+                        "
                     >
 
                         <div
                             className="
-                w-full
-                max-w-md
-                bg-white
-                dark:bg-slate-900
-                rounded-3xl
-                shadow-2xl
-                p-8
-                "
+                        w-full
+                        max-w-md
+                        bg-white
+                        dark:bg-slate-900
+                        rounded-3xl
+                        shadow-2xl
+                        p-8
+                        "
                         >
-                            <p className="text-center font-style: italic">Hold on please ! Work In Progress </p>
+
 
                             <h2
                                 className="
-                    text-3xl
-                    font-bold
-                    text-slate-800
-                    dark:text-white
-                    text-center
-                    "
+                            text-3xl
+                            font-bold
+                            text-slate-800
+                            dark:text-white
+                            text-center
+                            "
                             >
-                                Request To Join
+                                Join Request
                             </h2>
 
 
                             <p
                                 className="
-                    mt-3
-                    text-center
-                    text-gray-600
-                    dark:text-gray-300
-                    "
+                            mt-3
+                            text-center
+                            text-gray-600
+                            dark:text-gray-300
+                            "
                             >
                                 Please provide your details and we will contact you.
                             </p>
@@ -720,87 +610,123 @@ export default function Home() {
 
                                 <input
                                     type="text"
+                                    value={requestName}
+                                    onChange={(e) => setRequestName(e.target.value)}
                                     placeholder="Full Name"
                                     className="
-                        w-full
-                        px-4
-                        py-3
-                        rounded-xl
-                        border
-                        border-gray-300
-                        dark:border-slate-700
-                        bg-white
-                        dark:bg-slate-800
-                        text-gray-900
-                        dark:text-white
-                        outline-none
-                        focus:ring-2
-                        focus:ring-blue-500
-                        "
+                                    w-full
+                                    px-4
+                                    py-3
+                                    rounded-xl
+                                    border
+                                    border-gray-300
+                                    dark:border-slate-700
+                                    bg-white
+                                    dark:bg-slate-800
+                                    text-gray-900
+                                    dark:text-white
+                                    outline-none
+                                    focus:ring-2
+                                    focus:ring-blue-500
+                                    "
                                 />
 
 
                                 <input
                                     type="tel"
+                                    value={requestMobile}
+                                    onChange={(e) => setRequestMobile(e.target.value)}
                                     placeholder="Mobile Number"
                                     className="
-                        w-full
-                        px-4
-                        py-3
-                        rounded-xl
-                        border
-                        border-gray-300
-                        dark:border-slate-700
-                        bg-white
-                        dark:bg-slate-800
-                        text-gray-900
-                        dark:text-white
-                        outline-none
-                        focus:ring-2
-                        focus:ring-blue-500
-                        "
+                                    w-full
+                                    px-4
+                                    py-3
+                                    rounded-xl
+                                    border
+                                    border-gray-300
+                                    dark:border-slate-700
+                                    bg-white
+                                    dark:bg-slate-800
+                                    text-gray-900
+                                    dark:text-white
+                                    outline-none
+                                    focus:ring-2
+                                    focus:ring-blue-500
+                                    "
                                 />
+
+                                <textarea
+                                    placeholder="Enter your message (max 100 characters)"
+                                    value={requestMessage}
+                                    onChange={(e) => {
+
+                                        const value = e.target.value.replace(
+                                            /[^a-zA-Z0-9 $%.&@!-]/g,
+                                            ""
+                                        );
+
+                                        setRequestMessage(value);
+                                    }}
+                                    rows={3}
+                                    className="
+                                    w-full
+                                    px-4
+                                    py-3
+                                    rounded-xl
+                                    border
+                                    border-gray-300
+                                    dark:border-slate-700
+                                    bg-white
+                                    dark:bg-slate-800
+                                    text-gray-900
+                                    dark:text-white
+                                    outline-none
+                                    resize-none
+                                    focus:ring-2
+                                    focus:ring-blue-500
+                                   "
+                                />
+                                <span className="text-orange-300">{100 - requestMessage.length} characters remaining</span>
 
                             </div>
 
-
-
                             <div
                                 className="
-                    mt-8
-                    flex
-                    justify-end
-                    gap-4
-                    "
+                                mt-8
+                                flex
+                                justify-end
+                                gap-4
+                                "
                             >
 
                                 <button
                                     onClick={() => setShowJoinModal(false)}
                                     className="
-                        px-6
-                        py-3
-                        rounded-full
-                        border
-                        border-gray-300
-                        dark:border-slate-600
-                        text-gray-700
-                        dark:text-gray-300
-                        "
+                                    px-6
+                                    py-3
+                                    rounded-full
+                                    border
+                                    border-gray-300
+                                    dark:border-slate-600
+                                    text-gray-700
+                                    dark:text-gray-300
+                                    "
                                 >
                                     Cancel
                                 </button>
 
 
                                 <button
+                                    onClick={submitRequest}
                                     className="
-                        px-6
-                        py-3
-                        rounded-full
-                        bg-blue-600
-                        hover:bg-blue-700
-                        text-white
-                        font-semibold
-                        "
+                                    px-6
+                                    py-3
+                                    rounded-full
+                                    bg-blue-600
+                                    hover:bg-blue-700
+                                    text-white
+                                    font-semibold
+                                    "
                                 >
                                     Submit
                                 </button>
@@ -810,6 +736,37 @@ export default function Home() {
 
 
                         </div>
+
+                        {
+                            showMessage && (
+
+                                <div
+                                    className="
+                fixed
+                top-5
+                left-1/2
+                -translate-x-1/2
+                z-50
+                px-6
+                py-3
+                rounded-xl
+                shadow-xl
+                text-white
+                transition-all
+                duration-300
+                "
+                                    style={{
+                                        backgroundColor:
+                                            messageType === "success"
+                                                ? "#16a34a"
+                                                : "#dc2626"
+                                    }}
+                                >
+                                    {messageText}
+                                </div>
+
+                            )
+                        }
 
                     </div>
 

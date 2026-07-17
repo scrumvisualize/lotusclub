@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, } from "react";
+import { useNavigate } from "react-router-dom";
 import { User, LogOut } from "lucide-react";
 
 type Props = {
@@ -18,6 +19,15 @@ export default function UserProfileChip({
     const [open, setOpen] = useState(false);
 
     const menuRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
+
+    const loggedUser =
+        JSON.parse(
+            localStorage.getItem("user") || "null"
+        );
+
+    const isAdmin =
+        loggedUser?.role === "admin";
 
 
     // Close popup when clicking outside
@@ -152,6 +162,33 @@ export default function UserProfileChip({
                         </div>
 
                     </div>
+
+                    {isAdmin === true && (
+                        <button
+                            onClick={() => navigate("/requests")}
+                            className="
+                            mt-2
+                            px-4
+                            py-2
+                            mb-2
+                            rounded-lg
+                            text-blue-600
+                            dark:text-blue-400
+                            font-medium
+                            text-sm
+                            hover:bg-blue-50
+                            dark:hover:bg-slate-800
+                            hover:text-blue-700
+                            transition-all
+                            duration-200
+                            inline-flex
+                            items-center
+                            gap-2
+                            "
+                        >
+                            📋 View Requests
+                        </button>
+                    )}
 
 
                     <button
