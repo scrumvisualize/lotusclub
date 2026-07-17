@@ -247,14 +247,14 @@ export default function Home() {
 
                     <p
                         className="
-                mt-4
-                text-sm
-                md:text-base
-                font-medium
-                text-gray-600
-                dark:text-gray-200
-                tracking-wide
-            "
+                        mt-4
+                        text-sm
+                        md:text-sm
+                        font-medium
+                        text-gray-600
+                        dark:text-gray-200
+                        tracking-wide
+                        "
                     >
                         Connecting People • Creating Memories • Celebrating Together
                     </p>

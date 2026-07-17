@@ -59,7 +59,7 @@ export default function App() {
             <ProtectedRoute
               adminOnly
             >
-              <Requests />
+              <Requests setIsLoading={setIsLoading} />
             </ProtectedRoute>
           }
         />

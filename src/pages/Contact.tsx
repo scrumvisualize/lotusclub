@@ -118,6 +118,8 @@ export default function Contact() {
 
 
                     <div className="
+                        relative
+                        z-0
                         overflow-hidden
                         rounded-xl
                         shadow-lg
