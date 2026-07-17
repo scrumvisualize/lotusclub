@@ -15,7 +15,12 @@ import type { UserRequest } from "../types/request";
 import { Phone } from "lucide-react";
 
 
-const Requests = () => {
+type Props = {
+    setIsLoading: (value: boolean) => void;
+};
+
+
+const Requests = ({ setIsLoading }: Props) => {
 
     const [requests, setRequests] = useState<UserRequest[]>([]);
     const [search, setSearch] = useState("");
@@ -24,6 +29,8 @@ const Requests = () => {
     const [deleteId, setDeleteId] = useState<string | null>(null);
     const [visibleCount, setVisibleCount] = useState(3);
 
+
+
     useEffect(() => {
 
         const q = query(
@@ -31,7 +38,7 @@ const Requests = () => {
             orderBy("createdAt", "desc")
         );
 
-
+        setIsLoading(true);
         const unsubscribe = onSnapshot(q, (snapshot) => {
 
             const data = snapshot.docs.map(doc => ({
@@ -41,6 +48,8 @@ const Requests = () => {
 
 
             setRequests(data);
+            // Stop loader after Firebase data arrives
+            setIsLoading(false);
 
         });
 
@@ -48,7 +57,7 @@ const Requests = () => {
         return () => unsubscribe();
 
 
-    }, []);
+    }, [setIsLoading]);
 
 
 
@@ -152,14 +161,77 @@ const Requests = () => {
                 <div className="mt-6 space-y-4">
 
                     {
-                        visibleRequests.map(request => (
+
+                        visibleRequests.length === 0 ? (
 
                             <div
-                                key={request.id}
-                                onClick={() =>
-                                    setSelectedRequest(request)
-                                }
                                 className="
+                                mt-10
+                                bg-white
+                                dark:bg-slate-900
+                                rounded-3xl
+                                shadow-md
+                                border
+                                border-gray-100
+                                dark:border-slate-800
+                                p-8
+                                text-center
+                                "
+                            >
+
+                                <div
+                                    className="
+                                w-14
+                                h-14
+                                mx-auto
+                                rounded-full
+                                bg-blue-100
+                                dark:bg-blue-900
+                                flex
+                                items-center
+                                justify-center
+                                text-2xl
+                                "
+                                >
+                                    📭
+                                </div>
+
+
+                                <h3
+                                    className="
+                                    mt-4
+                                    text-xl
+                                    font-semibold
+                                    text-slate-800
+                                    dark:text-white
+                                    "
+                                >
+                                    No Requests Available
+                                </h3>
+
+
+                                <p
+                                    className="
+                                mt-2
+                                text-gray-500
+                                dark:text-gray-400
+                                "
+                                >
+                                    There are currently no requests to display.
+                                </p>
+
+                            </div>
+
+                        ) : (
+
+                            visibleRequests.map(request => (
+
+                                <div
+                                    key={request.id}
+                                    onClick={() =>
+                                        setSelectedRequest(request)
+                                    }
+                                    className="
                                     bg-white
                                     dark:bg-slate-900
                                     rounded-2xl
@@ -172,30 +244,30 @@ const Requests = () => {
                                     hover:shadow-xl
                                     transition-all
                                     duration-300
-                                "
-                            >
+                                   "
+                                >
 
-                                <div
-                                    className="
+                                    <div
+                                        className="
                                     flex
                                     items-center
                                     justify-between
                                     gap-4
                                     "
-                                >
-
-                                    {/* Name + Mobile */}
-                                    <div
-                                        className="
-                                    flex
-                                    items-center
-                                    gap-4
-                                    min-w-0
-                                    "
                                     >
 
+                                        {/* Name + Mobile */}
                                         <div
                                             className="
+                                            flex
+                                            items-center
+                                            gap-4
+                                            min-w-0
+                                            "
+                                        >
+
+                                            <div
+                                                className="
                                             w-11
                                             h-11
                                             rounded-full
@@ -208,97 +280,99 @@ const Requests = () => {
                                             dark:text-blue-300
                                             font-bold
                                             "
-                                        >
-                                            {request.name.charAt(0).toUpperCase()}
-                                        </div>
+                                            >
+                                                {request.name.charAt(0).toUpperCase()}
+                                            </div>
 
 
-                                        <div>
+                                            <div>
 
-                                            <h3
-                                                className="
+                                                <h3
+                                                    className="
                                                 font-semibold
                                                 text-lg
                                                 text-slate-800
                                                 dark:text-white
                                                 "
-                                            >
-                                                {request.name}
-                                            </h3>
+                                                >
+                                                    {request.name}
+                                                </h3>
 
-
-                                            <div
-                                                className="
-                                            flex
-                                            items-center
-                                            gap-2
-                                            text-sm
-                                            text-gray-500
-                                            dark:text-gray-400
-                                            "
-                                            >
-                                                <Phone
-                                                    size={16}
-                                                    className="
-                                                text-blue-600
-                                                dark:text-blue-400
-                                                "
-                                                />
-
-                                                <span>
-                                                    {request.mobile}
-                                                </span>
 
                                                 <div
                                                     className="
+                                                    flex
+                                                    items-center
+                                                    gap-2
+                                                    text-sm
+                                                    text-gray-500
+                                                    dark:text-gray-400
+                                                    "
+                                                >
+                                                    <Phone
+                                                        size={16}
+                                                        className="
+                                                    text-blue-600
+                                                    dark:text-blue-400
+                                                    "
+                                                    />
+
+                                                    <span>
+                                                        {request.mobile}
+                                                    </span>
+
+                                                    <div
+                                                        className="
                                                     text-xs
                                                     text-gray-400
                                                     dark:text-gray-500
                                                     mt-1
                                                     mx-4
                                                     "
-                                                >
-                                                    {request.createdAt?.toDate
-                                                        ? request.createdAt.toDate().toLocaleString()
-                                                        : ""
-                                                    }
+                                                    >
+                                                        {request.createdAt?.toDate
+                                                            ? request.createdAt.toDate().toLocaleString()
+                                                            : ""
+                                                        }
+                                                    </div>
                                                 </div>
+
+
+
                                             </div>
 
-
-
                                         </div>
+
+
+                                        {/* Delete */}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setDeleteId(request.id);
+                                            }}
+                                            className="
+                                            px-3
+                                            py-1.5
+                                            rounded-full
+                                            text-sm
+                                            text-red-500
+                                            hover:bg-red-50
+                                            dark:hover:bg-red-900/30
+                                            transition
+                                            "
+                                        >
+                                            🗑 Delete
+                                        </button>
+
 
                                     </div>
 
 
-                                    {/* Delete */}
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setDeleteId(request.id);
-                                        }}
-                                        className="
-                                        px-3
-                                        py-1.5
-                                        rounded-full
-                                        text-sm
-                                        text-red-500
-                                        hover:bg-red-50
-                                        dark:hover:bg-red-900/30
-                                        transition
-                                    "
-                                    >
-                                        🗑 Delete
-                                    </button>
-
-
                                 </div>
 
+                            ))
 
-                            </div>
-
-                        ))
+                        )
                     }
 
 
@@ -309,10 +383,10 @@ const Requests = () => {
 
                         <div
                             className="
-                flex
-                justify-center
-                mt-6
-            "
+                            flex
+                            justify-center
+                            mt-6
+                           "
                         >
 
                             <button
@@ -322,16 +396,16 @@ const Requests = () => {
                                     )
                                 }
                                 className="
-                    px-6
-                    py-3
-                    rounded-full
-                    bg-blue-600
-                    hover:bg-blue-700
-                    text-white
-                    font-semibold
-                    shadow-md
-                    transition
-                "
+                                px-6
+                                py-3
+                                rounded-full
+                                bg-blue-600
+                                hover:bg-blue-700
+                                text-white
+                                font-semibold
+                                shadow-md
+                                transition
+                            "
                             >
                                 Show More
                             </button>
