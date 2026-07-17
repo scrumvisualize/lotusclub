@@ -8,6 +8,7 @@ import BookRummyTable from "./pages/BookRummyTable"
 import ProtectedRoute from "./components/protectedRoute";
 import ChangePassword from "./pages/ChangePassword";
 import GlobalLoader from "./components/GlobalLoader";
+import Requests from "../src/pages/Requests";
 import { useState } from "react";
 
 
@@ -52,6 +53,16 @@ export default function App() {
           element={<ChangePassword />}
         />
         <Route path="/contact" element={<Contact />} />
+        <Route
+          path="/requests"
+          element={
+            <ProtectedRoute
+              adminOnly
+            >
+              <Requests />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
 

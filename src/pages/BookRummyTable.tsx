@@ -317,7 +317,7 @@ export default function BookRummyTable() {
                             const data =
                                 doc.data();
 
-                            console.log("Load memebers" + JSON.stringify(data));
+                            //console.log("Load memebers" + JSON.stringify(data));
 
                             return {
 
@@ -472,7 +472,7 @@ export default function BookRummyTable() {
                     const data =
                         snapshot.data();
 
-                    console.log("Booking " + JSON.stringify(data));
+                    //console.log("Booking " + JSON.stringify(data));
 
                     // Load admin configured rummy amount
                     setRummyAmountPerPlayer(
