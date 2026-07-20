@@ -14,6 +14,8 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../firebase";
+import ManagePartners from "./ManagePartners";
+import Partners from "../components/Partners";
 
 export default function Home() {
 
@@ -324,7 +326,7 @@ export default function Home() {
                     duration-300
                     hover:scale-105
                     hover:-translate-y-2
-                    lg:translate-y-4
+                    lg:translate-y-[-5px]
                 "
                         />
 
@@ -547,6 +549,10 @@ export default function Home() {
                 </div>
             </div>
 
+            <div>
+                <Partners />
+            </div>
+
             {/* Footer section */}
 
             <Footer />
@@ -656,12 +662,12 @@ export default function Home() {
                                 />
 
                                 <textarea
-                                    placeholder="Enter your message (max 100 characters)"
+                                    placeholder="Enter your message (max 250 characters)"
                                     value={requestMessage}
                                     onChange={(e) => {
 
                                         const value = e.target.value.replace(
-                                            /[^a-zA-Z0-9 $%.&@!-]/g,
+                                            /[^a-zA-Z0-9 "$%.&@!-]/g,
                                             ""
                                         );
 
@@ -686,7 +692,7 @@ export default function Home() {
                                     focus:ring-blue-500
                                    "
                                 />
-                                <span className="text-orange-300">{100 - requestMessage.length} characters remaining</span>
+                                <span className="text-orange-300">{250 - requestMessage.length} characters remaining</span>
 
                             </div>
 
