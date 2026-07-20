@@ -190,6 +190,34 @@ export default function UserProfileChip({
                         </button>
                     )}
 
+                    {
+                        isAdmin && (
+                            <button
+                                onClick={() => navigate("/manage-users")}
+                                className="
+                                px-4
+                                py-2
+                                mb-2
+                                rounded-lg
+                                text-blue-600
+                                dark:text-blue-400
+                                font-medium
+                                text-sm
+                                hover:bg-blue-50
+                                dark:hover:bg-slate-800
+                                hover:text-blue-700
+                                transition-all
+                                duration-200
+                                inline-flex
+                                items-center
+                                gap-2
+                                "
+                            >
+                                👥 Manage Users
+                            </button>
+                        )
+                    }
+
 
                     <button
                         onClick={onLogout}

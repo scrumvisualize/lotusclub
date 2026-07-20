@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/protectedRoute";
 import ChangePassword from "./pages/ChangePassword";
 import GlobalLoader from "./components/GlobalLoader";
 import Requests from "../src/pages/Requests";
+import ManageUsers from "./pages/ManageUsers";
 import { useState } from "react";
 
 
@@ -60,6 +61,15 @@ export default function App() {
               adminOnly
             >
               <Requests setIsLoading={setIsLoading} />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manage-users"
+          element={
+            <ProtectedRoute adminOnly>
+              <ManageUsers setIsLoading={setIsLoading} />
             </ProtectedRoute>
           }
         />
