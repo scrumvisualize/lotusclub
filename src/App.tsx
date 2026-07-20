@@ -11,6 +11,7 @@ import GlobalLoader from "./components/GlobalLoader";
 import Requests from "../src/pages/Requests";
 import ManageUsers from "./pages/ManageUsers";
 import { useState } from "react";
+import ManagePartners from "./pages/ManagePartners";
 
 
 export default function App() {
@@ -70,6 +71,15 @@ export default function App() {
           element={
             <ProtectedRoute adminOnly>
               <ManageUsers setIsLoading={setIsLoading} />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manage-partners"
+          element={
+            <ProtectedRoute adminOnly>
+              <ManagePartners />
             </ProtectedRoute>
           }
         />
