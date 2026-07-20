@@ -14,7 +14,6 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../firebase";
-import ManagePartners from "./ManagePartners";
 import Partners from "../components/Partners";
 
 export default function Home() {
