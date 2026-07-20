@@ -1,47 +1,56 @@
-export default function Members() {
+import { useEffect, useState } from "react";
 
-    const members = [
-        {
-            id: 1,
-            name: "Dan Thomas",
-            membership: "Permanent",
-            suburb: "Forest Lake",
-            status: "Active",
-            joiningYear: "2020",
-        },
-        {
-            id: 2,
-            name: "Vinod Mathew",
-            membership: "Permanent",
-            suburb: "Manly",
-            status: "Active",
-            joiningYear: "2022",
-        },
-        {
-            id: 3,
-            name: "Tran Don",
-            membership: "Guest",
-            suburb: "Ripley",
-            status: "Active",
-            joiningYear: "2023",
-        },
-        {
-            id: 4,
-            name: "Great Man",
-            membership: "Guest",
-            suburb: "Holland Park",
-            status: "Cancelled",
-            joiningYear: "2024",
-        },
-        {
-            id: 5,
-            name: "Sandy Hedge",
-            membership: "Permanent",
-            suburb: "Annerley",
-            status: "Active",
-            joiningYear: "2024",
-        },
-    ];
+import {
+    collection,
+    onSnapshot,
+    orderBy,
+    query
+} from "firebase/firestore";
+
+import { db } from "../firebase";
+
+type Member = {
+    id: string;
+    name: string;
+    membershipType: string;
+    suburb: string;
+    status: string;
+    yearOfJoining: string;
+};
+
+
+const Members = () => {
+
+    const [members, setMembers] = useState<Member[]>([]);
+
+
+    useEffect(() => {
+
+        const q = query(
+            collection(db, "members"),
+            orderBy("name", "asc")
+        );
+
+
+        const unsubscribe = onSnapshot(
+            q,
+            (snapshot) => {
+
+                const data = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()
+                })) as Member[];
+
+
+                setMembers(data);
+            }
+        );
+
+
+        return () => unsubscribe();
+
+
+    }, []);
 
     return (
 
@@ -148,10 +157,9 @@ export default function Members() {
 
                         </thead>
 
-
                         <tbody>
 
-                            {members.map((member) => (
+                            {members.map((member, index) => (
 
                                 <tr
                                     key={member.id}
@@ -164,9 +172,9 @@ export default function Members() {
                                     transition
                                     "
                                 >
-
                                     <td className="px-6 py-4">
-                                        {member.id}
+
+                                        {index + 1}
                                     </td>
 
                                     <td className="px-6 py-4 font-medium">
@@ -174,7 +182,7 @@ export default function Members() {
                                     </td>
 
                                     <td className="px-6 py-4">
-                                        {member.membership}
+                                        {member.membershipType}
                                     </td>
 
                                     <td className="px-6 py-4">
@@ -205,7 +213,7 @@ export default function Members() {
                                     </td>
 
                                     <td className="px-6 py-4">
-                                        {member.joiningYear}
+                                        {member.yearOfJoining}
                                     </td>
 
                                 </tr>
@@ -225,3 +233,5 @@ export default function Members() {
     );
 
 }
+
+export default Members;

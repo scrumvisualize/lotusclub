@@ -35,8 +35,6 @@ export default function Login({ setIsLoading }: Props) {
 
             setIsLoading(true);
             setError("");
-            //setLoading(true);
-
 
             const membership =
                 membershipNo.trim().toUpperCase();

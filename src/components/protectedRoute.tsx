@@ -11,10 +11,6 @@ export default function ProtectedRoute({ children, adminOnly = false }: Props) {
         localStorage.getItem("user") || "null"
     );
 
-    console.log("ProtectedRoute user:", user);
-    console.log("Admin value:", user?.isAdmin);
-    console.log("Admin type:", typeof user?.isAdmin);
-
 
     if (!user) {
         return <Navigate to="/login" replace />;
