@@ -15,6 +15,7 @@ import {
 
 import { db } from "../firebase";
 import Partners from "../components/Partners";
+import FAQSection from "../components/FAQSection";
 
 export default function Home() {
 
@@ -548,9 +549,13 @@ export default function Home() {
                 </div>
             </div>
 
+            {/* Partners section */}
             <div>
                 <Partners />
             </div>
+
+            {/* FAQ section */}
+            <FAQSection />
 
             {/* Footer section */}
 
