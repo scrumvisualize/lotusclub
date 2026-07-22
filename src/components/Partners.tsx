@@ -10,8 +10,7 @@ import {
 import { db } from "../firebase";
 
 import {
-    ExternalLink,
-    Handshake
+    ExternalLink
 } from "lucide-react";
 
 
@@ -110,12 +109,6 @@ export default function Partners() {
                         gap-2
                         "
                     >
-
-                        <Handshake
-                            className="
-                            text-blue-600
-                            "
-                        />
 
                         <h2
                             className="

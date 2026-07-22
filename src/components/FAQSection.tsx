@@ -55,7 +55,6 @@ const FAQSection = () => {
                         Frequently Asked Questions
                     </h2>
 
-                    <div className="w-24 h-1 bg-blue-600 mx-auto mt-3 rounded-full" />
 
                     <p className="mt-4 text-gray-600 dark:text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
                         Find answers to common questions about Lotus club.

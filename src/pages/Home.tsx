@@ -16,6 +16,8 @@ import {
 import { db } from "../firebase";
 import Partners from "../components/Partners";
 import FAQSection from "../components/FAQSection";
+import { Milestone } from "lucide-react";
+import Milestones from "../components/Milestones";
 
 export default function Home() {
 
@@ -553,6 +555,10 @@ export default function Home() {
             <div>
                 <Partners />
             </div>
+
+            {/* Milestone section */}
+
+            <Milestones />
 
             {/* FAQ section */}
             <FAQSection />
