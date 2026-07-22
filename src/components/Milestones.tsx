@@ -13,7 +13,7 @@ import {
     Trees,
     UserPlus,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const milestones = [
     { title: "Playing Cards", icon: CreditCard },
@@ -44,11 +44,16 @@ type Milestone = {
 
 const MilestoneItem = ({
     item,
+    index,
+    activeMilestone
 }: {
     item: Milestone;
+    index: number;
+    activeMilestone: number;
 }) => {
 
     const Icon = item.icon;
+    const isActive = activeMilestone === index;
 
     return (
         <div className="group flex items-center">
@@ -57,34 +62,27 @@ const MilestoneItem = ({
 
                 {/* Tooltip */}
                 <div
-                    className="
-                        absolute
-                        -top-16
-                        left-1/2
-                        -translate-x-1/2
+                    className={`
+                    absolute
+                    -top-16
+                    left-1/2
+                    -translate-x-1/2
+                    whitespace-nowrap
+                    rounded-xl
+                    px-4
+                    py-2
+                    text-sm
+                    font-semibold
+                    shadow-lg
+                    transition-all
+                    duration-500
+                    z-20
 
-                        whitespace-nowrap
-                        rounded-xl
-                        px-4
-                        py-2
-
-                        text-sm
-                        font-semibold
-
-                        shadow-lg
-                        transition-all
-                        duration-500
-                        z-20
-
-                        bg-slate-200
-                        text-slate-700
-
-                        dark:bg-slate-800
-                        dark:text-white
-
-                        group-hover:bg-emerald-500
-                        group-hover:text-white
-                    "
+                    ${isActive
+                            ? "bg-emerald-500 text-white"
+                            : "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-white"
+                        }
+                `}
                 >
                     {item.title}
                 </div>
@@ -92,37 +90,31 @@ const MilestoneItem = ({
 
                 {/* Glow */}
                 <div
-                    className="
-                        absolute
-                        inset-0
-                        scale-0
-                        rounded-full
-                        bg-emerald-400/20
-                        blur-2xl
-
-                        transition-all
-                        duration-500
-
-                        group-hover:scale-[2.5]
-                    "
+                    className={`
+                    absolute
+                    inset-0
+                    rounded-full
+                    bg-emerald-400/20
+                    blur-2xl
+                    transition-all
+                    duration-500
+                    ${isActive
+                            ? "scale-[2.5] opacity-100"
+                            : "scale-0 opacity-0"
+                        }
+                `}
                 />
 
 
                 {/* Circle */}
                 <div
-                    className="
+                    className={`
                         relative
                         h-14
                         w-14
 
                         rounded-full
                         border-4
-
-                        border-gray-300
-                        bg-gray-200
-
-                        dark:bg-slate-800
-                        dark:border-slate-700
 
                         flex
                         items-center
@@ -131,29 +123,38 @@ const MilestoneItem = ({
                         transition-all
                         duration-500
 
-                        group-hover:bg-emerald-500
-                        group-hover:border-emerald-500
-                        group-hover:scale-110
-                        group-hover:shadow-[0_0_40px_rgba(16,185,129,0.55)]
-                        group-hover:animate-pulse
-                    "
+                        ${isActive
+                            ? `
+                                    bg-emerald-500
+                                    border-emerald-500
+                                    scale-110
+                                    shadow-[0_0_40px_rgba(16,185,129,0.55)]
+                                    animate-pulse
+                                `
+                            : `
+                                    bg-gray-200
+                                    border-gray-300
+                                    dark:bg-slate-800
+                                    dark:border-slate-700
+                                `
+                        }
+                    `}
                 >
 
                     <Icon
                         size={30}
-                        className="
-                            text-gray-600
-                            dark:text-slate-300
+                        className={`
+                        transition-all
+                        duration-500
 
-                            transition-all
-                            duration-500
-
-                            group-hover:text-white
-                        "
+                        ${isActive
+                                ? "text-white"
+                                : "text-gray-600 dark:text-slate-300"
+                            }
+                    `}
                     />
 
                 </div>
-
             </div>
 
 
@@ -172,52 +173,77 @@ const MilestoneItem = ({
             >
 
                 <div
-                    className="
-                        flex-1
-                        border-t-[3px]
-                        border-dotted
+                    className={`
+                    flex-1
+                    border-t-[3px]
+                    border-dotted
 
-                        border-gray-300
-                        dark:border-slate-700
+                    transition-all
+                    duration-700
 
-                        group-hover:border-emerald-400
-                    "
+                    ${isActive
+                            ? `
+                    border-emerald-400
+                    shadow-[0_0_12px_rgba(16,185,129,0.7)]
+                  `
+                            : `
+                    border-gray-300
+                    dark:border-slate-700
+                  `
+                        }
+                `}
                 />
 
 
                 <div
-                    className="
-                        absolute
-                        left-1/2
-                        -translate-x-1/2
+                    className={`
+                    absolute
+                    left-1/2
+                    -translate-x-1/2
 
-                        h-3
-                        w-3
+                    h-3
+                    w-3
 
-                        rounded-full
+                    rounded-full
 
-                        bg-gray-300
-                        dark:bg-slate-600
+                    transition-all
+                    duration-700
 
-                        transition-all
-
-                        group-hover:bg-emerald-500
-                        group-hover:scale-150
-                    "
+                    ${isActive
+                            ? `
+                    bg-emerald-500
+                    scale-150
+                    shadow-[0_0_14px_rgba(16,185,129,0.9)]
+                  `
+                            : `
+                    bg-gray-300
+                    dark:bg-slate-600
+                  `
+                        }
+                `}
                 />
 
 
                 <div
-                    className="
-                        flex-1
-                        border-t-[3px]
-                        border-dotted
+                    className={`
+                    flex-1
+                    border-t-[3px]
+                    border-dotted
 
-                        border-gray-300
-                        dark:border-slate-700
+                    transition-all
+                    duration-700
 
-                        group-hover:border-emerald-400
-                    "
+                    ${isActive
+                            ? `
+                    border-emerald-400
+                    shadow-[0_0_12px_rgba(16,185,129,0.7)]
+                  `
+                            : `
+                    border-gray-300
+                    dark:border-slate-700
+                  `
+                        }
+                `}
                 />
 
             </div>
@@ -228,14 +254,25 @@ const MilestoneItem = ({
 
 export default function MilestoneTimeline() {
 
-    const [activeMilestone, setActiveMilestone] = useState<number | null>(null);
+    const [activeMilestone, setActiveMilestone] =
+        useState(0);
+
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveMilestone((prev) =>
+                prev === milestones.length - 1 ? 0 : prev + 1
+            );
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, []);
 
 
     return (
         <section className="py-16 px-4 bg-gray-50 dark:bg-slate-950 overflow-hidden">
 
             <div className="max-w-7xl mx-auto">
-
 
                 {/* Heading */}
                 <div className="text-center mb-24 md:mb-32">
@@ -269,7 +306,6 @@ export default function MilestoneTimeline() {
                 </div>
 
 
-
                 {/* Desktop / Tablet */}
                 <div className="hidden md:flex flex-col gap-28 ml-25">
 
@@ -284,18 +320,18 @@ export default function MilestoneTimeline() {
                         "
                     >
 
-                        {firstRow.map((item) => (
+                        {firstRow.map((item, index) => (
 
                             <MilestoneItem
                                 key={item.title}
                                 item={item}
+                                index={index}
+                                activeMilestone={activeMilestone}
                             />
 
                         ))}
 
                     </div>
-
-
 
                     {/* Second Row */}
                     <div
@@ -307,11 +343,13 @@ export default function MilestoneTimeline() {
                         "
                     >
 
-                        {secondRow.map((item) => (
+                        {secondRow.map((item, index) => (
 
                             <MilestoneItem
                                 key={item.title}
                                 item={item}
+                                index={index + 6}
+                                activeMilestone={activeMilestone}
                             />
 
                         ))}
@@ -320,9 +358,6 @@ export default function MilestoneTimeline() {
 
 
                 </div>
-
-
-
 
 
                 {/* =========================
@@ -356,13 +391,7 @@ export default function MilestoneTimeline() {
                                 <div
                                     key={item.title}
 
-                                    onClick={() =>
-                                        setActiveMilestone(
-                                            isActive
-                                                ? null
-                                                : index
-                                        )
-                                    }
+                                    onClick={() => setActiveMilestone(index)}
 
                                     className="
                                         flex
@@ -501,9 +530,6 @@ export default function MilestoneTimeline() {
                                     </div>
 
 
-
-
-
                                     {/* Vertical Connector */}
 
                                     {index !== milestones.length - 1 && (
@@ -551,13 +577,9 @@ export default function MilestoneTimeline() {
 
                     </div>
 
-
                 </div>
 
-
-
             </div>
-
 
         </section>
     );
