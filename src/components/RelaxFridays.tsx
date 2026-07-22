@@ -124,6 +124,7 @@ export default function RelaxFridays() {
                         sm:h-[380px]
                         lg:h-[420px]
                         object-cover
+                        object-bottom
                         rounded-3xl
                         shadow-2xl
                         border
