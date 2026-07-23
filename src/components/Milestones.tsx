@@ -16,19 +16,19 @@ import {
 import { useEffect, useState } from "react";
 
 const milestones = [
-    { title: "Playing Cards", icon: CreditCard },
+    { title: "CardsClub", icon: CreditCard },
     { title: "Discussion", icon: MessageCircle },
     { title: "Planning", icon: ClipboardList },
-    { title: "Core Group", icon: Users },
-    { title: "Sweets Rd", icon: MapPin },
-    { title: "Club Started", icon: Flag },
+    { title: "CoreGroup", icon: Users },
+    { title: "Pallara", icon: MapPin },
+    { title: "ClubStarted", icon: Flag },
 
     { title: "Weekly Hosting", icon: CalendarDays },
     { title: "Investing", icon: PiggyBank },
-    { title: "Bought Assets", icon: Building2 },
-    { title: "Fern Ave", icon: RefreshCw },
-    { title: "5 Years", icon: PartyPopper },
-    { title: "Bought Acreage", icon: Trees },
+    { title: "Assets", icon: Building2 },
+    { title: "Browns Plains", icon: RefreshCw },
+    { title: "5Yrs", icon: PartyPopper },
+    { title: "Acreage", icon: Trees },
 
     { title: "Guest Members", icon: UserPlus },
 ];
@@ -54,38 +54,63 @@ const MilestoneItem = ({
 
     const Icon = item.icon;
     const isActive = activeMilestone === index;
+    const isCelebration =
+        item.title === "ClubStarted" ||
+        item.title === "5Yrs";
 
     return (
         <div className="group flex items-center">
 
             <div className="relative flex flex-col items-center">
 
-                {/* Tooltip */}
-                <div
-                    className={`
-                    absolute
-                    -top-16
-                    left-1/2
-                    -translate-x-1/2
-                    whitespace-nowrap
-                    rounded-xl
-                    px-4
-                    py-2
-                    text-sm
-                    font-semibold
-                    shadow-lg
-                    transition-all
-                    duration-500
-                    z-20
+                {/* Tooltip - only display when animation reaches this milestone */}
+                {isActive && (
+                    <>
+                        {/* Tooltip */}
+                        <div
+                            className="
+                            absolute
+                            -top-20
+                            left-1/2
+                            -translate-x-1/2
 
-                    ${isActive
-                            ? "bg-emerald-500 text-white"
-                            : "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-white"
-                        }
-                `}
-                >
-                    {item.title}
-                </div>
+                            rounded-xl
+                            px-4
+                            py-2
+
+                            bg-emerald-500
+                            text-white
+
+                            text-sm
+                            font-semibold
+
+                            shadow-lg
+                            z-20
+                        "
+                        >
+                            {item.title}
+                        </div>
+
+
+                        {/* Simple vertical connector */}
+                        <div
+                            className="
+                            absolute
+                            -top-10
+                            left-1/2
+                            -translate-x-1/2
+
+                            h-10
+                            w-[3px]
+
+                            bg-emerald-400
+                            rounded-full
+
+                            shadow-[0_0_8px_rgba(16,185,129,0.7)]
+                            "
+                        />
+                    </>
+                )}
 
 
                 {/* Glow */}
@@ -102,48 +127,109 @@ const MilestoneItem = ({
                             ? "scale-[2.5] opacity-100"
                             : "scale-0 opacity-0"
                         }
-                `}
+                    `}
                 />
-
 
                 {/* Circle */}
                 <div
                     className={`
-                        relative
-                        h-14
-                        w-14
+                    relative
+                    h-14
+                    w-14
 
-                        rounded-full
-                        border-4
+                    rounded-full
+                    border-4
 
-                        flex
-                        items-center
-                        justify-center
+                    flex
+                    items-center
+                    justify-center
 
-                        transition-all
-                        duration-500
+                    transition-all
+                    duration-500
 
-                        ${isActive
+                    ${isActive
                             ? `
-                                    bg-emerald-500
-                                    border-emerald-500
-                                    scale-110
-                                    shadow-[0_0_40px_rgba(16,185,129,0.55)]
-                                    animate-pulse
-                                `
+                            bg-emerald-500
+                            border-emerald-500
+                            scale-110
+                            shadow-[0_0_40px_rgba(16,185,129,0.55)]
+                            animate-pulse
+                        `
                             : `
-                                    bg-gray-200
-                                    border-gray-300
-                                    dark:bg-slate-800
-                                    dark:border-slate-700
-                                `
+                            bg-gray-200
+                            border-gray-300
+                            dark:bg-slate-800
+                            dark:border-slate-700
+                        `
                         }
-                    `}
+                   `}
                 >
+
+                    {/* Celebration Effect */}
+                    {isActive && isCelebration && (
+                        <>
+                            {/* Expanding ring */}
+                            <span
+                                className="
+                                absolute
+                                inset-0
+                                rounded-full
+                                border-4
+                                border-yellow-300
+                                animate-ping
+                               "
+                            />
+
+                            {/* Confetti */}
+                            <span
+                                className="
+                                absolute
+                                -top-5
+                                -left-3
+                                text-xl
+                                animate-bounce
+                                z-10
+                                "
+                            >
+                                🎉
+                            </span>
+
+                            <span
+                                className="
+                                absolute
+                                -top-4
+                                -right-3
+                                text-lg
+                                animate-pulse
+
+                                z-10
+                                "
+                            >
+                                ✨
+                            </span>
+
+                            <span
+                                className="
+                                absolute
+                                -bottom-4
+                                right-0
+                                text-lg
+                                animate-bounce
+                                z-10
+                                "
+                            >
+                                🎊
+                            </span>
+                        </>
+                    )}
+
 
                     <Icon
                         size={30}
                         className={`
+                        relative
+                        z-20
+
                         transition-all
                         duration-500
 
@@ -255,17 +341,23 @@ const MilestoneItem = ({
 export default function MilestoneTimeline() {
 
     const [activeMilestone, setActiveMilestone] =
-        useState(0);
-
+        useState(-1);
 
     useEffect(() => {
+
         const interval = setInterval(() => {
+
             setActiveMilestone((prev) =>
-                prev === milestones.length - 1 ? 0 : prev + 1
+                prev >= milestones.length - 1
+                    ? 0
+                    : prev + 1
             );
+
         }, 3000);
 
+
         return () => clearInterval(interval);
+
     }, []);
 
 
@@ -301,7 +393,7 @@ export default function MilestoneTimeline() {
                         A journey of friendship, planning, growth and memorable milestones.
                     </p>
 
-                    <p className="text-sm italic">(please hover to highlight each milestones)</p>
+                    <p className="text-sm italic">(Follow our journey as each milestone comes alive.)</p>
 
                 </div>
 
@@ -369,11 +461,12 @@ export default function MilestoneTimeline() {
 
                     <div
                         className="
+                            relative
                             flex
                             flex-col
                             items-center
-                            gap-10
-                        "
+                            cursor-pointer
+                            "
                     >
 
                         {milestones.map((item, index) => {
@@ -394,6 +487,7 @@ export default function MilestoneTimeline() {
                                     onClick={() => setActiveMilestone(index)}
 
                                     className="
+                                        relative
                                         flex
                                         flex-col
                                         items-center
@@ -402,55 +496,60 @@ export default function MilestoneTimeline() {
                                 >
 
 
+                                    {/* Mobile Tooltip - right side */}
+                                    {isActive && (
+                                        <>
+                                            {/* Horizontal connector */}
+                                            <div
+                                                className="
+                                                absolute
+                                                top-1/2
+                                                left-14
 
-                                    {/* Tooltip */}
+                                                w-10
+                                                h-[3px]
 
-                                    <div
-                                        className={`
-                                            mb-4
-                                            rounded-xl
-                                            px-4
-                                            py-2
+                                                bg-emerald-400
+                                                rounded-full
 
-                                            text-sm
-                                            font-semibold
-
-                                            shadow-md
-
-                                            whitespace-nowrap
-
-                                            transition-all
-                                            duration-500
+                                                -translate-y-1/2
+                                            "
+                                            />
 
 
-                                            ${isActive
+                                            {/* Tooltip */}
+                                            <div
+                                                className="
+                                                absolute
 
-                                                ?
+                                                left-24
+                                                top-1/2
+                                                -translate-y-1/2
 
-                                                `
+                                                whitespace-nowrap
+
+                                                rounded-xl
+
+                                                px-4
+                                                py-2
+
+                                                text-sm
+                                                font-semibold
+
+                                                shadow-lg
+
+                                                z-20
+
                                                 bg-emerald-500
                                                 text-white
-                                                scale-105
-                                                `
 
-                                                :
-
-                                                `
-                                                bg-slate-200
-                                                text-slate-700
-
-                                                dark:bg-slate-800
-                                                dark:text-white
-                                                `
-                                            }
-
-                                        `}
-                                    >
-                                        {item.title}
-
-                                    </div>
-
-
+                                                animate-pulse
+                                                "
+                                            >
+                                                {item.title}
+                                            </div>
+                                        </>
+                                    )}
 
 
 
