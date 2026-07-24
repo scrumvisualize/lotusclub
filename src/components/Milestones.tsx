@@ -1,5 +1,5 @@
 import {
-    CreditCard,
+    Lightbulb,
     MessageCircle,
     ClipboardList,
     Users,
@@ -16,7 +16,7 @@ import {
 import { useEffect, useState } from "react";
 
 const milestones = [
-    { title: "CardsClub", icon: CreditCard },
+    { title: "Idea", icon: Lightbulb, year: "2017" },
     { title: "Discussion", icon: MessageCircle },
     { title: "Planning", icon: ClipboardList },
     { title: "CoreGroup", icon: Users },
@@ -705,8 +705,6 @@ export default function MilestoneTimeline() {
                                         />
 
                                     )}
-
-
 
                                 </div>
 
