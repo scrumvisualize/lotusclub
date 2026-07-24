@@ -1,5 +1,5 @@
 import {
-    CreditCard,
+    Lightbulb,
     MessageCircle,
     ClipboardList,
     Users,
@@ -16,18 +16,18 @@ import {
 import { useEffect, useState } from "react";
 
 const milestones = [
-    { title: "CardsClub", icon: CreditCard },
+    { title: "Idea", icon: Lightbulb, year: "2017" },
     { title: "Discussion", icon: MessageCircle },
     { title: "Planning", icon: ClipboardList },
     { title: "CoreGroup", icon: Users },
     { title: "Pallara", icon: MapPin },
-    { title: "ClubStarted", icon: Flag },
+    { title: "ClubStarted", icon: Flag, year: "2018" },
 
     { title: "Weekly Hosting", icon: CalendarDays },
     { title: "Investing", icon: PiggyBank },
     { title: "Assets", icon: Building2 },
     { title: "Browns Plains", icon: RefreshCw },
-    { title: "5Yrs", icon: PartyPopper },
+    { title: "5Yrs", icon: PartyPopper, year: "2024" },
     { title: "Acreage", icon: Trees },
 
     { title: "Guest Members", icon: UserPlus },
@@ -39,6 +39,7 @@ const secondRow = milestones.slice(6);
 type Milestone = {
     title: string;
     icon: React.ElementType;
+    year?: string;
 };
 
 
@@ -241,6 +242,46 @@ const MilestoneItem = ({
                     />
 
                 </div>
+
+                {/* Year Badge */}
+                {isActive && item.year && (
+                    <div
+                        className={`
+                        absolute
+                        -bottom-10
+                        left-1/2
+                        -translate-x-1/2
+
+                        px-3
+                        py-1
+
+                        rounded-full
+
+                        text-xs
+                        font-bold
+
+                        transition-all
+                        duration-500
+
+                        ${isActive
+                                ? `
+                        bg-emerald-500
+                        text-white
+                        scale-110
+                        shadow-lg
+                    `
+                                : `
+                        bg-slate-200
+                        text-slate-500
+                        dark:bg-slate-800
+                        dark:text-slate-400
+                    `
+                            }
+                `}
+                    >
+                        {item.year}
+                    </div>
+                )}
             </div>
 
 
@@ -664,8 +705,6 @@ export default function MilestoneTimeline() {
                                         />
 
                                     )}
-
-
 
                                 </div>
 

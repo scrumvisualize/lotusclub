@@ -50,7 +50,7 @@ export default function Navbar() {
 
         setUser(null);
 
-        window.location.href = "/login";
+        window.location.href = "/";
 
     };
 
