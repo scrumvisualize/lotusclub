@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, Newspaper } from "lucide-react";
 
 type Props = {
     name: string;
@@ -243,6 +243,40 @@ export default function UserProfileChip({
                                 "
                             >
                                 🤝 Manage Partners
+                            </button>
+
+                        )
+                    }
+
+                    {
+                        isAdmin && (
+
+                            <button
+                                onClick={() => navigate("/club-news")}
+                                className="
+                                px-5
+                                py-2
+                                mb-2
+                                rounded-lg
+                                text-blue-600
+                                dark:text-blue-400
+                                font-medium
+                                text-sm
+                                hover:bg-blue-50
+                                dark:hover:bg-slate-800
+                                hover:text-blue-700
+                                transition-all
+                                duration-200
+                                inline-flex
+                                items-center
+                                gap-2
+                                "
+                            >
+                                <Newspaper
+                                    size={18}
+                                    strokeWidth={2}
+                                />
+                                News
                             </button>
 
                         )

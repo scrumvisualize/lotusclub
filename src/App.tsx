@@ -12,6 +12,7 @@ import Requests from "../src/pages/Requests";
 import ManageUsers from "./pages/ManageUsers";
 import { useState } from "react";
 import ManagePartners from "./pages/ManagePartners";
+import ClubNews from "./pages/ClubNews";
 
 
 export default function App() {
@@ -80,6 +81,15 @@ export default function App() {
           element={
             <ProtectedRoute adminOnly>
               <ManagePartners />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/club-news"
+          element={
+            <ProtectedRoute adminOnly>
+              <ClubNews />
             </ProtectedRoute>
           }
         />
