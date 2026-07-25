@@ -17,6 +17,7 @@ import { db } from "../firebase";
 import Partners from "../components/Partners";
 import FAQSection from "../components/FAQSection";
 import Milestones from "../components/Milestones";
+import LatestClubNews from "../components/LatestClubNews";
 
 export default function Home() {
 
@@ -495,6 +496,10 @@ export default function Home() {
             {/* About Section */}
 
             <AboutSection />
+
+            {/* News Section */}
+
+            <LatestClubNews />
 
             {/* Relax Fridays */}
 
