@@ -497,17 +497,68 @@ export default function MilestoneTimeline() {
                     MOBILE TIMELINE
                 ========================== */}
 
+
+
                 <div className="md:hidden relative mt-10">
 
 
+                    {/* Connector Background */}
+                    <div
+                        className="
+                        absolute
+                        top-8
+                        bottom-10
+                        left-0
+                        right-0
+
+                        grid
+                        grid-cols-2
+
+                        pointer-events-none
+                    "
+                    >
+
+                        {/* Left Column Line */}
+                        <div
+                            className="
+                                justify-self-center
+
+                                border-l-[3px]
+                                border-dotted
+
+                                border-gray-300
+                                dark:border-slate-700
+                            "
+                        />
+
+
+                        {/* Right Column Line */}
+                        <div
+                            className="
+                            justify-self-center
+
+                            border-l-[3px]
+                            border-dotted
+
+                            border-gray-300
+                            dark:border-slate-700
+                        "
+                        />
+
+                    </div>
+
+
+
+                    {/* Milestones */}
                     <div
                         className="
                             relative
-                            flex
-                            flex-col
-                            items-center
-                            cursor-pointer
-                            "
+
+                            grid
+                            grid-cols-2
+
+                            gap-y-14
+                        "
                     >
 
                         {milestones.map((item, index) => {
@@ -519,192 +570,207 @@ export default function MilestoneTimeline() {
                                 activeMilestone === index;
 
 
-
                             return (
 
                                 <div
                                     key={item.title}
 
-                                    onClick={() => setActiveMilestone(index)}
+                                    onClick={() =>
+                                        setActiveMilestone(index)
+                                    }
 
                                     className="
-                                        relative
-                                        flex
-                                        flex-col
-                                        items-center
-                                        cursor-pointer
+                                    relative
+                                    flex
+                                    flex-col
+                                    items-center
+                                    cursor-pointer
+                                    z-10
                                     "
                                 >
 
 
-                                    {/* Mobile Tooltip - right side */}
+                                    {/* Tooltip */}
                                     {isActive && (
-                                        <>
-                                            {/* Horizontal connector */}
-                                            <div
-                                                className="
-                                                absolute
-                                                top-1/2
-                                                left-14
 
-                                                w-10
-                                                h-[3px]
+                                        <div
+                                            className="
+                                        absolute
+                                        -top-14
+                                        whitespace-nowrap
+                                        rounded-xl
+                                        px-4
+                                        py-2
+                                        text-sm
+                                        font-semibold
 
-                                                bg-emerald-400
-                                                rounded-full
+                                        bg-emerald-500
+                                        text-white
 
-                                                -translate-y-1/2
-                                            "
-                                            />
+                                        shadow-lg
+                                        animate-pulse
+                                        z-30
+                                        "
+                                        >
+                                            {item.title}
+                                        </div>
 
-
-                                            {/* Tooltip */}
-                                            <div
-                                                className="
-                                                absolute
-
-                                                left-24
-                                                top-1/2
-                                                -translate-y-1/2
-
-                                                whitespace-nowrap
-
-                                                rounded-xl
-
-                                                px-4
-                                                py-2
-
-                                                text-sm
-                                                font-semibold
-
-                                                shadow-lg
-
-                                                z-20
-
-                                                bg-emerald-500
-                                                text-white
-
-                                                animate-pulse
-                                                "
-                                            >
-                                                {item.title}
-                                            </div>
-                                        </>
                                     )}
 
 
 
-                                    {/* Circle */}
-
+                                    {/* Glow */}
                                     <div
                                         className={`
-                                            h-14
-                                            w-14
+                                    absolute
 
-                                            rounded-full
+                                    h-14
+                                    w-14
 
-                                            border-4
+                                    rounded-full
 
-                                            flex
-                                            items-center
-                                            justify-center
+                                    bg-emerald-400/30
 
+                                    blur-xl
 
-                                            transition-all
-                                            duration-500
-
+                                    transition-all
+                                    duration-500
 
 
-                                            ${isActive
+                                    ${isActive
+                                                ?
+                                                "scale-[2.5] opacity-100"
+                                                :
+                                                "scale-0 opacity-0"
+                                            }
+                                `}
+                                    />
+
+
+
+                                    {/* Circle */}
+                                    <div
+                                        className={`
+                                        relative
+
+                                        h-14
+                                        w-14
+
+                                        rounded-full
+
+                                        border-4
+
+                                        flex
+                                        items-center
+                                        justify-center
+
+
+                                        transition-all
+                                        duration-500
+
+
+                                ${isActive
 
                                                 ?
 
                                                 `
-                                                bg-emerald-500
-                                                border-emerald-500
+                                    bg-emerald-500
+                                    border-emerald-500
 
-                                                scale-110
+                                    scale-110
 
-                                                shadow-[0_0_35px_rgba(16,185,129,0.6)]
+                                    shadow-[0_0_35px_rgba(16,185,129,0.6)]
 
-                                                animate-pulse
-                                                `
-
+                                    animate-pulse
+                                    `
 
                                                 :
 
                                                 `
-                                                bg-gray-200
-                                                border-gray-300
+                                    bg-gray-200
+                                    border-gray-300
 
-                                                dark:bg-slate-800
-                                                dark:border-slate-700
-                                                `
+                                    dark:bg-slate-800
+                                    dark:border-slate-700
+                                    `
                                             }
 
-                                        `}
+                            `}
                                     >
 
 
                                         <Icon
-
                                             size={30}
 
-                                            className={
-
-                                                isActive
-
+                                            className={`
+                                            relative
+                                            z-20
+                                            ${isActive
                                                     ?
-
                                                     "text-white"
-
                                                     :
-
                                                     "text-gray-600 dark:text-slate-300"
-
-                                            }
-
+                                                }
+                                        `}
                                         />
 
 
                                     </div>
 
 
-                                    {/* Vertical Connector */}
 
-                                    {index !== milestones.length - 1 && (
+
+                                    {/* Title - Show only when milestone reached */}
+                                    {isActive && (
+                                        <div
+                                            className="
+                                            mt-4
+                                            text-center
+                                            text-sm
+                                            font-semibold
+                                            text-emerald-600
+                                            dark:text-emerald-400
+                                            max-w-[120px]
+
+                                            animate-pulse
+                                        "
+                                        >
+                                            {item.title}
+                                        </div>
+                                    )}
+
+
+
+
+                                    {/* Year - Show only when milestone reached */}
+                                    {isActive && item.year && (
 
                                         <div
+                                            className="
+                                            mt-2
 
-                                            className={`
-                                                mt-3
-                                                h-12
+                                            px-3
+                                            py-1
 
-                                                border-l-[3px]
-                                                border-dotted
+                                            rounded-full
 
+                                            text-xs
+                                            font-bold
 
-                                                transition-all
-                                                duration-500
+                                            bg-emerald-500
+                                            text-white
 
+                                            shadow-lg
 
-                                                ${isActive
-
-                                                    ?
-
-                                                    "border-emerald-400"
-
-                                                    :
-
-                                                    "border-gray-300 dark:border-slate-700"
-
-                                                }
-
-                                            `}
-
-                                        />
+                                            animate-pulse
+                                        "
+                                        >
+                                            {item.year}
+                                        </div>
 
                                     )}
+
+
 
                                 </div>
 
@@ -714,6 +780,7 @@ export default function MilestoneTimeline() {
 
 
                     </div>
+
 
                 </div>
 
