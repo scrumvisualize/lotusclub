@@ -54,6 +54,33 @@ export default function Navbar() {
 
     };
 
+    const navLinkClass = `
+    relative
+    inline-block
+    py-2
+
+    text-gray-700
+    dark:text-white
+
+    transition-all
+    duration-300
+
+    hover:text-blue-500
+
+    after:absolute
+    after:left-1/2
+    after:-translate-x-1/2
+    after:-bottom-1
+    after:h-[2.5px]
+    after:w-0
+    after:rounded-full
+    after:bg-red-500
+    after:transition-all
+    after:duration-300
+
+    hover:after:w-full
+`;
+
 
     return (
 
@@ -94,49 +121,49 @@ export default function Navbar() {
                 <Link
                     to="/"
                     className="
-    flex
-    items-center
-    gap-3
-    "
+                    flex
+                    items-center
+                    gap-3
+                    "
                 >
 
                     <img
                         src={lotuslogo}
                         alt="Lotus Club"
                         className="
-        w-14
-        h-14
-        rounded-full
-        object-cover
-        border-2
-        border-blue-500
-        shadow-lg
-        transition-transform
-        duration-300
-        hover:scale-110
-        "
+                        w-14
+                        h-14
+                        rounded-full
+                        object-cover
+                        border-2
+                        border-blue-500
+                        shadow-lg
+                        transition-transform
+                        duration-300
+                        hover:scale-110
+                        "
                     />
 
                     <div>
 
                         <h1
                             className="
-            text-2xl
-            font-bold
-            text-blue-600
-            dark:text-blue-400
-            leading-none
-            "
+                            text-2xl
+                            font-bold
+                            text-blue-600
+                            dark:text-blue-400
+                            leading-none
+                            "
                         >
                             Lotus Club
                         </h1>
 
                         <p
                             className="
-            text-xs
-            text-gray-500
-            dark:text-gray-400
-            "
+                            text-xs
+                            text-gray-500
+                            dark:text-gray-400
+                            "
                         >
                             Friendship • Fun • Memories
                         </p>
@@ -151,45 +178,43 @@ export default function Navbar() {
 
                 <div
                     className="
-                    hidden
-                    md:flex
-                    items-center
-                    gap-8
-                    text-gray-700
-                    dark:text-white
+                        hidden
+                        md:flex
+                        items-center
+                        gap-8
                     "
                 >
 
-                    <Link to="/" className="hover:text-blue-600 transition-colors duration-200">
+                    <Link to="/" className={navLinkClass}>
                         Home
                     </Link>
 
-
-                    <a href="/#about" className="hover:text-blue-600 transition-colors duration-200">
+                    <a href="/#about" className={navLinkClass}>
                         About Us
                     </a>
 
-                    <a href="/#policies" className="hover:text-blue-600 transition-colors duration-200">
+                    <a href="/#policies" className={navLinkClass}>
                         Club Policies
                     </a>
 
-                    <a href="/#hosting" className="hover:text-blue-600 transition-colors duration-200">
+                    <a href="/#hosting" className={navLinkClass}>
                         Hosting
                     </a>
 
-                    <Link to="/members" className="hover:text-blue-600 transition-colors duration-200">
+                    <Link to="/members" className={navLinkClass}>
                         Members
                     </Link>
 
-                    <Link to="/contact" className="hover:text-blue-600 transition-colors duration-200">
+                    <Link to="/contact" className={navLinkClass}>
                         Contact
                     </Link>
 
                     {user ? (
                         <>
-                            <Link to="/bookrummytable" className="hover:text-blue-600 transition-colors duration-200">
+                            <Link to="/bookrummytable" className={navLinkClass}>
                                 Book a Rummy Seat
                             </Link>
+
                             <UserProfileChip
                                 name={user.name}
                                 membershipNo={user.membershipNo}
@@ -198,7 +223,7 @@ export default function Navbar() {
                             />
                         </>
                     ) : (
-                        <Link to="/login" className="hover:text-blue-600 transition-colors duration-200">
+                        <Link to="/login" className={navLinkClass}>
                             Login
                         </Link>
                     )}
@@ -206,28 +231,21 @@ export default function Navbar() {
                     <button
                         onClick={toggleTheme}
                         className="
-                        p-2
-                        rounded-full
-                        bg-gray-200
-                        dark:bg-slate-700
-                        hover:scale-110
-                        transition
+                            p-2
+                            rounded-full
+                            bg-gray-200
+                            dark:bg-slate-700
+                            hover:scale-110
+                            transition
                         "
                     >
-
-                        {
-                            theme === "light"
-                                ?
-                                <Moon size={22} />
-                                :
-                                <Sun size={22} />
+                        {theme === "light"
+                            ? <Moon size={22} />
+                            : <Sun size={22} />
                         }
-
                     </button>
 
-
                 </div>
-
 
 
 
@@ -371,7 +389,6 @@ export default function Navbar() {
 
                 )
             }
-
 
         </nav>
 

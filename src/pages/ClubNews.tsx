@@ -665,12 +665,12 @@ p-3
                         onClick={saveNews}
 
                         className="
-bg-green-600
-text-white
-px-6
-py-3
-rounded-lg
-"
+                        bg-green-600
+                        text-white
+                        px-6
+                        py-3
+                        rounded-lg
+                        "
 
                     >
 
@@ -696,12 +696,12 @@ rounded-lg
                             onClick={resetForm}
 
                             className="
-bg-gray-400
-text-white
-px-6
-py-3
-rounded-lg
-"
+                            bg-gray-400
+                            text-white
+                            px-6
+                            py-3
+                            rounded-lg
+                            "
 
                         >
 
@@ -726,9 +726,9 @@ rounded-lg
 
 
             <div className="
-mt-8
-space-y-4
-">
+                mt-8
+                space-y-4
+                ">
 
 
                 {
@@ -740,31 +740,31 @@ space-y-4
                             key={item.id}
 
                             className="
-border
-rounded-xl
-p-5
-shadow-sm
-bg-gray-50
-"
+                                border
+                                rounded-xl
+                                p-5
+                                shadow-sm
+                                bg-gray-50
+                                "
 
 
                         >
 
 
                             <div className="
-flex
-justify-between
-gap-3
-flex-wrap
-">
+                                flex
+                                justify-between
+                                gap-3
+                                flex-wrap
+                                ">
 
 
                                 <div>
 
                                     <h2 className="
-font-bold
-text-lg
-">
+                                    font-bold
+                                    text-lg
+                                    ">
 
                                         {
                                             item.title ||
@@ -776,9 +776,9 @@ text-lg
 
 
                                     <p className="
-text-sm
-text-gray-500
-">
+                                        text-sm
+                                        text-gray-500
+                                        ">
 
                                         Type:
                                         {item.type}
@@ -800,13 +800,12 @@ text-gray-500
                                         }
 
                                         className="
-bg-blue-600
-text-white
-px-3
-py-1
-rounded
-"
-
+                                        bg-blue-600
+                                        text-white
+                                        px-3
+                                        py-1
+                                        rounded
+                                        "
                                     >
 
                                         Edit
@@ -822,13 +821,12 @@ rounded
                                         }
 
                                         className="
-bg-red-600
-text-white
-px-3
-py-1
-rounded
-"
-
+                                        bg-red-600
+                                        text-white
+                                        px-3
+                                        py-1
+                                        rounded
+                                        "
                                     >
 
                                         Delete
@@ -845,9 +843,9 @@ rounded
 
 
                             <p className="
-mt-3
-text-gray-700
-">
+                                mt-3
+                                text-gray-700
+                                ">
 
                                 {item.description}
 

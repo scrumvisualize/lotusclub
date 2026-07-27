@@ -265,87 +265,380 @@ export default function Home() {
 
                     {/* Images */}
 
-                    <div
+                    {/* <div
                         className="
-                mt-10
-                grid
-                grid-cols-1
-                sm:grid-cols-2
-                lg:grid-cols-3
-                gap-5
-            "
+                            mt-10
+                            grid
+                            grid-cols-1
+                            sm:grid-cols-2
+                            lg:grid-cols-3
+                            gap-5
+                        "
                     >
 
                         <img
                             src={fun1}
                             alt="Lotus Club Image 1"
                             className="
-                    w-full
-                    h-[220px]
-                    sm:h-[260px]
-                    lg:h-[350px]
-                    object-cover
-                    rounded-3xl
-                    shadow-xl
-                    transition-all
-                    duration-300
-                    hover:scale-105
-                    hover:-translate-y-2
-                "
+                            w-full
+                            h-[220px]
+                            sm:h-[260px]
+                            lg:h-[350px]
+                            object-cover
+                            rounded-3xl
+                            shadow-xl
+                            transition-all
+                            duration-300
+                            hover:scale-105
+                            hover:-translate-y-2
+                            "
                         />
 
                         <img
                             src={coins}
                             alt="Lotus Club Image 2"
                             className="
-                    w-full
-                    h-[220px]
-                    sm:h-[260px]
-                    lg:h-[350px]
-                    object-cover
-                    rounded-3xl
-                    shadow-xl
-                    transition-all
-                    duration-300
-                    hover:scale-105
-                    hover:-translate-y-2
-                    lg:-translate-y-6
-                "
+                                w-full
+                                h-[220px]
+                                sm:h-[260px]
+                                lg:h-[350px]
+                                object-cover
+                                rounded-3xl
+                                shadow-xl
+                                transition-all
+                                duration-300
+                                hover:scale-105
+                                hover:-translate-y-2
+                                lg:-translate-y-6
+                            "
                         />
 
                         <img
                             src={fun3}
                             alt="Lotus Club Image 3"
                             className="
-                    w-full
-                    h-[220px]
-                    sm:h-[260px]
-                    lg:h-[350px]
-                    object-cover
-                    rounded-3xl
-                    shadow-xl
-                    transition-all
-                    duration-300
-                    hover:scale-105
-                    hover:-translate-y-2
-                    lg:translate-y-[-5px]
-                "
+                            w-full
+                            h-[220px]
+                            sm:h-[260px]
+                            lg:h-[350px]
+                            object-cover
+                            rounded-3xl
+                            shadow-xl
+                            transition-all
+                            duration-300
+                            hover:scale-105
+                            hover:-translate-y-2
+                            lg:translate-y-[-5px]
+                            "
                         />
 
+                    </div> */}
+                    <div
+                        className="
+        mt-10
+        grid
+        grid-cols-1
+        sm:grid-cols-2
+        lg:grid-cols-3
+        gap-5
+    "
+                    >
+
+                        {/* Image 1 */}
+                        <div className="group h-[220px] sm:h-[260px] lg:h-[350px] [perspective:1000px]">
+                            <div
+                                className="
+                relative
+                w-full
+                h-full
+                transition-transform
+                duration-700
+                [transform-style:preserve-3d]
+                group-hover:[transform:rotateY(180deg)]
+            "
+                            >
+
+                                {/* Front */}
+                                <img
+                                    src={fun1}
+                                    alt="Lotus Club Image 1"
+                                    className="
+                                    absolute
+                                    w-full
+                                    h-full
+                                    object-cover
+                                    rounded-3xl
+                                    shadow-xl
+                                    [backface-visibility:hidden]
+                                "
+                                />
+
+                                {/* Back */}
+                                <div
+                                    className="
+                                absolute
+                                w-full
+                                h-full
+                                rounded-3xl
+                                overflow-hidden
+                                shadow-xl
+                                [transform:rotateY(180deg)]
+                                [backface-visibility:hidden]
+                                "
+                                >
+                                    {/* Grayscale Image */}
+                                    <img
+                                        src={fun1}
+                                        alt=""
+                                        className="
+                                        absolute
+                                        w-full
+                                        h-full
+                                        object-cover
+                                        grayscale
+                                    "
+                                    />
+
+                                    {/* Transparent Overlay */}
+                                    <div
+                                        className="
+                                        absolute
+                                        inset-0
+                                        bg-gray-900/50
+                                        backdrop-blur-[2px]
+                                        flex
+                                        items-center
+                                        justify-center
+                                        text-center
+                                        p-8
+                                    "
+                                    >
+                                        <p
+                                            className="
+                                            text-white
+                                            text-4xl
+                                            font-bold
+                                            leading-snug
+                                            drop-shadow-lg
+                                        "
+                                        >
+                                            Exclusively available for members, only in Brisbane!
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {/* Image 2 */}
+                        <div className="group h-[220px] sm:h-[260px] lg:h-[350px] [perspective:1000px] lg:-translate-y-6">
+
+                            <div
+                                className="
+                                relative
+                                w-full
+                                h-full
+                                transition-transform
+                                duration-700
+                                ease-in-out
+                                [transform-style:preserve-3d]
+                                group-hover:[transform:rotateY(180deg)]
+                                "
+                            >
+
+                                {/* Front Image */}
+                                <img
+                                    src={coins}
+                                    alt="Lotus Club Image 2"
+                                    className="
+                                    absolute
+                                    w-full
+                                    h-full
+                                    object-cover
+                                    rounded-3xl
+                                    shadow-xl
+                                    [backface-visibility:hidden]
+                                    "
+                                />
+
+
+                                {/* Back Image with Grayscale */}
+                                <div
+                                    className="
+                                    absolute
+                                    w-full
+                                    h-full
+                                    rounded-3xl
+                                    overflow-hidden
+                                    shadow-xl
+                                    [transform:rotateY(180deg)]
+                                    [backface-visibility:hidden]
+                                    "
+                                >
+
+                                    {/* Grey Scale Background */}
+                                    <img
+                                        src={coins}
+                                        alt=""
+                                        className="
+                                        absolute
+                                        w-full
+                                        h-full
+                                        object-cover
+                                        grayscale
+                                        "
+                                    />
+
+
+                                    {/* Transparent Overlay + Text */}
+                                    <div
+                                        className="
+                                        absolute
+                                        inset-0
+                                        bg-gray-900/50
+                                        backdrop-blur-[2px]
+                                        flex
+                                        items-center
+                                        justify-center
+                                        text-center
+                                        p-8
+                                        "
+                                    >
+                                        <p
+                                            className="
+                                            text-white
+                                            text-3xl
+                                            lg:text-4xl
+                                            font-bold
+                                            leading-snug
+                                            drop-shadow-lg
+                                            "
+                                        >
+                                            Great vibe, Good food
+                                            & Great fun!
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        {/* Image 3 */}
+                        <div className="group h-[220px] sm:h-[260px] lg:h-[350px] [perspective:1000px] lg:translate-y-[-5px]">
+
+                            <div
+                                className="
+                                relative
+                                w-full
+                                h-full
+                                transition-transform
+                                duration-700
+                                ease-in-out
+                                [transform-style:preserve-3d]
+                                group-hover:[transform:rotateY(180deg)]
+                            "
+                            >
+
+                                {/* Front Image */}
+                                <img
+                                    src={fun3}
+                                    alt="Lotus Club Image 3"
+                                    className="
+                                    absolute
+                                    w-full
+                                    h-full
+                                    object-cover
+                                    rounded-3xl
+                                    shadow-xl
+                                    [backface-visibility:hidden]
+                                    "
+                                />
+
+
+                                {/* Back Image with Grey Scale */}
+                                <div
+                                    className="
+                                    absolute
+                                    w-full
+                                    h-full
+                                    rounded-3xl
+                                    overflow-hidden
+                                    shadow-xl
+                                    [transform:rotateY(180deg)]
+                                    [backface-visibility:hidden]
+                                    "
+                                >
+
+                                    {/* Grayscale Background */}
+                                    <img
+                                        src={fun3}
+                                        alt=""
+                                        className="
+                                        absolute
+                                        w-full
+                                        h-full
+                                        object-cover
+                                        grayscale
+                                        "
+                                    />
+
+
+                                    {/* Transparent Glass Overlay */}
+                                    <div
+                                        className="
+                                        absolute
+                                        inset-0
+                                        bg-gray-900/45
+                                        backdrop-blur-[2px]
+                                        flex
+                                        items-center
+                                        justify-center
+                                        text-center
+                                        p-8
+                                        "
+                                    >
+                                        <p
+                                            className="
+                                        text-white
+                                        text-3xl
+                                        lg:text-4xl
+                                        font-bold
+                                        leading-snug
+                                        drop-shadow-lg
+                                        "
+                                        >
+                                            Calm &
+                                            Perfect location !
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
+
 
                     {/* Description */}
 
                     <p
                         className="
-                mt-10
-                text-gray-600
-                dark:text-gray-300
-                max-w-3xl
-                mx-auto
-                text-lg
-                leading-relaxed
-            "
+                        mt-10
+                        text-gray-600
+                        dark:text-gray-300
+                        max-w-3xl
+                        mx-auto
+                        text-lg
+                        leading-relaxed
+                        "
                     >
                         A place where friends connect, enjoy playing cards,
                         celebrate special moments and create wonderful memories
@@ -356,23 +649,23 @@ export default function Home() {
 
                     <div
                         className="
-                mt-10
-                grid
-                grid-cols-2
-                md:grid-cols-4
-                gap-6
-                max-w-4xl
-                mx-auto
-            "
+                        mt-10
+                        grid
+                        grid-cols-2
+                        md:grid-cols-4
+                        gap-6
+                        max-w-4xl
+                        mx-auto
+                        "
                     >
 
                         <div
                             className="
-                    p-5
-                    rounded-2xl
-                    bg-blue-50
-                    dark:bg-slate-800
-                "
+                            p-5
+                            rounded-2xl
+                            bg-blue-50
+                            dark:bg-slate-800
+                            "
                         >
                             <h3 className="text-3xl font-bold text-blue-600">
                                 50+
@@ -385,11 +678,11 @@ export default function Home() {
 
                         <div
                             className="
-                    p-5
-                    rounded-2xl
-                    bg-blue-50
-                    dark:bg-slate-800
-                "
+                            p-5
+                            rounded-2xl
+                            bg-blue-50
+                            dark:bg-slate-800
+                            "
                         >
                             <h3 className="text-3xl font-bold text-blue-600">
                                 5+
@@ -402,11 +695,11 @@ export default function Home() {
 
                         <div
                             className="
-                    p-5
-                    rounded-2xl
-                    bg-blue-50
-                    dark:bg-slate-800
-                "
+                            p-5
+                            rounded-2xl
+                            bg-blue-50
+                            dark:bg-slate-800
+                            "
                         >
                             <h3 className="text-3xl font-bold text-blue-600">
                                 5+
@@ -419,11 +712,11 @@ export default function Home() {
 
                         <div
                             className="
-                    p-5
-                    rounded-2xl
-                    bg-blue-50
-                    dark:bg-slate-800
-                "
+                                p-5
+                                rounded-2xl
+                                bg-blue-50
+                                dark:bg-slate-800
+                                "
                         >
                             <h3 className="text-3xl font-bold text-blue-600">
                                 ❤️
