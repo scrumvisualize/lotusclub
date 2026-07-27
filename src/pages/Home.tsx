@@ -30,6 +30,7 @@ export default function Home() {
     const [showMessage, setShowMessage] = useState(false);
     const [messageText, setMessageText] = useState("");
     const [messageType, setMessageType] = useState<"success" | "error">("success");
+    const [flippedCard, setFlippedCard] = useState<number | null>(null);
 
     const user = JSON.parse(
         localStorage.getItem("user") || "null"
@@ -264,98 +265,39 @@ export default function Home() {
                     </p>
 
                     {/* Images */}
-
-                    {/* <div
+                    <div
                         className="
-                            mt-10
-                            grid
-                            grid-cols-1
-                            sm:grid-cols-2
-                            lg:grid-cols-3
-                            gap-5
+                        mt-10
+                        grid
+                        grid-cols-1
+                        sm:grid-cols-2
+                        lg:grid-cols-3
+                        gap-5
                         "
                     >
 
-                        <img
-                            src={fun1}
-                            alt="Lotus Club Image 1"
-                            className="
-                            w-full
-                            h-[220px]
-                            sm:h-[260px]
-                            lg:h-[350px]
-                            object-cover
-                            rounded-3xl
-                            shadow-xl
-                            transition-all
-                            duration-300
-                            hover:scale-105
-                            hover:-translate-y-2
-                            "
-                        />
-
-                        <img
-                            src={coins}
-                            alt="Lotus Club Image 2"
-                            className="
-                                w-full
-                                h-[220px]
-                                sm:h-[260px]
-                                lg:h-[350px]
-                                object-cover
-                                rounded-3xl
-                                shadow-xl
-                                transition-all
-                                duration-300
-                                hover:scale-105
-                                hover:-translate-y-2
-                                lg:-translate-y-6
-                            "
-                        />
-
-                        <img
-                            src={fun3}
-                            alt="Lotus Club Image 3"
-                            className="
-                            w-full
-                            h-[220px]
-                            sm:h-[260px]
-                            lg:h-[350px]
-                            object-cover
-                            rounded-3xl
-                            shadow-xl
-                            transition-all
-                            duration-300
-                            hover:scale-105
-                            hover:-translate-y-2
-                            lg:translate-y-[-5px]
-                            "
-                        />
-
-                    </div> */}
-                    <div
-                        className="
-        mt-10
-        grid
-        grid-cols-1
-        sm:grid-cols-2
-        lg:grid-cols-3
-        gap-5
-    "
-                    >
-
                         {/* Image 1 */}
-                        <div className="group h-[220px] sm:h-[260px] lg:h-[350px] [perspective:1000px]">
+                        <div className="group h-[220px] sm:h-[260px] lg:h-[350px] [perspective:1000px]"
+                            onClick={() =>
+                                setFlippedCard(flippedCard === 1 ? null : 1)
+                            }>
                             <div
+                                style={{
+                                    transform:
+                                        flippedCard === 1
+                                            ? "rotateY(180deg)"
+                                            : undefined,
+                                }}
                                 className="
-                relative
-                w-full
-                h-full
-                transition-transform
-                duration-700
-                [transform-style:preserve-3d]
-                group-hover:[transform:rotateY(180deg)]
-            "
+                                    relative
+                                    w-full
+                                    h-full
+                                    transition-transform
+                                    duration-700
+                                    [transform-style:preserve-3d]
+                                    group-hover:[transform:rotateY(180deg)]
+                                    
+                                "
                             >
 
                                 {/* Front */}
@@ -416,7 +358,9 @@ export default function Home() {
                                         <p
                                             className="
                                             text-white
-                                            text-4xl
+                                            text-2xl
+                                            sm:text-3xl
+                                            lg:text-4xl
                                             font-bold
                                             leading-snug
                                             drop-shadow-lg
@@ -432,9 +376,19 @@ export default function Home() {
 
 
                         {/* Image 2 */}
-                        <div className="group h-[220px] sm:h-[260px] lg:h-[350px] [perspective:1000px] lg:-translate-y-6">
+                        <div className="group h-[220px] sm:h-[260px] lg:h-[350px] [perspective:1000px] lg:-translate-y-6"
+                            onClick={() =>
+                                setFlippedCard(flippedCard === 1 ? null : 1)
+                            }
+                        >
 
                             <div
+                                style={{
+                                    transform:
+                                        flippedCard === 1
+                                            ? "rotateY(180deg)"
+                                            : undefined,
+                                }}
                                 className="
                                 relative
                                 w-full
@@ -508,7 +462,8 @@ export default function Home() {
                                         <p
                                             className="
                                             text-white
-                                            text-3xl
+                                            text-2xl
+                                            sm:text-3xl
                                             lg:text-4xl
                                             font-bold
                                             leading-snug
@@ -529,9 +484,19 @@ export default function Home() {
 
 
                         {/* Image 3 */}
-                        <div className="group h-[220px] sm:h-[260px] lg:h-[350px] [perspective:1000px] lg:translate-y-[-5px]">
+                        <div className="group h-[220px] sm:h-[260px] lg:h-[350px] [perspective:1000px] lg:translate-y-[-5px]"
+                            onClick={() =>
+                                setFlippedCard(flippedCard === 1 ? null : 1)
+                            }
+                        >
 
                             <div
+                                style={{
+                                    transform:
+                                        flippedCard === 1
+                                            ? "rotateY(180deg)"
+                                            : undefined,
+                                }}
                                 className="
                                 relative
                                 w-full
@@ -605,7 +570,8 @@ export default function Home() {
                                         <p
                                             className="
                                         text-white
-                                        text-3xl
+                                        text-2xl
+                                        sm:text-3xl
                                         lg:text-4xl
                                         font-bold
                                         leading-snug

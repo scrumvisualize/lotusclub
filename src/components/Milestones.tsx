@@ -718,56 +718,40 @@ export default function MilestoneTimeline() {
                                     </div>
 
 
-
-
-                                    {/* Title - Show only when milestone reached */}
                                     {isActive && (
                                         <div
                                             className="
-                                            mt-4
-                                            text-center
-                                            text-sm
-                                            font-semibold
-                                            text-emerald-600
-                                            dark:text-emerald-400
-                                            max-w-[120px]
+                                            absolute
+                                            -top-16
+                                            left-1/2
+                                            -translate-x-1/2
 
-                                            animate-pulse
-                                        "
-                                        >
-                                            {item.title}
-                                        </div>
-                                    )}
+                                            whitespace-nowrap
 
-
-
-
-                                    {/* Year - Show only when milestone reached */}
-                                    {isActive && item.year && (
-
-                                        <div
-                                            className="
-                                            mt-2
-
-                                            px-3
-                                            py-1
-
-                                            rounded-full
-
-                                            text-xs
-                                            font-bold
+                                            rounded-xl
+                                            px-4
+                                            py-2
 
                                             bg-emerald-500
                                             text-white
 
+                                            text-sm
+                                            font-semibold
+                                            text-center
+
                                             shadow-lg
-
-                                            animate-pulse
-                                        "
+                                            
+                                            z-30
+                                            "
                                         >
-                                            {item.year}
-                                        </div>
+                                            <div>{item.title}</div>
 
+                                            {item.year && (
+                                                <div className="text-xs font-normal opacity-90 mt-1">
+                                                    {item.year}
+                                                </div>
+                                            )}
+                                        </div>
                                     )}
 
 
